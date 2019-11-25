@@ -57,14 +57,19 @@ Hierarchy:
                         Id: d8c850dc-5a35-4d8e-a656-360d42d98d0f
                         Model: 45f2791c-1dad-4aaf-bf07-cd42bf068d8d:Sphere
                         Materials: {}
+                    d7d11be34408a71aba0c072e7341275b: !EntityProcessorExample.Player.PlayerActionComponent,EntityProcessorExample
+                        Id: 7bc19a98-17f3-4893-b212-81041beeda48
+                    8386bd954a2ec39483ec52a6bd7b505c: !EntityProcessorExample.Player.PlayerInputComponent,EntityProcessorExample
+                        Id: 6c3bec9f-2716-4a98-ae5d-8200ed9c2825
+                        IsKeyboardEnabled: true
         -   Entity:
                 Id: 782b25b8-81e6-4913-90b7-4ab43b8a13f0
                 Name: Camera
                 Components:
                     9e58591b22d3291be21085680afd810a: !TransformComponent
                         Id: 9f5a4d4c-35e1-4201-930a-13709a05e3de
-                        Position: {X: 2.6, Y: 0.6, Z: -1.0}
-                        Rotation: {X: 0.0, Y: 0.829037547, Z: 0.0, W: 0.5591929}
+                        Position: {X: 0.0, Y: 5.0, Z: 5.0}
+                        Rotation: {X: -0.382683456, Y: 0.0, Z: 0.0, W: 0.9238795}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
                     0d13ab8b418b68ead504dffefa559898: !CameraComponent
@@ -72,15 +77,6 @@ Hierarchy:
                         Name: null
                         Projection: Perspective
                         Slot: ba3d91a8-a882-4cf6-965e-a846ab61f0d4
-                    9210ff91a7d810c7981daaac0b4539c4: !EntityProcessorExample.BasicCameraController,EntityProcessorExample
-                        Id: 2f4e1d07-704f-42f1-a236-9f6563dde5ea
-                        Gamepad: false
-                        KeyboardMovementSpeed: {X: 5.0, Y: 5.0, Z: 5.0}
-                        TouchMovementSpeed: {X: 0.7, Y: 0.7, Z: 0.3}
-                        SpeedFactor: 5.0
-                        KeyboardRotationSpeed: {X: 3.0, Y: 3.0}
-                        MouseRotationSpeed: {X: 1.0, Y: 1.0}
-                        TouchRotationSpeed: {X: 1.0, Y: 0.7}
         -   Entity:
                 Id: 7d920d04-ac0a-45e9-a26f-44d61ab63fa5
                 Name: Directional light
