@@ -11,7 +11,42 @@ Hierarchy:
         - ref!! ce64dc3a-a089-4558-b145-c9c3be1be0c8
         - ref!! 8794ab59-c54c-4151-819d-2a7de42c6037
         - ref!! cf359ea7-cdb8-4fbd-ac2a-1aa974c7b744
+        - ref!! 01f592f5-6034-4b3b-b5b4-94c213662e07
+        - ref!! 8c3b645f-4a0b-432b-96bb-bc1ad5e63ce4
+        - ref!! dbd5c01c-d33d-4b07-a390-0b1452f83dab
+        - ref!! 7c3abec4-c302-4962-a3a9-f762c9dfa3a1
     Parts:
+        -   Folder: null
+            Entity:
+                Id: 01f592f5-6034-4b3b-b5b4-94c213662e07
+                Name: Sphere2
+                Components:
+                    cb72f6fe4ca7e91969cc0753a9cfe163: !TransformComponent
+                        Id: 44aa3b64-d1fe-4484-9269-3a476c8357d5
+                        Position: {X: -0.285297871, Y: 0.09148866, Z: 0.1896826}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 2.0, Y: 2.0, Z: 2.0}
+                        Children: {}
+                    0c01ac91ad33ee9055b855565e3c36d9: !ModelComponent
+                        Id: 19b2ece7-d4d3-4b21-bf02-b134880d99f7
+                        Model: fc710b06-8e3d-4f9d-8d40-eb1eed38be64:Sphere
+                        Materials: {}
+        -   Folder: null
+            Entity:
+                Id: 7c3abec4-c302-4962-a3a9-f762c9dfa3a1
+                Name: Decal3
+                Components:
+                    df500e62d60065e269223fef9c8e8ae6: !TransformComponent
+                        Id: 8762ee03-7451-4ada-a504-69732c6b6638
+                        Position: {X: 0.5486298, Y: 0.09548759, Z: 0.967347145}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ccd4dd79ec14f658a2b8c03c5f008eb8: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalExample
+                        Id: ead6abce-0270-4aca-a63a-c8467b079391
+                        DecalTexture: 82732d98-df3b-4d99-974e-2f4079a3860c:Textures/circle01
+                        Color: {R: 0.176421881, G: 0.735616267, B: 0.8065, A: 1.0}
+                        RenderGroup: Group0
         -   Entity:
                 Id: 8794ab59-c54c-4151-819d-2a7de42c6037
                 Name: Ground
@@ -25,6 +60,28 @@ Hierarchy:
                     25f11de0dd4fbc33aae3a06f3ac830a7: !ModelComponent
                         Id: 92e4be68-0b4b-4010-a2b6-d1f8f5dd9a8e
                         Model: 124d4996-8e2a-4c56-a19d-64279609c6ae:Ground
+                        Materials: {}
+        -   Entity:
+                Id: 8c3b645f-4a0b-432b-96bb-bc1ad5e63ce4
+                Name: Decal1
+                Components:
+                    edd5b4a6df975e89f0cc5898c9c3a27c: !TransformComponent
+                        Id: aa580d94-d875-4adc-89fe-edf5a1c26dc5
+                        Position: {X: 0.31012845, Y: -0.160740986, Z: 1.46456182}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    a164e2ac2206ce03c5710788a821412a: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalExample
+                        Id: f74753fa-8d82-4a56-a809-de6bafa5781b
+                        Enabled: false
+                        DecalTexture: 82732d98-df3b-4d99-974e-2f4079a3860c:Textures/circle01
+                        Color: {R: 1.0, G: 1.0, B: 1.0, A: 1.0}
+                        RenderGroup: Group10
+                    700d8d11d12e61c37def254f06a96543: !ModelComponent
+                        Id: 706b565d-f99e-48c4-9d75-60eff0ea0301
+                        Model: 296d8325-79cf-452b-804d-18b6149f0861:Cube
+                        RenderGroup: Group10
+                        IsShadowCaster: false
                         Materials: {}
         -   Entity:
                 Id: a2e9da1f-bf8d-4da2-89e9-34715ca1db94
@@ -74,7 +131,7 @@ Hierarchy:
                 Components:
                     cb72f6fe4ca7e91969cc0753a9cfe163: !TransformComponent
                         Id: dbbaac4c-67d2-45b3-8b18-d2fddbd46cd1
-                        Position: {X: 0.0, Y: 0.5, Z: 0.0}
+                        Position: {X: 0.439121544, Y: -0.0011702776, Z: -0.7178326}
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
@@ -82,6 +139,21 @@ Hierarchy:
                         Id: c4d9c627-1962-454e-88c6-168af9826a3b
                         Model: fc710b06-8e3d-4f9d-8d40-eb1eed38be64:Sphere
                         Materials: {}
+        -   Entity:
+                Id: dbd5c01c-d33d-4b07-a390-0b1452f83dab
+                Name: Decal2
+                Components:
+                    df500e62d60065e269223fef9c8e8ae6: !TransformComponent
+                        Id: 2954b2c8-2ecf-4afa-bc72-f302517e6920
+                        Position: {X: 1.11799753, Y: 0.09548759, Z: -0.485119343}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ccd4dd79ec14f658a2b8c03c5f008eb8: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalExample
+                        Id: f7388e6b-0d9a-48e7-be03-6add8e8832ae
+                        DecalTexture: 82732d98-df3b-4d99-974e-2f4079a3860c:Textures/circle01
+                        Color: {R: 0.894, G: 0.07822498, B: 0.07822498, A: 1.0}
+                        RenderGroup: Group0
         -   Entity:
                 Id: e06a2b03-b657-4ac0-bbe7-8ca4ed072e47
                 Name: Camera

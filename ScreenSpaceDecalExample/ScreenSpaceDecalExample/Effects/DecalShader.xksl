@@ -1,0 +1,67 @@
+﻿shader DecalShader : DepthBase, ShaderBase, Transformation, PositionStream4, ComputeColor
+{
+    // We must inherit ComputeColor, even if we don't use it explicitly, because this is required by the Material.
+
+    rgroup PerMaterial
+    {
+        stage Texture2D DecalTexture;
+    }
+
+    cbuffer PerMaterial
+    {
+        stage float TextureScale = 1.0f;
+        [Color]
+        stage float4 DecalColor;
+    }
+
+    stage stream float4 PositionInViewSpace;  // Shader position in View Space
+
+    // Vertex Shader
+    stage override void VSMain()
+    {
+        // Because we inherited 'base' shaders, this will assign the other data for us.
+        base.VSMain();
+
+        /* Transformation Notes:
+            [Position0] * [WorldMatrix] * [ViewMatrix] * [ProjectionMatrix]
+            Position0: The object/model's local space
+              multiply with WorldMatrix -> Gets to (game) world space
+              multiply with ViewMatrix -> Gets to camera's view space (ie. object relative to the camera)
+              multiply with ProjectionMatrix -> Gets to screen space
+
+           Multiply by the inverse matrices to go back to the previous spaces.
+        */
+
+        // streams.Position is in the box's local space. [This is declared in PositionStream4 shader]
+        float4 viewSpacePos = mul(streams.Position, WorldView);
+        streams.PositionInViewSpace = viewSpacePos;
+        streams.ShadingPosition =  mul(streams.Position, WorldViewProjection);
+    }
+
+    // Pixel Shader
+    stage override void PSMain()
+    {
+        // ShadingPosition is the screen space. [This is declared in ShaderBaseStream shader]
+        // (0, 0) is the top left corner on the screen. x goes right, y goes down.
+        float2 screenPos = streams.ShadingPosition.xy;
+        float2 screenSpaceUv = float2(screenPos.x / ViewSize.x, screenPos.y / ViewSize.y);  // Gets UV in [0..1] range.
+
+        // Get depth value from depth buffer at the point on the screen. [This function comes from DepthBase shader]
+        float depthValueInViewSpace = ComputeDepthFromUV(screenSpaceUv);    // Depth position in view space
+
+        float zDepthProportion = -streams.PositionInViewSpace.z / FarClipPlane;    // Between 0...1 when within camera viewing range
+        float3 shaderPointRayInViewSpace = streams.PositionInViewSpace.xyz / zDepthProportion;   // Ray is projected out to sit exactly on the far clip plane
+
+        float3 depthPointInViewSpace =  shaderPointRayInViewSpace * (depthValueInViewSpace / FarClipPlane);     // The point from the depth buffer in the view space
+        float4 depthPointInWorldSpace = mul(float4(depthPointInViewSpace, 1), ViewInverse);
+        float4 depthPointInBoxSpace = mul(depthPointInWorldSpace, WorldInverse);        // The point from the depth buffer in local space of the box
+
+        // Box of length 1, so lies in the range [-0.5...0.5] of every axis.
+        // So everything outside this box range is clipped.
+        clip(0.5f - abs(depthPointInBoxSpace.xyz));
+
+        // The center of the box is at origin, so we need to offset so we're in UV space (ie. in [0...1] range).
+        float2 decalTextCoord = (depthPointInBoxSpace.xz / TextureScale) + 0.5f;
+        streams.ColorTarget = DecalTexture.Sample(AnisotropicSampler, decalTextCoord) * DecalColor;
+    }
+};
