@@ -115,6 +115,12 @@ RenderFeatures:
                 TransparentRenderStage: ref!! a83481dd-b2de-4533-8abb-6be6e0cdd1b2
                 EffectName: null
         PipelineProcessors: {}
+    3b73431e9fb5edf8d4d10cced6649228*: !ScreenSpaceDecalExample.DecalSystem.Renderer.DecalRootRenderFeature,ScreenSpaceDecalRootRendererExample
+        RenderStageSelectors:
+            9c5829294cd11adde230c69b669ec5e0: !ScreenSpaceDecalExample.DecalSystem.Renderer.DecalRenderStageSelector,ScreenSpaceDecalRootRendererExample
+                RenderStage: ref!! a83481dd-b2de-4533-8abb-6be6e0cdd1b2
+                EffectName: null
+        PipelineProcessors: {}
 SharedRenderers:
     60459475d3a3adaf2d1ba5d99913ca75: !Xenko.Rendering.Compositing.ForwardRenderer,Xenko.Engine
         Id: a32d2024-155d-45f8-9236-b361769d2aa7

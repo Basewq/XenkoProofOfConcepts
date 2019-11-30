@@ -15,4 +15,20 @@
 
     <PackageReference Include="Xenko.Core.Assets.CompilerApp" Version="3.1.0.1" IncludeAssets="build;buildTransitive" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Effects\DecalShader.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DecalShader.xksl</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Effects\DecalShader.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>DecalShader.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 </Project>

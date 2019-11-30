@@ -11,7 +11,41 @@ Hierarchy:
         - ref!! b3cd0b6f-d562-4b16-9928-b58e04194c87
         - ref!! 45a0f056-df28-4468-a16b-2377b05784b9
         - ref!! a74f0209-0639-4928-a100-38bc5f38f7b3
+        - ref!! 8e6c0670-4de7-4f4f-8034-c0693cefac9d
+        - ref!! 0caaba1b-e5a8-4872-bd61-b053f32cb5a1
+        - ref!! 1f5f6056-fd00-4185-afdf-84ca3e7b30ba
     Parts:
+        -   Entity:
+                Id: 0caaba1b-e5a8-4872-bd61-b053f32cb5a1
+                Name: Decal1
+                Components:
+                    bd2c478a8bc6ba68d8a2e15f56a9ea3f: !TransformComponent
+                        Id: c2afb7c3-e2d0-41d7-96f0-591f28caefd7
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    5add4c7bdbc2e492c26ca55f4c54a397: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalRootRendererExample
+                        Id: dd87d8f5-bc9a-4fb5-96b5-1dd430f671b3
+                        Texture: 897f9e4e-005c-4f53-81e8-9ad2dec0f662:Texture/circle01
+                        Color: {R: 1.0, G: 1.0, B: 1.0, A: 1.0}
+                        RenderGroup: Group0
+        -   Folder: null
+            Entity:
+                Id: 1f5f6056-fd00-4185-afdf-84ca3e7b30ba
+                Name: Decal2
+                Components:
+                    bd2c478a8bc6ba68d8a2e15f56a9ea3f: !TransformComponent
+                        Id: c82f0aff-e6e7-41b4-af42-6c3d227fb8e9
+                        Position: {X: -0.0892398655, Y: 0.0, Z: 1.30412877}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    5add4c7bdbc2e492c26ca55f4c54a397: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalRootRendererExample
+                        Id: b5b64415-1e55-4408-99ad-2d656a451f4f
+                        Texture: 591415c1-cc4a-47d5-b045-f954989af028:Texture/circle02
+                        Color: {R: 1.0, G: 1.0, B: 1.0, A: 1.0}
+                        RenderGroup: Group0
         -   Entity:
                 Id: 45a0f056-df28-4468-a16b-2377b05784b9
                 Name: Ground
@@ -26,13 +60,28 @@ Hierarchy:
                         Id: 20425ada-a166-4e40-989b-b09c2494d242
                         Model: 44d7505d-93c7-4b09-a228-d033b8d0d482:Ground
                         Materials: {}
+        -   Folder: null
+            Entity:
+                Id: 8e6c0670-4de7-4f4f-8034-c0693cefac9d
+                Name: Sphere
+                Components:
+                    05036cd812791f737dc390cc4b6b4404: !TransformComponent
+                        Id: 44722629-a96a-4eb2-a573-5f542561550f
+                        Position: {X: -0.656307, Y: -0.17949973, Z: 0.303944737}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 2.0, Y: 2.0, Z: 2.0}
+                        Children: {}
+                    010b252e71196e1a38c851c46035acc5: !ModelComponent
+                        Id: 847744b1-7ba6-46d9-8332-77a4930c7ced
+                        Model: e76612e6-7149-40d8-a89f-c37cb8bcd1af:Sphere
+                        Materials: {}
         -   Entity:
                 Id: a74f0209-0639-4928-a100-38bc5f38f7b3
                 Name: Sphere
                 Components:
                     05036cd812791f737dc390cc4b6b4404: !TransformComponent
                         Id: 72406028-6b54-4d31-b915-bdb91a4fc1ab
-                        Position: {X: 0.0, Y: 0.5, Z: 0.0}
+                        Position: {X: 0.0, Y: -0.163548052, Z: 0.0}
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
