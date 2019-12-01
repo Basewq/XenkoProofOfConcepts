@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectInfoRenderTargetExample.Windows", "ObjectInfoRenderTargetExample.Windows\ObjectInfoRenderTargetExample.Windows.csproj", "{08E71E70-1540-4EE6-A973-6C126446DE0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectInfoRenderTargetExample", "ObjectInfoRenderTargetExample\ObjectInfoRenderTargetExample.csproj", "{C4FCA6A0-91E1-47DE-B02A-44FE54E054B5}"
+EndProject
+Global
+EndGlobal
