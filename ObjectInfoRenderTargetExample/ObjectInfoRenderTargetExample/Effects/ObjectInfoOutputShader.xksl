@@ -1,0 +1,15 @@
+﻿/// <summary>
+/// A shader used to output the ID of the model component, mesh and material for a particular RenderMesh.
+/// </summary>
+shader ObjectInfoOutputShader : ShaderBase
+{
+    cbuffer PerDraw
+    {
+        stage float4 ObjectInfoData;    // Refer to struct ObjectInfoData
+    }
+
+    stage override void PSMain()
+    {
+        streams.ColorTarget = ObjectInfoData;
+    }
+};

@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +15,51 @@
     <PackageReference Include="Xenko.UI" Version="3.1.0.1" />
 
     <PackageReference Include="Xenko.Core.Assets.CompilerApp" Version="3.1.0.1" IncludeAssets="build;buildTransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Effects\ObjectInfoInputShader.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoInputShader.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoOutputEffect.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoOutputEffect.xkfx</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoOutputShader.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoOutputShader.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoOutputTestShader.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoOutputTestShader.xksl</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Effects\ObjectInfoInputShader.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoInputShader.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputEffect.xkfx">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoOutputEffect.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputShader.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoOutputShader.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputTestShader.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoOutputTestShader.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>

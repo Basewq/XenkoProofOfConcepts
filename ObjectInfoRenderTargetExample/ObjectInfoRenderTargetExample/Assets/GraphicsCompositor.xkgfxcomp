@@ -38,6 +38,11 @@ RenderStages:
         Name: GBuffer
         EffectSlotName: GBuffer
         SortMode: !FrontToBackSortMode {}
+    a992cc647861fe14b4d6501476a4b14d*:
+        Id: 9271571f-0f12-4ab4-ae22-2f9e740d7456
+        Name: ObjectInfo
+        EffectSlotName: ObjectInfo
+        SortMode: !SortModeStateChange {}
 RenderFeatures:
     d8fb80b0e7995140a46bca8dc36ee8a2: !Xenko.Rendering.MeshRenderFeature,Xenko.Rendering
         RenderStageSelectors:
@@ -57,6 +62,10 @@ RenderFeatures:
             106341b76db9fcda6a033dad16aa708b: !Xenko.Rendering.MeshTransparentRenderStageSelector,Xenko.Rendering
                 OpaqueRenderStage: ref!! 3f7e36d3-d477-457f-8cd8-91a9a8fd34ab
                 EffectName: XenkoForwardShadingEffect.ShadowMapCaster
+            0bffc9585411cf4e5112b8f5507f230b*: !ObjectInfoRenderTargetExample.ObjectInfoRenderer.ObjectInfoRenderStageSelector,ObjectInfoRenderTargetExample
+                RenderGroup: Group0, Group1, Group2, Group3, Group4, Group5, Group6, Group7, Group8, Group9, Group11, Group12, Group13, Group14, Group15, Group16, Group17, Group18, Group19, Group20, Group21, Group22, Group23, Group24, Group25, Group26, Group27, Group28, Group29, Group30, Group31
+                ObjectInfoRenderStage: ref!! 9271571f-0f12-4ab4-ae22-2f9e740d7456
+                EffectName: ObjectInfoOutputEffect
         PipelineProcessors:
             d70f5aee0616e4ab25081ceaf643290c: !Xenko.Rendering.MeshPipelineProcessor,Xenko.Rendering
                 TransparentRenderStage: ref!! c81fe228-bd2b-4658-a4e1-188a39a4de55
@@ -92,6 +101,7 @@ RenderFeatures:
                             ShadowCasterRenderStage: ref!! b95af54b-f48c-425d-8db2-3a500019b13d
                         d59ef45dd99e49d3af3887763d153aa7: !Xenko.Rendering.Shadows.LightPointShadowMapRendererCubeMap,Xenko.Rendering
                             ShadowCasterRenderStage: ref!! a5519e98-90cc-44ed-8c4a-92265da12851
+            1da7a2c32e7abb4c96e949213e559cd9*: !ObjectInfoRenderTargetExample.ObjectInfoRenderer.ObjectInfoRenderFeature,ObjectInfoRenderTargetExample {}
     28e9bf54a5adbe063f59fb17acb2723e: !Xenko.Rendering.Sprites.SpriteRenderFeature,Xenko.Rendering
         RenderStageSelectors:
             d74665cff080638a2439c4422e542d85: !Xenko.Rendering.Sprites.SpriteTransparentRenderStageSelector,Xenko.Rendering
@@ -195,6 +205,9 @@ Game: !Xenko.Rendering.Compositing.SceneCameraRenderer,Xenko.Engine
     Child: !Xenko.Rendering.Compositing.SceneRendererCollection,Xenko.Rendering
         Id: 82568e46-92e7-421a-8dca-114a74e0cd69
         Children:
+            f46855898e13580c6975e0792b27846f*: !ObjectInfoRenderTargetExample.ObjectInfoRenderer.ObjectInfoSceneRenderer,ObjectInfoRenderTargetExample
+                Id: 265f73ef-b24a-4f1d-970a-1d049310b7cf
+                ObjectInfoRenderStage: ref!! 9271571f-0f12-4ab4-ae22-2f9e740d7456
             d39c5ddbf8b7d5ca02bafb6496b1cc3c: !Xenko.Rendering.Compositing.ForwardRenderer,Xenko.Engine ref!! 3a103006-279b-4544-80bd-85e1a3252272
             01d338078e9b21121ead0868932613dd: !Xenko.Rendering.Compositing.DebugRenderer,Xenko.Rendering ref!! b02cc8db-0c24-4814-b27d-0195c7b38982
     RenderMask: All

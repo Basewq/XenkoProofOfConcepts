@@ -1,0 +1,20 @@
+﻿shader ObjectInfoOutputTestShader : ObjectInfoInputShader, ShaderBase, Camera, ComputeColor
+{
+    // This shader is not part of the ObjectInfo RenderTarget output. It is only used
+    // for testing whether the RenderTarget was generated correctly or not.
+
+    override float4 Compute()
+    {
+        // ShadingPosition is the screen space. [This is declared in ShaderBaseStream shader]
+        // (0, 0) is the top left corner on the screen. x goes right, y goes down.
+        float2 screenPos = streams.ShadingPosition.xy;
+        float2 screenSpaceUv = float2(screenPos.x / ViewSize.x, screenPos.y / ViewSize.y);  // Gets UV in [0..1] range.
+
+        float modelCompId = GetModelComponentId(screenSpaceUv);
+        float meshId = GetMeshIndex(screenSpaceUv);
+        float materialId = GetMaterialIndex(screenSpaceUv);
+
+        float3 col = float3(modelCompId / 5, 0, 0);     // We have 5 entities, so we normalize so it fits the color range (0...1].
+        return float4(col, 1);
+    }
+};

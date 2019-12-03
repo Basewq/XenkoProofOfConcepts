@@ -1,0 +1,24 @@
+﻿shader ObjectInfoInputShader : Texturing
+{
+    // We inherit Texturing because it has a convenient sampler we can use.
+
+    rgroup PerView.ObjectInfo
+    {
+        stage Texture2D ObjectInfoData;    // Refer to struct ObjectInfoData
+    }
+
+    float GetModelComponentId(float2 uv) {
+        return ObjectInfoData.SampleLevel(PointSampler, uv, 0.0).x;
+    }
+
+    float GetMeshIndex(float2 uv) {
+        float meshIndexAndMaterialIndex = ObjectInfoData.SampleLevel(PointSampler, uv, 0.0).y;
+        return floor(meshIndexAndMaterialIndex);    // integer part is the mesh index
+    }
+
+    float GetMaterialIndex(float2 uv) {
+        float meshIndexAndMaterialIndex = ObjectInfoData.SampleLevel(PointSampler, uv, 0.0).y;
+        float fractionalPart = meshIndexAndMaterialIndex - floor(meshIndexAndMaterialIndex);
+        return fractionalPart * 1024;       // ObjectInfoData.MaxMaterialIndex = 1024
+    }
+};

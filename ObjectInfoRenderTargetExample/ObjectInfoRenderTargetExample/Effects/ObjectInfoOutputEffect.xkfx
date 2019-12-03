@@ -1,0 +1,13 @@
+﻿using Xenko.Rendering.Data;
+using Xenko.Shaders.Compiler;
+
+namespace RenderTargetExample.Effects
+{
+    effect ObjectInfoOutputEffect
+    {
+        // Include the standard forward shading effect
+        mixin XenkoForwardShadingEffect;
+
+        mixin ObjectInfoOutputShader;
+    }
+}

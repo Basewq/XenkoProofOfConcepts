@@ -10,8 +10,27 @@ Hierarchy:
         - ref!! 96431a10-ddde-4c31-991e-7dc4dd5a276c
         - ref!! 5a5d5d76-6b93-4317-89b1-4437b8957a5f
         - ref!! 82ba1ef5-af48-4651-b3df-6b53beed6b63
+        - ref!! 6fad6cbb-c750-40b6-9cab-aab34dcb0ab2
         - ref!! 35d0816b-8929-48c4-9ffc-0f86197115a6
+        - ref!! 6d68adcd-ea72-4487-ad98-8723026cbdc3
+        - ref!! 08245d6f-c636-41ce-82c5-28588eefaf3b
     Parts:
+        -   Folder: null
+            Entity:
+                Id: 08245d6f-c636-41ce-82c5-28588eefaf3b
+                Name: Sphere3
+                Components:
+                    1a833b84e5c2ab645f3c5dff1ac63208: !TransformComponent
+                        Id: ee01f1ae-3d03-4038-841b-76926a99f993
+                        Position: {X: 1.27124, Y: 0.5, Z: -1.696407}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    e0ce3f6385bae6494d50599992bbc83e: !ModelComponent
+                        Id: 2813b2fc-f373-4ef8-b880-bc88cb71cb98
+                        Model: 97e4c0de-903a-40a3-a51d-a7302b330888:Sphere
+                        Materials:
+                            9886b96cb84010d9bc2c67371afe2f44~0: ea4fff51-27a0-499f-bedd-5c7842939559:MaterialTestB
         -   Entity:
                 Id: 18c7495a-4864-4e3c-9ae8-dfdd3c2c4dcf
                 Name: Camera
@@ -67,6 +86,40 @@ Hierarchy:
                         Id: a514ff04-65ac-4af8-a1a1-556abc2c0938
                         Type: !LightSkybox
                             Skybox: 859a8669-e5cb-4528-a954-cf9d08a00d41:Skybox
+        -   Folder: null
+            Entity:
+                Id: 6d68adcd-ea72-4487-ad98-8723026cbdc3
+                Name: Sphere2
+                Components:
+                    1a833b84e5c2ab645f3c5dff1ac63208: !TransformComponent
+                        Id: 65f8aa4c-8d12-4118-a463-a1fd92c182b7
+                        Position: {X: 0.233596668, Y: 0.5, Z: 1.52094018}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    e0ce3f6385bae6494d50599992bbc83e: !ModelComponent
+                        Id: db86ef98-0efd-432b-aa1d-b0f239005652
+                        Model: 97e4c0de-903a-40a3-a51d-a7302b330888:Sphere
+                        Materials:
+                            9886b96cb84010d9bc2c67371afe2f44~0: f34d47ea-f392-4085-b92e-73b87e82f7f9:MaterialTestA
+        -   Folder: null
+            Entity:
+                Id: 6fad6cbb-c750-40b6-9cab-aab34dcb0ab2
+                Name: Wall
+                Components:
+                    59f5f6480562bd95218aec9b0efb3a82: !TransformComponent
+                        Id: 6a16bab3-4b90-4d9b-9323-0fc13943125e
+                        Position: {X: 2.41008544, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.49999997, Y: 0.49999997, Z: -0.49999997, W: 0.49999997}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    92a77e97a6cc4e8529458c318914e758: !ModelComponent
+                        Id: 0a0cfe41-845a-428c-805d-5a5ceb72f258
+                        Model: 7ec5fce2-9127-4dd3-b53a-278c3298bfd5:Ground
+                        RenderGroup: Group10
+                        IsShadowCaster: false
+                        Materials:
+                            966b6b495d8bc85050c1033e33ee233c~0: d9f28587-cb25-4d66-a881-969ae8ad1ab4:TestRenderMaterial
         -   Entity:
                 Id: 82ba1ef5-af48-4651-b3df-6b53beed6b63
                 Name: Ground
