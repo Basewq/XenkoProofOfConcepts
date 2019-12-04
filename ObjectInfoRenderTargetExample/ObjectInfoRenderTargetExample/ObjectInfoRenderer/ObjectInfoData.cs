@@ -1,20 +1,18 @@
 ﻿namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {
-    struct ObjectInfoData
+    // The generated shader key will be public, so this struct must also be public.
+    public struct ObjectInfoData
     {
-        private const float MaxMaterialIndex = 1024;
-
-        public float ModelComponentId;
+        public uint ModelComponentId;
         /// <summary>
-        /// MeshIndex is stored as the integer part, MaterialIndex is stored as fractional which can
-        /// be recovered by multiplying the fraction by 1024.
+        /// MeshIndex is stored in the upper 16 bits, MaterialIndex is stored in the lower 16 bits.
         /// </summary>
-        public float MeshIndexAndMaterialIndex;
+        public uint MeshIndexAndMaterialIndex;
 
-        public ObjectInfoData(float modelComponentId, float meshIndex, float materialIndex)
+        public ObjectInfoData(uint modelComponentId, ushort meshIndex, ushort materialIndex)
         {
             ModelComponentId = modelComponentId;
-            MeshIndexAndMaterialIndex = meshIndex + (materialIndex / MaxMaterialIndex);
+            MeshIndexAndMaterialIndex = ((uint)meshIndex << 16) | materialIndex;
         }
     }
 }

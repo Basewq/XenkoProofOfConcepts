@@ -23,7 +23,9 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
             base.CollectCore(context);
 
             // Fill RenderStage formats
-            ObjectInfoRenderStage.Output = new RenderOutputDescription(renderTargetFormat: PixelFormat.R32G32_Float, depthStencilFormat: PixelFormat.D32_Float);
+            // This declares the ObjectInfo texture to be (uint, uint) format.
+            // Changing this means changing ObjectInfoData, ObjectInfoInputShader, and ObjectInfoOutputShader.
+            ObjectInfoRenderStage.Output = new RenderOutputDescription(renderTargetFormat: PixelFormat.R32G32_UInt, depthStencilFormat: PixelFormat.D32_Float);
 
             context.RenderView.RenderStages.Add(ObjectInfoRenderStage);
         }
@@ -69,8 +71,9 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
                     continue;
                 }
 
-                // This texture is accessible as a resource in shaders, eg.
-                // rgroup PerView.ObjectInfo { stage Texture2D ObjectInfo; }
+                // This texture is accessible as a resource in shaders in future rendering stages, eg. see
+                // ObjectInfoInputShader declaring the following:
+                // rgroup PerView.ObjectInfo { stage Texture2D<uint2> ObjectInfoData; }
                 // Inherit the shader in ObjectInfoInputShader.xksl to use in your own shader.
                 var objectInfoLogicalKey = rootEffectRenderFeature.CreateViewLogicalGroup("ObjectInfo");
                 var viewFeature = renderView.Features[renderFeature.Index];

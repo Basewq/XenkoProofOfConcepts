@@ -14,10 +14,10 @@ using Xenko.Shaders;
 using Xenko.Core.Mathematics;
 using Buffer = Xenko.Graphics.Buffer;
 
-namespace Xenko.Rendering
+namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {
     public static partial class ObjectInfoOutputShaderKeys
     {
-        public static readonly ValueParameterKey<Vector4> ObjectInfoData = ParameterKeys.NewValue<Vector4>();
+        public static readonly ValueParameterKey<ObjectInfoData> ObjectInfo = ParameterKeys.NewValue<ObjectInfoData>();
     }
 }

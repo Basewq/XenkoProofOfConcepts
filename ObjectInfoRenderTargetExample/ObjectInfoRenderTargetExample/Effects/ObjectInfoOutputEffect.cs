@@ -14,8 +14,6 @@ using Xenko.Shaders;
 using Xenko.Core.Mathematics;
 using Buffer = Xenko.Graphics.Buffer;
 
-using Xenko.Rendering.Data;
-using Xenko.Shaders.Compiler;
 namespace ObjectInfoRenderTargetExample.Effects
 {
     internal static partial class ShaderMixins
@@ -24,7 +22,6 @@ namespace ObjectInfoRenderTargetExample.Effects
         {
             public void Generate(ShaderMixinSource mixin, ShaderMixinContext context)
             {
-                context.Mixin(mixin, "XenkoForwardShadingEffect");
                 context.Mixin(mixin, "ObjectInfoOutputShader");
             }
 

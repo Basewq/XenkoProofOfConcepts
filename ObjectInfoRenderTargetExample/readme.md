@@ -2,7 +2,11 @@
 
 This projects renders object (entity) information (ModelComponent ID, Mesh & Material Indices) onto a render target, which is then read by a Material shader to display.
 
-This code is largely based on Xenko's `PickingSceneRenderer` class, except made to output the entire view and to make it accessible to custom shaders on materials.
+This code is adapted from Xenko's `PickingSceneRenderer` class, except made to output the entire view and to make it accessible to custom shaders on materials.
+
+Example of output of RenderTarget identifying the different ModelComponents of each entity (color is normalized to appear on screen):
+
+![Render Target Output](images/rendertarget_output.png)
 
 **Project Notes:**
 
@@ -12,7 +16,7 @@ Due to how "buffer" data must be passed to the shader for generating the output 
 
 **Usage Notes:**
 
-To use in your own project, you will also need to set up the `GraphicsCompositor`.
+To use in your own project, you will also need to set up the `GraphicsCompositor`. Refer to the images below for examples.
 
 - Add an `ObjectInfo` render stage (both effect slot name and name should be the same).
 - In the `MeshRenderFeature`, add the (sub) render feature `ObjectInfoRenderFeature`, and the render stage selector `ObjectInfoRenderStageSelector`.
@@ -30,3 +34,18 @@ The example scene has the "Wall" entity in Render group `Group10`, and the `Obje
 At the end of the draw call, it will set up the generated texture for consumption (consumption example is the shader `ObjectInfoOutputTestShader.xksl`).
 
 The `ObjectInfoRenderFeature` generates the "buffer" data, ie. the entity data we want to output, and `ObjectInfoRenderStageSelector` declares the effect/shader that reads this buffer data (`ObjectInfoOutputEffect.xkfx` & `ObjectInfoOutputShader.xksl`, where the Effect Name is declared in the Graphics Compositor).
+
+---
+### Graphics Compositor Setup
+
+ObjectInfo render stage:
+
+![Render Stage](images/gfxcomp_renderstage.png)
+
+ObjectInfoSceneRenderer:
+
+![Entry Points](images/gfxcomp_entrypoints.png)
+
+ObjectInfoRenderFeature and ObjectInfoRenderStageSelector:
+
+![Mesh Render Feature](images/gfxcomp_meshrenderfeature.png)

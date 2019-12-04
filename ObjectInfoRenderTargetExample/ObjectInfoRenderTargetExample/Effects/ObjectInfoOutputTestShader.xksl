@@ -8,13 +8,16 @@
         // ShadingPosition is the screen space. [This is declared in ShaderBaseStream shader]
         // (0, 0) is the top left corner on the screen. x goes right, y goes down.
         float2 screenPos = streams.ShadingPosition.xy;
-        float2 screenSpaceUv = float2(screenPos.x / ViewSize.x, screenPos.y / ViewSize.y);  // Gets UV in [0..1] range.
 
-        float modelCompId = GetModelComponentId(screenSpaceUv);
-        float meshId = GetMeshIndex(screenSpaceUv);
-        float materialId = GetMaterialIndex(screenSpaceUv);
+        // The object info texture is the same dimensions as the screen, so its position is exactly
+        // where the pixel shader's current position is.
+        uint modelCompId = GetModelComponentId(screenPos);
+        uint meshId = GetMeshIndex(screenPos);
+        uint materialId = GetMaterialIndex(screenPos);
 
-        float3 col = float3(modelCompId / 5, 0, 0);     // We have 5 entities, so we normalize so it fits the color range (0...1].
+        // For rendering purposes, we need to normalize the values so it fits the color range (0...1],
+        // so we just divide by some arbitrary number (eg. number of entities).
+        float3 col = float3(float(modelCompId) / 5, float(meshId) / 5, 0);
         return float4(col, 1);
     }
 };

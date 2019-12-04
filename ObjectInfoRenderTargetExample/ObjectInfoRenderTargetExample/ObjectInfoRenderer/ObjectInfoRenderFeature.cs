@@ -22,13 +22,12 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
         {
             _objectInfoPropertyKey = RootRenderFeature.RenderData.CreateObjectKey<ObjectInfoData>();
 
-            _objectInfoDataBuffer = ((RootEffectRenderFeature)RootRenderFeature).CreateDrawCBufferOffsetSlot(ObjectInfoOutputShaderKeys.ObjectInfoData.Name);
+            _objectInfoDataBuffer = ((RootEffectRenderFeature)RootRenderFeature).CreateDrawCBufferOffsetSlot(ObjectInfoOutputShaderKeys.ObjectInfo.Name);
         }
 
         public override void Extract()
         {
             var objectInfoDataHolder = RootRenderFeature.RenderData.GetData(_objectInfoPropertyKey);
-
             foreach (var objectNodeReference in RootRenderFeature.ObjectNodeReferences)
             {
                 var objectNode = RootRenderFeature.GetObjectNode(objectNodeReference);
@@ -51,11 +50,14 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
                     }
                 }
 
+                // RuntimeIdHelper.ToRuntimeId is how Xenko does it for its 'Picking' scene.
+                // We should probably change this to use something more appropriate for our data.
                 var modelCompId = RuntimeIdHelper.ToRuntimeId(modelComponent);
-                var objectInfoData = new ObjectInfoData(modelCompId, meshIndex, renderMesh.Mesh.MaterialIndex);
+                var objectInfoData = new ObjectInfoData((uint)modelCompId, (ushort)meshIndex, (ushort)renderMesh.Mesh.MaterialIndex);
                 objectInfoDataHolder[objectNodeReference] = objectInfoData;
 
 #if DEBUG
+                // This is only for debugging purposes, it can be removed.
                 if (_isFirstRun)
                 {
                     System.Diagnostics.Debug.WriteLine($"Entity: {modelComponent.Entity.Name} - modelCompId: {objectInfoData.ModelComponentId} - mesh/mat Index: {objectInfoData.MeshIndexAndMaterialIndex}");
@@ -69,10 +71,15 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 
         public unsafe override void Prepare(RenderDrawContext context)
         {
+            // This entire method shows how we pass the ObjectInfoData to the shader, and is exactly
+            // how Xenko does it when it needs to pass data. Unfortunately, it is this code
+            // that forces the project to require 'unsafe' code.
             var objectInfoDataHolder = RootRenderFeature.RenderData.GetData(_objectInfoPropertyKey);
 
             foreach (var renderNode in ((RootEffectRenderFeature)RootRenderFeature).RenderNodes)
             {
+                // PerDrawLayout means we access this data in the shader via
+                // cbuffer PerDraw { ... } (see ObjectInfoOutputShader.xlsl)
                 var perDrawLayout = renderNode.RenderEffect.Reflection?.PerDrawLayout;
                 if (perDrawLayout == null)
                 {

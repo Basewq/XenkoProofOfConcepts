@@ -1,24 +1,30 @@
-﻿shader ObjectInfoInputShader : Texturing
+﻿shader ObjectInfoInputShader
 {
-    // We inherit Texturing because it has a convenient sampler we can use.
-
     rgroup PerView.ObjectInfo
     {
-        stage Texture2D ObjectInfoData;    // Refer to struct ObjectInfoData
+        // Be sure to include <uint2> otherwise the shader will not correctly read the texture
+        stage Texture2D<uint2> ObjectInfoData;    // As per shader ObjectInfoOutputShader, x stores the ModelComponentId, y stores the mesh & material indices.
     }
 
-    float GetModelComponentId(float2 uv) {
-        return ObjectInfoData.SampleLevel(PointSampler, uv, 0.0).x;
+    uint GetModelComponentId(float2 textureLocation)
+    {
+        // Because this is a uint texture, we cannot use texture samplers.
+        // It must use the Load method which requires the pixel location (ie. [0...TextureWidth/Height - 1]),
+        // rather than UV location.
+
+        uint modelCompId = ObjectInfoData.Load(int3(textureLocation, 0)).x;
+        return modelCompId;
     }
 
-    float GetMeshIndex(float2 uv) {
-        float meshIndexAndMaterialIndex = ObjectInfoData.SampleLevel(PointSampler, uv, 0.0).y;
-        return floor(meshIndexAndMaterialIndex);    // integer part is the mesh index
+    uint GetMeshIndex(float2 textureLocation)
+    {
+        uint meshIndexAndMaterialIndex = ObjectInfoData.Load(int3(textureLocation, 0)).y;
+        return meshIndexAndMaterialIndex >> 16;     // The upper 16 bits
     }
 
-    float GetMaterialIndex(float2 uv) {
-        float meshIndexAndMaterialIndex = ObjectInfoData.SampleLevel(PointSampler, uv, 0.0).y;
-        float fractionalPart = meshIndexAndMaterialIndex - floor(meshIndexAndMaterialIndex);
-        return fractionalPart * 1024;       // ObjectInfoData.MaxMaterialIndex = 1024
+    uint GetMaterialIndex(float2 textureLocation)
+    {
+        uint meshIndexAndMaterialIndex = ObjectInfoData.Load(int3(textureLocation, 0)).y;
+        return meshIndexAndMaterialIndex & 0xFFFF;  // The lower 16 bits
     }
 };
