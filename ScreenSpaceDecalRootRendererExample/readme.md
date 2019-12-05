@@ -9,6 +9,8 @@ For the system to work, remember to include it in the 'Render features' in the G
 
 In the DecalRootRenderFeature property grid, also add the `DecalRenderStatgeSelector` in the Render Stage Selectors section, and select `Transparent` in the Render Stage property.
 
+Note that `Screen Space Decal Example` project also contains a feature that allows decals to ignore specific Render Groups, which has not been implemented in this project, however it is possible to implement those changes into this project.
+
 **Important Game Studio Notes:**
 * The entity with the `DecalComponent` is not selectable in the Game Studio scene editor, and must be selected by the entity tree sub-window.
 
