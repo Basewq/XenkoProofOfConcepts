@@ -38,6 +38,11 @@ RenderStages:
         Name: GBuffer
         EffectSlotName: GBuffer
         SortMode: !FrontToBackSortMode {}
+    7249ee8453ed27b6a12954534d20013c*:
+        Id: b323f44d-f273-46e5-82da-b2d57c854210
+        Name: DecalProjectableObjectInfo
+        EffectSlotName: DecalProjectableObjectInfo
+        SortMode: !FrontToBackSortMode {}
 RenderFeatures:
     d8fb80b0e7995140a46bca8dc36ee8a2: !Xenko.Rendering.MeshRenderFeature,Xenko.Rendering
         RenderStageSelectors:
@@ -57,6 +62,10 @@ RenderFeatures:
             106341b76db9fcda6a033dad16aa708b: !Xenko.Rendering.MeshTransparentRenderStageSelector,Xenko.Rendering
                 OpaqueRenderStage: ref!! a3a7dadc-0695-4dce-abee-e01f9d9c1f6f
                 EffectName: XenkoForwardShadingEffect.ShadowMapCaster
+            e944dbe068fe934e89325f41a898f66c*: !ScreenSpaceDecalExample.ObjectInfoRenderer.ObjectInfoRenderStageSelector,ScreenSpaceDecalExample
+                RenderGroup: Group0, Group1, Group2
+                ObjectInfoRenderStage: ref!! b323f44d-f273-46e5-82da-b2d57c854210
+                EffectName: ObjectInfoOutputEffect
         PipelineProcessors:
             d70f5aee0616e4ab25081ceaf643290c: !Xenko.Rendering.MeshPipelineProcessor,Xenko.Rendering
                 TransparentRenderStage: ref!! 171ee007-8cc5-4766-9571-adfba78f2c42
@@ -92,6 +101,7 @@ RenderFeatures:
                             ShadowCasterRenderStage: ref!! eb4e9785-a67e-4533-9334-ba3da50943bb
                         d59ef45dd99e49d3af3887763d153aa7: !Xenko.Rendering.Shadows.LightPointShadowMapRendererCubeMap,Xenko.Rendering
                             ShadowCasterRenderStage: ref!! f3e2cc02-fbf3-40da-be1f-d36492909df0
+            db36578401e8535c03162ba7f59a6c0c*: !ScreenSpaceDecalExample.ObjectInfoRenderer.ObjectInfoRenderFeature,ScreenSpaceDecalExample {}
     28e9bf54a5adbe063f59fb17acb2723e: !Xenko.Rendering.Sprites.SpriteRenderFeature,Xenko.Rendering
         RenderStageSelectors:
             d74665cff080638a2439c4422e542d85: !Xenko.Rendering.Sprites.SpriteTransparentRenderStageSelector,Xenko.Rendering
@@ -195,6 +205,9 @@ Game: !Xenko.Rendering.Compositing.SceneCameraRenderer,Xenko.Engine
     Child: !Xenko.Rendering.Compositing.SceneRendererCollection,Xenko.Rendering
         Id: 82568e46-92e7-421a-8dca-114a74e0cd69
         Children:
+            a5628696e786f1f89c56762f18a4f1a9*: !ScreenSpaceDecalExample.ObjectInfoRenderer.ObjectInfoSceneRenderer,ScreenSpaceDecalExample
+                Id: f720637d-913b-4fce-8bb1-6f3c9709500d
+                ObjectInfoRenderStage: ref!! b323f44d-f273-46e5-82da-b2d57c854210
             d39c5ddbf8b7d5ca02bafb6496b1cc3c: !Xenko.Rendering.Compositing.ForwardRenderer,Xenko.Engine ref!! 7b7b3d9c-7007-43fe-91a5-3a4c32803e47
             01d338078e9b21121ead0868932613dd: !Xenko.Rendering.Compositing.DebugRenderer,Xenko.Rendering ref!! d83ac309-d858-48d5-b6e1-b667e426eb80
     RenderMask: All

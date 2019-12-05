@@ -1,0 +1,18 @@
+﻿shader ObjectInfoInputShader
+{
+    rgroup PerView.ObjectInfo
+    {
+        // Be sure to include <uint2> otherwise the shader will not correctly read the texture
+        stage Texture2D<uint> ObjectInfoData;    // As per shader ObjectInfoOutputShader, x stores the RenderGroup.
+    }
+
+    uint GetRenderGroup(float2 textureLocation)
+    {
+        // Because this is a uint texture, we cannot use texture samplers.
+        // It must use the Load method which requires the pixel location (ie. [0...TextureWidth/Height - 1]),
+        // rather than UV location.
+
+        uint renderGroup = ObjectInfoData.Load(int3(textureLocation, 0)).x;
+        return renderGroup;
+    }
+};

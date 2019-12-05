@@ -1,0 +1,41 @@
+﻿namespace ScreenSpaceDecalExample.ObjectInfoRenderer
+{
+    // The shader that outputs the supplied ObjectInfoData (ModelComponentId, MeshIndexAndMaterialIndex) on a texture.
+    shader ObjectInfoOutputShader : PositionStream4, Transformation
+    {
+        // Inheriting PositionStream4 gives streams.Position, Transformation gives WorldViewProjection.
+
+        // Note that we cannot inherit ShaderBase because it defines SV_Target0 as float4.
+        // Since our texture is defined as R32G32_UInt (see ObjectInfoSceneRenderer where the
+        // output texture is defined), we need the output to be uint, otherwise there will
+        // be subtle precision loss due to converting from float to uint.
+
+        // This is the same structure as the C# struct ObjectInfoData
+        // Because this appears as a shader key, be sure to make the namespace declaration
+        // the SAME as the C#'s version, otherwise it won't reference that one properly
+        // in the generated shader key file.
+        struct ObjectInfoData
+        {
+            uint RenderGroup;
+        };
+
+        cbuffer PerDraw
+        {
+            stage ObjectInfoData ObjectInfo;
+        }
+
+        stage stream float4 ShadingPosition : SV_Position;
+        stage stream uint ColorTarget : SV_Target0;
+
+        stage void VSMain()
+        {
+            // This must be set, otherwise the pixel shader will not render the output correctly.
+            streams.ShadingPosition = mul(streams.Position, WorldViewProjection);
+        }
+
+        stage void PSMain()
+        {
+            streams.ColorTarget = ObjectInfo.RenderGroup;
+        }
+    };
+}

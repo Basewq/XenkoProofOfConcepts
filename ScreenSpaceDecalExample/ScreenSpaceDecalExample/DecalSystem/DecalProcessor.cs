@@ -120,7 +120,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
 
             var renderMesh = data.RenderMesh;
             renderMesh.Enabled = decalComponent.Enabled;
-            renderMesh.RenderGroup = decalComponent.RenderGroup;
+            renderMesh.RenderGroup = decalComponent.DecalRenderGroup;
 
             // Copy world matrix
             renderMesh.World = data.TransformComponent.WorldMatrix;
@@ -190,6 +190,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
                 pass.Parameters.Set(DecalShaderKeys.DecalTexture, decalComponent.DecalTexture);
                 pass.Parameters.Set(DecalShaderKeys.TextureScale, decalComponent.DecalScale);
                 pass.Parameters.Set(DecalShaderKeys.DecalColor, decalComponent.Color);
+                pass.Parameters.Set(DecalShaderKeys.IgnoreRenderGroups, (uint)decalComponent.IgnoreRenderGroups);
             }
         }
 

@@ -1,0 +1,16 @@
+﻿namespace ScreenSpaceDecalExample.Effects
+{
+    // namespace declaration is not required for effects, but probably good practice to keep it in
+    // to avoid code naming collisions.
+
+    // Remember to assign this effect to
+    // GraphicsCompositor -> MeshRenderFeature -> ObjectInfoRenderStageSelector -> Effect Name
+    effect ObjectInfoOutputEffect
+    {
+        // Do not include XenkoForwardShadingEffect!
+        // It inherits ShaderBase which defines SV_Target0 as float4, which we do
+        // not want (refer to notes in ObjectInfoOutputShader.xksl).
+
+        mixin ObjectInfoOutputShader;
+    };
+}

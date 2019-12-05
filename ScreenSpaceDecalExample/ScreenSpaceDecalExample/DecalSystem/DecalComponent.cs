@@ -25,7 +25,15 @@ namespace ScreenSpaceDecalExample.DecalSystem
         [DefaultValue(1f)]
         public float DecalScale { get; set; } = 1f;
 
+        /// <summary>
+        /// The RenderGroup this decal belongs to.
+        /// </summary>
+        // This is a bit arbitrary, but we must place the decals on a separate RenderGroup
+        // because we do not want it to appear on the 'ObjectInfo' texture.
         [DataMember(40)]
-        public RenderGroup RenderGroup { get; set; }
+        public RenderGroup DecalRenderGroup { get; set; } = RenderGroup.Group10;
+
+        [DataMember(50)]
+        public RenderGroupMask IgnoreRenderGroups { get; set; }
     }
 }

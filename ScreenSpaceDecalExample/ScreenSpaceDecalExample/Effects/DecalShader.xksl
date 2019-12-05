@@ -1,4 +1,4 @@
-﻿shader DecalShader : DepthBase, ShaderBase, Transformation, PositionStream4, ComputeColor
+﻿shader DecalShader : DepthBase, ShaderBase, Transformation, PositionStream4, ComputeColor, ObjectInfoInputShader
 {
     // We must inherit ComputeColor, even if we don't use it explicitly, because this is required by the Material.
 
@@ -12,6 +12,7 @@
         stage float TextureScale = 1.0f;
         [Color]
         stage float4 DecalColor;
+        stage uint IgnoreRenderGroups;
     }
 
     stage stream float4 PositionInViewSpace;  // Shader position in View Space
@@ -44,6 +45,12 @@
         // ShadingPosition is the screen space. [This is declared in ShaderBaseStream shader]
         // (0, 0) is the top left corner on the screen. x goes right, y goes down.
         float2 screenPos = streams.ShadingPosition.xy;
+        uint objectRenderGroup = GetRenderGroup(screenPos);
+        uint objectMask = 1 << objectRenderGroup;
+        if ((IgnoreRenderGroups & objectMask) != 0) {
+            discard;
+        }
+
         float2 screenSpaceUv = float2(screenPos.x / ViewSize.x, screenPos.y / ViewSize.y);  // Gets UV in [0..1] range.
 
         // Get depth value from depth buffer at the point on the screen. [This function comes from DepthBase shader]

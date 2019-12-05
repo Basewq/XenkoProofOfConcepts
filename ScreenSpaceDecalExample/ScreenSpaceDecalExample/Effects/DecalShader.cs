@@ -21,5 +21,6 @@ namespace Xenko.Rendering
         public static readonly ObjectParameterKey<Texture> DecalTexture = ParameterKeys.NewObject<Texture>();
         public static readonly ValueParameterKey<float> TextureScale = ParameterKeys.NewValue<float>(1.0f);
         public static readonly ValueParameterKey<Color4> DecalColor = ParameterKeys.NewValue<Color4>();
+        public static readonly ValueParameterKey<uint> IgnoreRenderGroups = ParameterKeys.NewValue<uint>();
     }
 }
