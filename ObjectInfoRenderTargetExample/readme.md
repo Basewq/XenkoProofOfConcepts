@@ -12,8 +12,6 @@ Example of output of RenderTarget identifying the different ModelComponents of e
 
 Ensure the .xksl and .xkfx files have the Custom Tool property set to XenkoShaderKeyGenerator in Visual Studio, so it can automatically build the .cs files. This requires the Xenko plugin for Visual Studio installed.
 
-Due to how "buffer" data must be passed to the shader for generating the output render texture, the project requires `unsafe` code, ie. the csproj file must declare `<AllowUnsafeBlocks>true</AllowUnsafeBlocks>` inside a PropertyGroup tag. 
-
 **Usage Notes:**
 
 To use in your own project, you will also need to set up the `GraphicsCompositor`. Refer to the images below for examples.

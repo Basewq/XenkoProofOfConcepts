@@ -68,11 +68,12 @@ namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 #endif
         }
 
-        public unsafe override void Prepare(RenderDrawContext context)
+        public override void Prepare(RenderDrawContext context)
         {
             // This entire method shows how we pass the ObjectInfoData to the shader, and is exactly
-            // how Xenko does it when it needs to pass data. Unfortunately, it is this code
-            // that forces the project to require 'unsafe' code.
+            // how Xenko does it when it needs to pass data. The only change is we use Utilities.Write
+            // where the underlying method call handles the pointer writing code, so we can avoid
+            // marking this project with 'unsafe' code.
             var objectInfoDataHolder = RootRenderFeature.RenderData.GetData(_objectInfoPropertyKey);
 
             foreach (var renderNode in ((RootEffectRenderFeature)RootRenderFeature).RenderNodes)
@@ -92,11 +93,8 @@ namespace ScreenSpaceDecalExample.ObjectInfoRenderer
                 }
 
                 var objectInfoData = objectInfoDataHolder[renderNode.RenderObject.ObjectNode];
-
                 var mappedCB = renderNode.Resources.ConstantBuffer.Data;
-                var objectInfoDataPtr = (ObjectInfoData*)((byte*)mappedCB + objectInfoDataOffset);
-
-                *objectInfoDataPtr = objectInfoData;
+                Utilities.Write(mappedCB + objectInfoDataOffset, ref objectInfoData);
             }
         }
     }
