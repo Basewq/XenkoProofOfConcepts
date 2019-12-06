@@ -30,10 +30,10 @@ The example scene has the "Wall" entity in Render group `Group10`, and the `Obje
 ---
 ### Code Explanation
 
-`ObjectInfoSceneRenderer` does the actual encoding (rendering) of the object info. Since it is expected to be used by the standard rendering system (eg. used in a custom shader on a material), you must make sure this renderer is orderer *before* the Forward renderer.
+`ObjectInfoSceneRenderer` does the actual encoding (rendering) of the object info. Since it is expected to be used by the standard rendering system (eg. used in a custom shader on a material), you must make sure this renderer is ordered *before* the Forward renderer.
 At the end of the draw call, it will set up the generated texture for consumption (consumption example is the shader `ObjectInfoOutputTestShader.xksl`).
 
-The `ObjectInfoRenderFeature` generates the "buffer" data, ie. the entity data we want to output, and `ObjectInfoRenderStageSelector` declares the effect/shader that reads this buffer data (`ObjectInfoOutputEffect.xkfx` & `ObjectInfoOutputShader.xksl`, where the Effect Name is declared in the Graphics Compositor).
+The `ObjectInfoRenderFeature` generates the "buffer" data, ie. the entity data we want the `ObjectInfoOutputEffect` to read and output, and `ObjectInfoRenderStageSelector` declares the effect/shader that reads this buffer data (`ObjectInfoOutputEffect.xkfx` & `ObjectInfoOutputShader.xksl`, where the Effect Name is declared in the Graphics Compositor).
 
 ---
 ### Graphics Compositor Setup
