@@ -2,7 +2,7 @@
 
 This repository houses a few basic projects to test capabilities of the Xenko Game Engine.
 
-The projects currently require built on Xenko version **3.1.0.1**, and have only been created with the Windows projects (apologies to any non-Windows developers!).
+The projects are currently built with Xenko version **3.1.0.1**, and have only been created with the Windows projects (apologies to any non-Windows developers!).
 
 These projects are aimed more towards intermediate to advanced programmers, and may require further investigation into the Xenko source code, or search online, for more information on how some of the applied code works, as some of the some techniques may not be officially what the Xenko developers intended for us to use.
 
