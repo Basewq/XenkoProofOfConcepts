@@ -1,0 +1,31 @@
+﻿namespace ObjectInfoRenderTargetExample.Effects
+{
+    // Oio stands for ObjectInfoOutput
+    shader OioShaderBase
+    {
+        stage stream float4 ShadingPosition : SV_Position;
+
+#if XENKO_GRAPHICS_API_DIRECT3D && XENKO_GRAPHICS_PROFILE < GRAPHICS_PROFILE_LEVEL_10_0
+        // Positive if this face is a front face, negative otherwise
+        stage stream float IsFrontFace : VFACE;
+#else
+        // True if this face is a front face
+        stage stream bool IsFrontFace : SV_IsFrontFace;
+#endif
+
+        // Default COLOR outputs for PS shader
+        stage stream uint2 ColorTarget : SV_Target0;    // Note this field is uint2, matching the texture format in ObjectInfoSceneRenderer.
+
+        // Default DEPTH output for PS shader
+        stage stream float Depth : SV_Depth;
+        stage stream float DepthGreater : SV_DepthGreater; // Special output after PS
+        stage stream float DepthLessEqual : SV_DepthLessEqual; // Special output after PS
+
+        // Default InstanceId for VS/GS shaders
+        stage stream uint InstanceID : SV_InstanceID;
+
+        stage void VSMain() {}
+
+        stage void PSMain() {}
+    };
+}

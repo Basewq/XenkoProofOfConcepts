@@ -22,6 +22,7 @@ namespace ObjectInfoRenderTargetExample.Effects
         {
             public void Generate(ShaderMixinSource mixin, ShaderMixinContext context)
             {
+                context.Mixin(mixin, "ObjectInfoXenkoBaseEffect");
                 context.Mixin(mixin, "ObjectInfoOutputShader");
             }
 

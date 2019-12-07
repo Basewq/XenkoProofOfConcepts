@@ -21,9 +21,9 @@ namespace ObjectInfoRenderTargetExample
         private Vector3 translation;
         private float yaw;
         private float pitch;
-        
+
         public bool Gamepad { get; set; } = false;
-        
+
         public Vector3 KeyboardMovementSpeed { get; set; } = new Vector3(5.0f);
 
         public Vector3 TouchMovementSpeed { get; set; } = new Vector3(0.7f, 0.7f, 0.3f);
@@ -35,6 +35,8 @@ namespace ObjectInfoRenderTargetExample
         public Vector2 MouseRotationSpeed { get; set; } = new Vector2(1.0f, 1.0f);
 
         public Vector2 TouchRotationSpeed { get; set; } = new Vector2(1.0f, 0.7f);
+
+        public ModelComponent WallModelComponent { get; set; }
 
         public override void Start()
         {
@@ -55,6 +57,11 @@ namespace ObjectInfoRenderTargetExample
         {
             ProcessInput();
             UpdateTransform();
+
+            var curPrintPos = new Int2(10, 10);
+            DebugText.Print("Move with WASD(QE) keys, hold right mouse button to control camera.", curPrintPos);
+            curPrintPos.Y += 15;
+            DebugText.Print("Press F1 to show/hide RenderTarget.", curPrintPos);
         }
 
         private void ProcessInput()
@@ -63,12 +70,12 @@ namespace ObjectInfoRenderTargetExample
             translation = Vector3.Zero;
             yaw = 0f;
             pitch = 0f;
-            
+
             // Keyboard and Gamepad based movement
             {
                 // Our base speed is: one unit per second:
                 //    deltaTime contains the duration of the previous frame, let's say that in this update
-                //    or frame it is equal to 1/60, that means that the previous update ran 1/60 of a second ago 
+                //    or frame it is equal to 1/60, that means that the previous update ran 1/60 of a second ago
                 //    and the next will, in most cases, run in around 1/60 of a second from now. Knowing that,
                 //    we can move 1/60 of a unit on this frame so that in around 60 frames(1 second)
                 //    we will have travelled one whole unit in a second.
@@ -76,20 +83,20 @@ namespace ObjectInfoRenderTargetExample
                 //    on screen which often are inconsistent, meaning that if the player has performance issues,
                 //    this entity will move around slower.
                 float speed = 1f * deltaTime;
-                
+
                 Vector3 dir = Vector3.Zero;
-                
+
                 if (Gamepad && Input.HasGamePad)
                 {
                     GamePadState padState = Input.DefaultGamePad.State;
                     // LeftThumb can be positive or negative on both axis (pushed to the right or to the left)
                     dir.Z += padState.LeftThumb.Y;
                     dir.X += padState.LeftThumb.X;
-                    
+
                     // Triggers are always positive, in this case using one to increase and the other to decrease
                     dir.Y -= padState.LeftTrigger;
                     dir.Y += padState.RightTrigger;
-                    
+
                     // Increase speed when pressing A, LeftShoulder or RightShoulder
                     // Here:does the enum flag 'Buttons' has one of the flag ('A','LeftShoulder' or 'RightShoulder') set
                     if ((padState.Buttons & (GamePadButton.A | GamePadButton.LeftShoulder | GamePadButton.RightShoulder)) != 0)
@@ -110,7 +117,7 @@ namespace ObjectInfoRenderTargetExample
                     {
                         dir.Z -= 1;
                     }
-                
+
                     // Left/Right
                     if (Input.IsKeyDown(Keys.A) || Input.IsKeyDown(Keys.Left))
                     {
@@ -120,7 +127,7 @@ namespace ObjectInfoRenderTargetExample
                     {
                         dir.X += 1;
                     }
-                
+
                     // Down/Up
                     if (Input.IsKeyDown(Keys.Q))
                     {
@@ -130,13 +137,13 @@ namespace ObjectInfoRenderTargetExample
                     {
                         dir.Y += 1;
                     }
-                    
+
                     // Increase speed when pressing shift
                     if (Input.IsKeyDown(Keys.LeftShift) || Input.IsKeyDown(Keys.RightShift))
                     {
                         speed *= SpeedFactor;
                     }
-                    
+
                     // If the player pushes down two or more buttons, the direction and ultimately the base speed
                     // will be greater than one (vector(1, 1) is farther away from zero than vector(0, 1)),
                     // normalizing the vector ensures that whichever direction the player chooses, that direction
@@ -148,11 +155,11 @@ namespace ObjectInfoRenderTargetExample
                         dir = Vector3.Normalize(dir);
                     }
                 }
-                
+
                 // Finally, push all of that to the translation variable which will be used within UpdateTransform()
                 translation += dir * KeyboardMovementSpeed * speed;
             }
-            
+
             // Keyboard and Gamepad based Rotation
             {
                 // See Keyboard & Gamepad translation's deltaTime usage
@@ -164,7 +171,7 @@ namespace ObjectInfoRenderTargetExample
                     rotation.X += padState.RightThumb.Y;
                     rotation.Y += -padState.RightThumb.X;
                 }
-                
+
                 if (Input.HasKeyboard)
                 {
                     if (Input.IsKeyDown(Keys.NumPad2))
@@ -175,7 +182,7 @@ namespace ObjectInfoRenderTargetExample
                     {
                         rotation.X -= 1;
                     }
-    
+
                     if (Input.IsKeyDown(Keys.NumPad4))
                     {
                         rotation.Y += 1;
@@ -184,22 +191,22 @@ namespace ObjectInfoRenderTargetExample
                     {
                         rotation.Y -= 1;
                     }
-                    
+
                     // See Keyboard & Gamepad translation's Normalize() usage
                     if (rotation.Length() > 1f)
                     {
                         rotation = Vector2.Normalize(rotation);
                     }
                 }
-                
+
                 // Modulate by speed
                 rotation *= KeyboardRotationSpeed * speed;
-                
+
                 // Finally, push all of that to pitch & yaw which are going to be used within UpdateTransform()
                 pitch += rotation.X;
                 yaw += rotation.Y;
             }
-            
+
             // Mouse movement and gestures
             {
                 // This type of input should not use delta time at all, they already are frame-rate independent.
@@ -214,7 +221,7 @@ namespace ObjectInfoRenderTargetExample
                     {
                         Input.LockMousePosition();
                         Game.IsMouseVisible = false;
-        
+
                         yaw -= Input.MouseDelta.X * MouseRotationSpeed.X;
                         pitch -= Input.MouseDelta.Y * MouseRotationSpeed.Y;
                     }
@@ -224,7 +231,7 @@ namespace ObjectInfoRenderTargetExample
                         Game.IsMouseVisible = true;
                     }
                 }
-                
+
                 // Handle gestures
                 foreach (var gestureEvent in Input.GestureEvents)
                 {
@@ -245,6 +252,17 @@ namespace ObjectInfoRenderTargetExample
                             translation.Y = -composite.DeltaTranslation.Y * TouchMovementSpeed.Y;
                             translation.Z = (float)Math.Log(composite.DeltaScale + 1) * TouchMovementSpeed.Z;
                             break;
+                    }
+                }
+            }
+
+            if (Input.HasKeyboard)
+            {
+                if (Input.IsKeyPressed(Keys.F1))
+                {
+                    if (WallModelComponent != null)
+                    {
+                        WallModelComponent.Enabled = !WallModelComponent.Enabled;
                     }
                 }
             }
@@ -270,7 +288,7 @@ namespace ObjectInfoRenderTargetExample
             Vector3 finalTranslation = translation;
             finalTranslation.Z = -finalTranslation.Z;
             finalTranslation = Vector3.TransformCoordinate(finalTranslation, rotation);
-            
+
             // Move in local coordinates
             Entity.Transform.Position += finalTranslation;
 

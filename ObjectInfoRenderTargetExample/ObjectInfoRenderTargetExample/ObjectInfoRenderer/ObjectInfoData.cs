@@ -9,6 +9,9 @@
         /// </summary>
         public uint MeshIndexAndMaterialIndex;
 
+        public uint MeshIndex => MeshIndexAndMaterialIndex >> 16;
+        public uint MaterialIndex => MeshIndexAndMaterialIndex & 0xFFFF;
+
         public ObjectInfoData(uint modelComponentId, ushort meshIndex, ushort materialIndex)
         {
             ModelComponentId = modelComponentId;

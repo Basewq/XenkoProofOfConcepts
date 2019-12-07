@@ -14,6 +14,7 @@ Hierarchy:
         - ref!! 35d0816b-8929-48c4-9ffc-0f86197115a6
         - ref!! 6d68adcd-ea72-4487-ad98-8723026cbdc3
         - ref!! 08245d6f-c636-41ce-82c5-28588eefaf3b
+        - ref!! cd49372d-52fd-48c1-a82e-5f7caab1ff44
     Parts:
         -   Folder: null
             Entity:
@@ -55,6 +56,7 @@ Hierarchy:
                         KeyboardRotationSpeed: {X: 3.0, Y: 3.0}
                         MouseRotationSpeed: {X: 1.0, Y: 1.0}
                         TouchRotationSpeed: {X: 1.0, Y: 0.7}
+                        WallModelComponent: ref!! 0a0cfe41-845a-428c-805d-5a5ceb72f258
         -   Entity:
                 Id: 35d0816b-8929-48c4-9ffc-0f86197115a6
                 Name: Sphere
@@ -159,3 +161,24 @@ Hierarchy:
                                 ComputeTransmittance: false
                                 BiasParameters: {}
                         Intensity: 20.0
+        -   Entity:
+                Id: cd49372d-52fd-48c1-a82e-5f7caab1ff44
+                Name: MannequinModel
+                Components:
+                    e86dd55094b9d964814adc5168b6a7ec: !TransformComponent
+                        Id: ba42b057-199a-46ce-9e36-f516cf584a49
+                        Position: {X: -1.231416, Y: 0.0, Z: -1.33287072}
+                        Rotation: {X: 0.0, Y: 0.640324354, Z: 0.0, W: 0.7681046}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    1925cdef4cc1c8ffae16e0f61637ffb5: !ModelComponent
+                        Id: b1c14e4a-88f9-4e45-aaad-167b4592377f
+                        Model: 8424a0b0-9d85-443b-bac8-00f554aaa1f3:Models/mannequinModel
+                        Materials: {}
+                    4ee1b398698b029d2a2cfc7a4ef00e36: !ObjectInfoRenderTargetExample.MannequinAnimationStart,ObjectInfoRenderTargetExample
+                        Id: 818d6dac-5c36-4505-a4b4-5d48d938dee3
+                        Animations:
+                            5196f46a3491b43183f9e0b724ebe759:
+                                Clip: bc727c43-8224-43f2-ba45-817ba50de232:Animations/Idle
+                                BlendOperation: LinearBlend
+                                StartTime: 0.0

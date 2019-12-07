@@ -35,23 +35,11 @@ namespace ScreenSpaceDecalExample.ObjectInfoRenderer
                 {
                     continue;
                 }
-                int meshIndex = 0;
                 if (!(renderMesh.Source is ModelComponent modelComponent))
                 {
                     continue;
                 }
 
-                for (int i = 0; i < modelComponent.Model.Meshes.Count; i++)
-                {
-                    if (modelComponent.Model.Meshes[i] == renderMesh.Mesh)
-                    {
-                        meshIndex = i;
-                        break;
-                    }
-                }
-
-                // RuntimeIdHelper.ToRuntimeId is how Xenko does it for its 'Picking' scene.
-                // We should probably change this to use something more appropriate for our data.
                 var objectInfoData = new ObjectInfoData(modelComponent.RenderGroup);
                 objectInfoDataHolder[objectNodeReference] = objectInfoData;
 

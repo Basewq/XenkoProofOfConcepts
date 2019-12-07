@@ -17,7 +17,7 @@
 
         // For rendering purposes, we need to normalize the values so it fits the color range (0...1],
         // so we just divide by some arbitrary number (eg. number of entities).
-        float3 col = float3(float(modelCompId) / 5, float(meshId) / 5, 0);
+        float3 col = float3(float(modelCompId) / 30, float(meshId) / 30, 0);
         return float4(col, 1);
     }
 };

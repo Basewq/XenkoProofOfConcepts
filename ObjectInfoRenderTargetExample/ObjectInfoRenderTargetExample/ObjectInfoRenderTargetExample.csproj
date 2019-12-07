@@ -29,17 +29,106 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ObjectInfoOutputEffect.xkfx</DependentUpon>
     </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\ObjectInfoXenkoBaseShader.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoXenkoBaseShader.xksl</DependentUpon>
+    </Compile>
     <Compile Update="Effects\ObjectInfoOutputShader.cs">
       <DesignTime>True</DesignTime>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>ObjectInfoOutputShader.xksl</DependentUpon>
     </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\OioNormalBase.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioNormalBase.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\OioNormalFromMesh.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioNormalFromMesh.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\OioNormalFromNormalMapping.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioNormalFromNormalMapping.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\OioShaderBase.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioShaderBase.xksl</DependentUpon>
+    </Compile>
     <Compile Update="Effects\ObjectInfoOutputTestShader.cs">
       <DesignTime>True</DesignTime>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>ObjectInfoOutputTestShader.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoOutputShaderBaseEffect.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\ObjectInfoXenkoBaseEffect.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoXenkoBaseEffect.xkfx</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\OioTransformationBase.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioTransformationBase.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\OioTransformationWAndVP.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioTransformationWAndVP.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioNormalMeshSkinning.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioNormalMeshSkinning.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioNormalVSSkinningFromMesh.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioNormalVSSkinningFromMesh.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioNormalVSSkinningNormalMapping.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioNormalVSSkinningNormalMapping.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioTangentMeshSkinning.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioTangentMeshSkinning.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioTransformationSkinning.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OioTransformationSkinning.xksl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoXenkoShadingEffect.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ObjectInfoXenkoShadingEffect.xkfx</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -52,13 +141,73 @@
       <Generator>XenkoShaderKeyGenerator</Generator>
       <LastGenOutput>ObjectInfoOutputEffect.cs</LastGenOutput>
     </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\ObjectInfoXenkoBaseShader.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoXenkoBaseShader.cs</LastGenOutput>
+    </None>
     <None Update="Effects\ObjectInfoOutputShader.xksl">
       <Generator>XenkoShaderKeyGenerator</Generator>
       <LastGenOutput>ObjectInfoOutputShader.cs</LastGenOutput>
     </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\OioNormalBase.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioNormalBase.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\OioNormalFromMesh.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioNormalFromMesh.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\OioNormalFromNormalMapping.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioNormalFromNormalMapping.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\OioShaderBase.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioShaderBase.cs</LastGenOutput>
+    </None>
     <None Update="Effects\ObjectInfoOutputTestShader.xksl">
       <Generator>XenkoShaderKeyGenerator</Generator>
       <LastGenOutput>ObjectInfoOutputTestShader.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputXenkoBaseEffect - Copy.xkfx">
+      <LastGenOutput>ObjectInfoOutputXenkoBaseEffect.cs</LastGenOutput>
+      <Generator>XenkoShaderKeyGenerator</Generator>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\ObjectInfoXenkoBaseEffect.xkfx">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoXenkoBaseEffect.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\OioTransformationBase.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioTransformationBase.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\OioTransformationWAndVP.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioTransformationWAndVP.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioNormalMeshSkinning.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioNormalMeshSkinning.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioNormalVSSkinningFromMesh.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioNormalVSSkinningFromMesh.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioNormalVSSkinningNormalMapping.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioNormalVSSkinningNormalMapping.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioTangentMeshSkinning.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioTangentMeshSkinning.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoBaseShaders\Skinning\OioTransformationSkinning.xksl">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>OioTransformationSkinning.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoXenkoShadingEffect.xkfx">
+      <Generator>XenkoShaderKeyGenerator</Generator>
+      <LastGenOutput>ObjectInfoXenkoShadingEffect.cs</LastGenOutput>
     </None>
   </ItemGroup>
 </Project>
