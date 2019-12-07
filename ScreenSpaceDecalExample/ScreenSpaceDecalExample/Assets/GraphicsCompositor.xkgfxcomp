@@ -63,7 +63,7 @@ RenderFeatures:
                 OpaqueRenderStage: ref!! a3a7dadc-0695-4dce-abee-e01f9d9c1f6f
                 EffectName: XenkoForwardShadingEffect.ShadowMapCaster
             e944dbe068fe934e89325f41a898f66c*: !ScreenSpaceDecalExample.ObjectInfoRenderer.ObjectInfoRenderStageSelector,ScreenSpaceDecalExample
-                RenderGroup: Group0, Group1, Group2
+                RenderGroup: Group0, Group1, Group2, Group3
                 ObjectInfoRenderStage: ref!! b323f44d-f273-46e5-82da-b2d57c854210
                 EffectName: ObjectInfoOutputEffect
         PipelineProcessors:

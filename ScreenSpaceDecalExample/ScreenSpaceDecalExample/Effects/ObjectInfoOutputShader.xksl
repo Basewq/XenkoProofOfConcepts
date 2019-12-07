@@ -1,7 +1,7 @@
 ﻿namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 {
     // The shader that outputs the supplied ObjectInfoData (ModelComponentId, MeshIndexAndMaterialIndex) on a texture.
-    shader ObjectInfoOutputShader : PositionStream4, Transformation
+    shader ObjectInfoOutputShader : PositionStream4, Transformation, OioShaderBase
     {
         // Inheriting PositionStream4 gives streams.Position, Transformation gives WorldViewProjection.
 
@@ -9,6 +9,9 @@
         // Since our texture is defined as R32G32_UInt (see ObjectInfoSceneRenderer where the
         // output texture is defined), we need the output to be uint, otherwise there will
         // be subtle precision loss due to converting from float to uint.
+        // This is defined in OioShaderBase, and this and many more parameters are
+        // pulled in via ObjectInfoXenkoBaseShaders\ObjectInfoXenkoBaseEffect.xkfx
+        // (which is pulled in via ObjectInfoOutputEffect.xkfx)
 
         // This is the same structure as the C# struct ObjectInfoData
         // Because this appears as a shader key, be sure to make the namespace declaration
@@ -24,16 +27,10 @@
             stage ObjectInfoData ObjectInfo;
         }
 
-        stage stream float4 ShadingPosition : SV_Position;
-        stage stream uint ColorTarget : SV_Target0;
+        // Note that we do not need to override VSMain. Due to inheriting OioShaderBase and the use of effect mixins,
+        // VSMain will be handled by one of the shader. This is necessary for handling skinned (animated) models.
 
-        stage void VSMain()
-        {
-            // This must be set, otherwise the pixel shader will not render the output correctly.
-            streams.ShadingPosition = mul(streams.Position, WorldViewProjection);
-        }
-
-        stage void PSMain()
+        stage override void PSMain()
         {
             streams.ColorTarget = ObjectInfo.RenderGroup;
         }

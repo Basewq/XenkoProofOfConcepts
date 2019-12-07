@@ -24,7 +24,7 @@ namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 
             // Fill RenderStage formats
             // This declares the ObjectInfo texture to be (uint) format.
-            // Changing this means changing ObjectInfoData, ObjectInfoInputShader, and ObjectInfoOutputShader.
+            // Changing this means changing ObjectInfoData, ObjectInfoInputShader, and OioShaderBase.
             ObjectInfoRenderStage.Output = new RenderOutputDescription(renderTargetFormat: PixelFormat.R32_UInt, depthStencilFormat: PixelFormat.D32_Float);
 
             context.RenderView.RenderStages.Add(ObjectInfoRenderStage);

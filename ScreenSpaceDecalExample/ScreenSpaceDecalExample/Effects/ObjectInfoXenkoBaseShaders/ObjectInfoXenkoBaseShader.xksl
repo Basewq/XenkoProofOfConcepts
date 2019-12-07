@@ -1,0 +1,14 @@
+﻿using Xenko.Rendering;
+using Xenko.Rendering.Data;
+using Xenko.Rendering.Materials;
+
+namespace ScreenSpaceDecalExample.Effects
+{
+    shader ObjectInfoXenkoBaseShader : ShaderBase
+    {
+        float4 GetShadingPosition()
+        {
+            return float4(1,0,0,0);
+        }
+    };
+}

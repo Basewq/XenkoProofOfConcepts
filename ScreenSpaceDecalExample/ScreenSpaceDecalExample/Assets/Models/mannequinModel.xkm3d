@@ -1,0 +1,35 @@
+!Model
+Id: 23441f2f-fe6e-46d4-bad9-2cc6eb89b61a
+SerializedVersion: {Xenko: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Models/mannequinModel.fbx
+Skeleton: 422a6313-41b2-49c2-9dde-4a41173e631f:Models/mannequinModel Skeleton
+PivotPosition: {X: 0.0, Y: 0.0, Z: 0.0}
+Materials:
+    c827fd6d86c1520703cb55a6042afc1b:
+        Name: glossMT
+        MaterialInstance:
+            Material: null
+    0a7fe55e22d73fe8906a38a14fbab5f2:
+        Name: glowMT
+        MaterialInstance:
+            Material: null
+    e390dc1849dc09a00ed7e1f594f60aa1:
+        Name: semiGlossMT
+        MaterialInstance:
+            Material: null
+    82cb2a8f912c886d63383df0bb9392e0:
+        Name: upperMatteMT
+        MaterialInstance:
+            Material: null
+    b85b00c9dca4b2cdd0e07d026bf4e256:
+        Name: lowerMatteMT
+        MaterialInstance:
+            Material: null
+    f408ace74939778b0f0960186ec6b82d:
+        Name: lambert1
+        MaterialInstance:
+            Material: null
+Modifiers: {}
+~SourceHashes:
+    2cadc541bb6e71dd006e455687a7ceaf~../../Resources/Models/mannequinModel.fbx: 41531d1299044bd0f0b265374610fb1d

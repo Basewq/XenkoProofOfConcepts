@@ -1,0 +1,101 @@
+!Skeleton
+Id: 422a6313-41b2-49c2-9dde-4a41173e631f
+SerializedVersion: {Xenko: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Models/mannequinModel.fbx
+PivotPosition: {X: 0.0, Y: 0.0, Z: 0.0}
+Nodes:
+    0edb6f3ca779148a6dced816e06e066e: {Name: RootNode, Depth: 0}
+    bd28580a173be57d8f856edefa7aa38a: {Name: mannequinModel, Depth: 1}
+    512fb55c1a8cd35cfd998c34b31ad113: {Name: upper, Depth: 2}
+    f95df48646adca42cc5a562ff27c74fb: {Name: lower, Depth: 2}
+    27cd67ad3269467de695514977c2ed04: {Name: arm, Depth: 2}
+    d2d1a10a084e5040695cd3e480e2c7ba: {Name: hand, Depth: 2}
+    32c1ae33fbd23fb685aab034db4bb09f: {Name: CATRigHub001, Depth: 1}
+    1e084ab5daef33ee999618bd96b5f4bd: {Name: CATRigLLeg1, Depth: 2}
+    651523aaee2efecd5bb04e5de6758c2e: {Name: CATRigLLeg2, Depth: 3}
+    5e39c7880e69110490090b086cecf83a: {Name: CATRigLLegAnkle, Depth: 4}
+    43fe012c71c74689ba33be74d4cd2ed6: {Name: CATRigAnkleleft, Depth: 5}
+    4451d2648b3e8a069a86a60c0fffceb1: {Name: left_additional, Depth: 5}
+    e7e5dbc4aac02a5df99f8d0b0a9d6aaf: {Name: left_extra_bone, Depth: 6}
+    154d82553d880199338754e10c4f89e0: {Name: CATRig1Boneside01, Depth: 4}
+    941cd766dc44ca86a595fbaf7a7a0800: {Name: CATRig1Boneside324, Depth: 4}
+    73828ae445200cd0aa95c42e3edbaa3e: {Name: CATRig1Boneupleft, Depth: 3}
+    e7b91845935a760c265f2bb48e52d628: {Name: CATRig1Bonelowleft, Depth: 4}
+    368f515d5ec5b64cf8a805b3e3f888b6: {Name: backplateleftup, Depth: 2}
+    ad9cf7be7de26536cdfa6607123ff3a4: {Name: backplatelieftdown, Depth: 3}
+    9db001c4c840c4ed1fecd10afeab8e41: {Name: CATRigSpine1, Depth: 2}
+    b5247d75f92afbfa8fcf2361ba080f7c: {Name: CATRigSpine2, Depth: 3}
+    28f7d50f1eb6229a914529fa2db599c3: {Name: CATRigSpine3, Depth: 4}
+    36ef42443351a8961abcd3f4ea4a79ec: {Name: CATRigHub002, Depth: 5}
+    4bb3d57951c6d96056bef5064a2ae3be: {Name: CATRigLArmCollarbone, Depth: 6}
+    bc16087e6f73990e5dd83f35f0cefca8: {Name: CATRigLArm1, Depth: 7}
+    034d8a1ce436b55e8b0723d5a58431be: {Name: CATRigLArm2, Depth: 8}
+    488bc58c90b909a5da4b383f6122fa82: {Name: CATRigLArmPalm, Depth: 9}
+    4cc4294601d4d0e76ebaa6d154096df6: {Name: CATRigLArmDigit11, Depth: 10}
+    0cb5b782c3279d80b03e63f1707cc45c: {Name: CATRigLArmDigit12, Depth: 11}
+    f307cb617ad255a0df9beffc720b7e06: {Name: CATRigLArmDigit13, Depth: 12}
+    3c334499745588a1b75730011b8d806a: {Name: CATRigLArmDigit21, Depth: 10}
+    8ce5026fe28bee3867cff669368f4a42: {Name: CATRigLArmDigit22, Depth: 11}
+    b66aa585024e44dc4c0227cbe4515af4: {Name: CATRigLArmDigit23, Depth: 12}
+    08cb29e9ef364f669a78f0919d9f1cf1: {Name: CATRigLArmDigit31, Depth: 10}
+    ee73f0d827e115c013d297a70d5be38e: {Name: CATRigLArmDigit32, Depth: 11}
+    aa2cc4e1028ea9a75bb570a73524b7cc: {Name: CATRigLArmDigit33, Depth: 12}
+    aaba6c25d35f7d1c5fbddcc66536779f: {Name: CATRigLArmDigit41, Depth: 10}
+    2a451d7efda7f4cf2802c33dc32e4579: {Name: CATRigLArmDigit42, Depth: 11}
+    2dbeacb05c93930376d0ca22f5e4d1c2: {Name: CATRigLArmDigit43, Depth: 12}
+    822ae57e627a3f9d3e8c9ccef652d497: {Name: CATRigLArmDigit51, Depth: 10}
+    2d39150e742af24386f6a4f12ec9483a: {Name: CATRigLArmDigit52, Depth: 11}
+    5998365062cd77fcd912d1726efe64ea: {Name: CATRigLArmDigit53, Depth: 12}
+    1c2fec9bc844fda574e0a633bc42d8a9: {Name: wepon_bone_L, Depth: 10}
+    1dad934110be1b71f41252c0471cf695: {Name: CATRigHub002Bone001, Depth: 6}
+    595eef1ccbb5e9bf43b60cda4e3b1db1: {Name: CATRigHub002Bone002, Depth: 6}
+    a6093619541408fd6b0fc80681d8772d: {Name: CATRigHub002Bone003, Depth: 6}
+    b8a311726344a117d6113f480697218e: {Name: CATRigSpin4435f, Depth: 6}
+    92a0023cab1a607ce40a369149ae908e: {Name: CATRigSpine3294, Depth: 7}
+    21122c262f71979b779b8eeab4c6768a: {Name: CATRigSpineneck043, Depth: 8}
+    1de1cdc6f52ac2e4774669e4900f5a2d: {Name: CATRigRibcage0rtee, Depth: 9}
+    311163ee9d3e41cdfcdfb663868445c9: {Name: CATRigHub002Bone004, Depth: 6}
+    286dd676f3790d73a81c86e8b0a526c2: {Name: CATRigRArmCollarbone, Depth: 6}
+    b5e6f4632517cf2a304b1a571e229ba5: {Name: CATRigRArm1, Depth: 7}
+    10290556fb4654d506b0be37e397acc9: {Name: CATRigRArm2, Depth: 8}
+    1c38aed34c26d4026810292d44b4a78d: {Name: CATRigRArmPalm, Depth: 9}
+    d057a98cc83821f45bb8aac73977a7ca: {Name: CATRigRArmDigit11, Depth: 10}
+    0f87d224e2d2a82886cfc051e6a6bb3e: {Name: CATRigRArmDigit12, Depth: 11}
+    5f64899b1a7eb7e16f899cc4b99d086a: {Name: CATRigRArmDigit13, Depth: 12}
+    8287a7c88be54732c96d67c6198c4665: {Name: CATRigRArmDigit21, Depth: 10}
+    e2bbf7d6694fc9fac90625fcefdd7138: {Name: CATRigRArmDigit22, Depth: 11}
+    6414d1b2568ca5ea9fed199f3b455e2a: {Name: CATRigRArmDigit23, Depth: 12}
+    0fc15f062441e9ad601f1e2db4688b1d: {Name: CATRigRArmDigit31, Depth: 10}
+    136674161b848e80b1219e35ae0385e7: {Name: CATRigRArmDigit32, Depth: 11}
+    2b7f9e1e973a695ea5b0b5d57128f9d9: {Name: CATRigRArmDigit33, Depth: 12}
+    0e87aeb6afe74f7c84993a1a4ffb0bd3: {Name: CATRigRArmDigit41, Depth: 10}
+    b82c792b508faeb0d603d35fb2f2cc24: {Name: CATRigRArmDigit42, Depth: 11}
+    52881021d15eaa86a6dc2de5fd3119b2: {Name: CATRigRArmDigit43, Depth: 12}
+    d35a30c56fd297700903588c2d7a828f: {Name: CATRigRArmDigit51, Depth: 10}
+    6e3a8a21aee5bbac5b3dc70cf14d4153: {Name: CATRigRArmDigit52, Depth: 11}
+    d807aed54e76173300e31f01c0cb4086: {Name: CATRigRArmDigit53, Depth: 12}
+    0c528b26fe00a914fccbae96b4c17fa8: {Name: wepon_bone_R, Depth: 10}
+    ded57ab44353451e91d98aa8a9441915: {Name: gun_bone, Depth: 6}
+    89a77102105e007fe738c03b6cc93247: {Name: gun_barrel, Depth: 7}
+    1ba3459d966ec2592baca65533126951: {Name: gun_bone_magazine_offset, Depth: 7}
+    d1c70132e19c1bdcf5063c3999f6bf21: {Name: gun_bone_magazine, Depth: 8}
+    d8f2a6b51320f503be6f137dd6c26d45: {Name: CATRigHub001Bone002, Depth: 2}
+    80bfafc3fbae7b7276f56e32068b711c: {Name: backplaterightup, Depth: 2}
+    144428b6c413565b55b24116269a4091: {Name: back platerightdown, Depth: 3}
+    5e9c36e79c8cca4b43a0b80447831697: {Name: CATRigRLeg1, Depth: 2}
+    6048e0e7cb5adcaf16c9a0de69d2f566: {Name: CATRigRLeg2, Depth: 3}
+    cd0d97d22568487db36139dca9b82e1d: {Name: CATRigRLegAnkle, Depth: 4}
+    51d7d1c351668f656ed776c418d3e0d3: {Name: CATRigAnkleright, Depth: 5}
+    c30432ec0ed390df3cf3d9361259e526: {Name: right_additional, Depth: 5}
+    b9d3c888e8f537e2a7c946db1b133388: {Name: right_extra_bone, Depth: 6}
+    1258083f387c8e5103f55a8517a49028: {Name: CATRig1Boeer643, Depth: 4}
+    db8cb3c1ee964b518a56327aad6b5ff0: {Name: CATRig1Bone43840, Depth: 4}
+    59f2e990498af626f1f2ef33f0c1353b: {Name: CATRig1Bonesiderightup, Depth: 3}
+    dff7ebcb312a900253649fded5f32db5: {Name: CATRig1Bonerightlow, Depth: 4}
+    4aea8862d7c817ae6c3d355babcdf021: {Name: CATRigLLegPlatform, Depth: 1}
+    e6c7e5682bc24fae04a9b39e923c7617: {Name: CATRigRLegPlatform, Depth: 1}
+    7f09537dad6b3734188e1072809862c7: {Name: CATRigRArmIKTarget, Depth: 1}
+    69c1704cb4fdc74871cffb69c1ca0515: {Name: CATRigLArmIKTarget, Depth: 1}
+~SourceHashes:
+    0082e73bbf5cf12b9403ab27c5893793~../../Resources/Models/mannequinModel.fbx: 41531d1299044bd0f0b265374610fb1d

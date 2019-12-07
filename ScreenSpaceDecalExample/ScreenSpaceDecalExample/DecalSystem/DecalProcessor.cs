@@ -47,6 +47,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
             {
                 MixinReference = "DecalShader"      // This is referring to our shader at Effects\DecalShader.xksl
             };
+
             var materialDescription = new MaterialDescriptor
             {
                 Attributes =

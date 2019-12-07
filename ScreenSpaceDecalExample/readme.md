@@ -50,3 +50,9 @@ ObjectInfoRenderFeature and ObjectInfoRenderStageSelector:
 
 Note: The Render Group mask in the RenderStageSelector needs to include all entities that are visible in the scene (ie. both the static AND dynamic entities), and **exclude** the decal's RenderGroup.
 In our example scene, the main renderable groups are `RenderGroup0`, `RenderGroup1`, `RenderGroup2`, and the decal is `RenderGroup10` (this is completely arbitrary).
+
+---
+### Limitations
+
+There is an issue with shadows not being casted over the decals.
+The current workaround is to reduce the alpha so it blends with the surface it is projected on (which does receive shadows), until a better solution is found.
