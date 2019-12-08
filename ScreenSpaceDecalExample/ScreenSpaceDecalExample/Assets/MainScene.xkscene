@@ -16,6 +16,7 @@ Hierarchy:
         - ref!! dbd5c01c-d33d-4b07-a390-0b1452f83dab
         - ref!! 7c3abec4-c302-4962-a3a9-f762c9dfa3a1
         - ref!! 2eac679c-b405-4a45-a7be-da75a5f15aee
+        - ref!! a2a0d4a9-a5bf-42ef-a904-c3d3a4604385
         - ref!! ba591e9b-787f-4a9f-9042-bfbec04e2c29
     Parts:
         -   Folder: null
@@ -41,9 +42,9 @@ Hierarchy:
                 Components:
                     df500e62d60065e269223fef9c8e8ae6: !TransformComponent
                         Id: 6131e8fe-04c0-4a6f-9463-b073ee55e41f
-                        Position: {X: 2.202314, Y: -0.2710778, Z: -1.72193718}
+                        Position: {X: 2.202314, Y: 0.0, Z: -1.72193718}
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                        Scale: {X: 3.0, Y: 3.0, Z: 3.0}
+                        Scale: {X: 3.0, Y: 1.0, Z: 3.0}
                         Children: {}
                     ccd4dd79ec14f658a2b8c03c5f008eb8: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalExample
                         Id: 24f7ec08-1f8f-41e3-837d-163f78a5f26a
@@ -68,6 +69,7 @@ Hierarchy:
                         Color: {R: 0.176421881, G: 0.735616267, B: 0.8065, A: 1.0}
                         DecalRenderGroup: Group10
                         IgnoreRenderGroups: Group1
+                        IsAffectedByShadow: false
         -   Entity:
                 Id: 8794ab59-c54c-4151-819d-2a7de42c6037
                 Name: Ground
@@ -97,6 +99,24 @@ Hierarchy:
                         Model: 296d8325-79cf-452b-804d-18b6149f0861:Cube
                         IsShadowCaster: false
                         Materials: {}
+        -   Folder: null
+            Entity:
+                Id: a2a0d4a9-a5bf-42ef-a904-c3d3a4604385
+                Name: Decal4
+                Components:
+                    df500e62d60065e269223fef9c8e8ae6: !TransformComponent
+                        Id: 550089ab-da13-4017-97ff-2c4646d19cbc
+                        Position: {X: 2.245031, Y: 0.0, Z: 0.555837035}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ccd4dd79ec14f658a2b8c03c5f008eb8: !ScreenSpaceDecalExample.DecalSystem.DecalComponent,ScreenSpaceDecalExample
+                        Id: bf85872f-0664-410f-b50a-146a84775040
+                        DecalTexture: 55b00d3d-4691-412c-a9d4-93008c66f1f4:Textures/circle02
+                        Color: {R: 1.0, G: 0.0, B: 0.0, A: 1.0}
+                        DecalRenderGroup: Group10
+                        IgnoreRenderGroups: Group3
+                        IsAffectedByShadow: false
         -   Entity:
                 Id: a2e9da1f-bf8d-4da2-89e9-34715ca1db94
                 Name: Directional light

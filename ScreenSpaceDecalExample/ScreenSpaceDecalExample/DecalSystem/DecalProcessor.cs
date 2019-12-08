@@ -62,7 +62,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
             procCube.Generate(Services, model);
 
             var material = Material.New(_graphicsDevice, materialDescription);
-            UpdateMaterialParameters(component, material);
+            UpdateMaterialParameters(component, data.TransformComponent, material);
             data.Material = material;
             data.Model = model;
         }
@@ -129,7 +129,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
             renderMesh.BoundingBox = new BoundingBoxExt(data.Model.BoundingBox);
             //renderMesh.BlendMatrices = meshInfo.BlendMatrices;
 
-            UpdateMaterialParameters(decalComponent, data.Material);
+            UpdateMaterialParameters(decalComponent, data.TransformComponent, data.Material);
         }
 
         private void UpdateMaterial(RenderMesh renderMesh, MaterialPass materialPass, MaterialInstance modelMaterialInstance, DecalComponent decalComponent)
@@ -184,14 +184,21 @@ namespace ScreenSpaceDecalExample.DecalSystem
             }
         }
 
-        private static void UpdateMaterialParameters(DecalComponent decalComponent, Material material)
+        private static void UpdateMaterialParameters(
+            DecalComponent decalComponent,
+            TransformComponent transformComponent,
+            Material material)
         {
+            var projectorUpDir = Vector3.UnitY;
+            transformComponent.Rotation.Rotate(ref projectorUpDir);
             foreach (var pass in material.Passes)
             {
                 pass.Parameters.Set(DecalShaderKeys.DecalTexture, decalComponent.DecalTexture);
                 pass.Parameters.Set(DecalShaderKeys.TextureScale, decalComponent.DecalScale);
                 pass.Parameters.Set(DecalShaderKeys.DecalColor, decalComponent.Color);
                 pass.Parameters.Set(DecalShaderKeys.IgnoreRenderGroups, (uint)decalComponent.IgnoreRenderGroups);
+                pass.Parameters.Set(DecalShaderKeys.IsAffectedByShadow, decalComponent.IsAffectedByShadow);
+                pass.Parameters.Set(DecalShaderKeys.ProjectorUpDirection, projectorUpDir);
             }
         }
 

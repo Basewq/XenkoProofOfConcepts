@@ -3,12 +3,16 @@
 This projects adds a screen space projected decal system which uses a custom entity processor to read the `DecalComponent` to feed a `RenderMesh` with our custom shader material to be consumed by the standard rendering system.
 This is a hacky solution as it relies on copying the existing rendering system's data format.
 
-The decal entity uses a 1x1x1 cube as a projector to render the selected texture onto whatever is inside the projector's 'box'.
+The decal entity uses a 1x1x1 box as a projector to render the selected texture onto whatever is inside the projector's 'box'.
+You can adjust the box size by changing `TransformComponent.Scale` of the decal entity.
 
-Current limitations (however someone smart may be able to implement/extend):
+Current limitations (however someone smart may be able to implement/extend/fix):
 * This is only useful for *static* entities (eg. ground), and will not work well with skinned (animatable) models.
 * Only a texture is rendered, no normal map.
-* There isn't a way to preview the cube, which would be useful for debugging purposes.
+* Since the projection is 'downwards' (relative to the box), the decal will stretch along a 'wall' (as seen in the example scene screenshot below).
+* While there is a `IsAffectedByShadow` property on the decal, changing between the two gives inconsistent lighting.
+* There isn't a way to preview the box, which would be useful for debugging purposes.
+* Be wary of moving too close to the box, as culling will occur. Depending on your needs, you could possibly just disable culling for the decal.
 
 ---
 ### Example Scene
@@ -49,10 +53,4 @@ ObjectInfoRenderFeature and ObjectInfoRenderStageSelector:
 ![Mesh Render Feature](images/gfxcomp_meshrenderfeature.png)
 
 Note: The Render Group mask in the RenderStageSelector needs to include all entities that are visible in the scene (ie. both the static AND dynamic entities), and **exclude** the decal's RenderGroup.
-In our example scene, the main renderable groups are `RenderGroup0`, `RenderGroup1`, `RenderGroup2`, and the decal is `RenderGroup10` (this is completely arbitrary).
-
----
-### Limitations
-
-There is an issue with shadows not being casted over the decals.
-The current workaround is to reduce the alpha so it blends with the surface it is projected on (which does receive shadows), until a better solution is found.
+In our example scene, the main renderable groups are `Group0`, `Group1`, `Group2`, `Group3`, and the decal is `Group10` (this is completely arbitrary).

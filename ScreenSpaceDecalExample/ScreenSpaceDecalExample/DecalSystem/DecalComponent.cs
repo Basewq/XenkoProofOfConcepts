@@ -35,5 +35,9 @@ namespace ScreenSpaceDecalExample.DecalSystem
 
         [DataMember(50)]
         public RenderGroupMask IgnoreRenderGroups { get; set; }
+
+        [DataMember(60)]
+        [DefaultValue(true)]
+        public bool IsAffectedByShadow { get; set; } = true;
     }
 }
