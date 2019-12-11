@@ -195,7 +195,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
             {
                 pass.Parameters.Set(DecalShaderKeys.DecalTexture, decalComponent.DecalTexture);
                 pass.Parameters.Set(DecalShaderKeys.TextureScale, decalComponent.DecalScale);
-                pass.Parameters.Set(DecalShaderKeys.DecalColor, decalComponent.Color);
+                pass.Parameters.Set(DecalShaderKeys.TintColor, decalComponent.Color);
                 pass.Parameters.Set(DecalShaderKeys.IgnoreRenderGroups, (uint)decalComponent.IgnoreRenderGroups);
                 pass.Parameters.Set(DecalShaderKeys.IsAffectedByShadow, decalComponent.IsAffectedByShadow);
                 pass.Parameters.Set(DecalShaderKeys.ProjectorUpDirection, projectorUpDir);

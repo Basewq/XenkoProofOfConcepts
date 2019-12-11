@@ -18,7 +18,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
         public Texture DecalTexture { get; set; }
 
         [DataMember(20)]
-        [Display("Decal Color")]
+        [Display("Tint Color")]
         public Color4 Color { get; set; } = Color4.White;
 
         [DataMember(30)]

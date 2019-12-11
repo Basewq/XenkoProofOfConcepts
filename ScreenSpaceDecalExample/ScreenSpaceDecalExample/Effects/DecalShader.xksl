@@ -1,6 +1,6 @@
 ﻿shader DecalShader
     : DepthBase, ShaderBase, Transformation, PositionStream4, ComputeColor, ObjectInfoInputShader,
-        EnvironmentLightArray, DirectLightGroupArray, MaterialPixelShadingStream, NormalUpdate, LightStream, Math, ScreenPositionBase
+        NormalUpdate
 {
     // We must inherit ComputeColor, even if we don't use it explicitly, because this is required by the Material.
     // The first row of inheritance is to handle our decal box projection, the second row of inheritance is to handle
@@ -15,13 +15,15 @@
     {
         stage float TextureScale = 1.0f;
         [Color]
-        stage float4 DecalColor;
+        stage float4 TintColor;
         stage uint IgnoreRenderGroups;
         stage bool IsAffectedByShadow;
         stage float3 ProjectorUpDirection;
     }
 
     stage stream float4 PositionInViewSpace;  // Shader position in View Space
+
+    stage stream float4 PS_DecalColor;
 
     // Vertex Shader
     stage override void VSMain()
@@ -86,7 +88,7 @@
 
         // The center of the box is at origin, so we need to offset so we're in UV space (ie. in [0...1] range).
         float2 decalTextCoord = (depthPointInBoxSpace.xz / TextureScale) + 0.5f;
-        float4 decalColor = DecalTexture.Sample(AnisotropicSampler, decalTextCoord) * DecalColor;
+        float4 decalColor = DecalTexture.Sample(AnisotropicSampler, decalTextCoord) * TintColor;
         if (decalColor.w <= 0)
         {
             // We have nothing to display, and since lighting may be expensive, we should exit early.
@@ -95,10 +97,17 @@
 
         if (IsAffectedByShadow)
         {
-            // We need to call base.PSMain() because the majority of lighting information is calculated via
-            // shader inheritance.
+            // Pass the field so it's accessible in the Compute() method.
+            streams.PS_DecalColor = decalColor;
+
+            // We call base.PSMain() because the majority of lighting information is calculated via
+            // shader inheritance, including the Compute() method below, and assign it to streams.ColorTarget.
+
+            // HACK: We need to force the lighting shader code think we're actually
+            // at the depth point's position, instead of the projector box's position,
+            // so we change it here to trick the lighting shader code.
+            streams.PositionWS = depthPointInWorldSpace;
             base.PSMain();
-            streams.ColorTarget = ComputeLightingAndShadow(depthPointInWorldSpace, decalColor);
         }
         else
         {
@@ -107,125 +116,8 @@
         }
     }
 
-    float4 ComputeLightingAndShadow(float4 depthPointInWorldSpace, float4 decalColor)
+    override float4 Compute()
     {
-        //------------------------------------------------------------------------------------
-        // This code is copied and adapted from Xenko's MaterialSurfaceLightingAndShading.xksl shader,
-        // but changed so that we only have one 'surface', which is treated as a Lambert diffuse material surface.
-        //------------------------------------------------------------------------------------
-
-        // Before performing the shading for all lights, update the NormalVS with the latest normal
-        // In case normal mapping is not used, this is a no-op
-        UpdateNormalFromTangentSpace(streams.matNormal);
-
-        // Flip the normal so it is facing the right direction for back faces
-#if XENKO_GRAPHICS_API_DIRECT3D && XENKO_GRAPHICS_PROFILE < GRAPHICS_PROFILE_LEVEL_10_0
-        //streams.normalWS = streams.normalWS * sign(streams.IsFrontFace);// FIXME: VFACE seems to not work in a proper way
-#else
-        if(!streams.IsFrontFace)
-        {
-            streams.normalWS = -streams.normalWS;
-        }
-#endif
-
-        // Make sure that light stream is reset
-        ResetLightStream();
-
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        // NOTE: this is our special code. We need to force the lighting shader code think we're actually
-        // at the depth point's position, instead of the projector box's position.
-        streams.PositionWS = depthPointInWorldSpace;
-        streams.matDiffuse = decalColor;    // This ensures the lighting calculates based on our decal.
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-
-        // Because matDiffuse can be modified when using a metalness, we are storing the colorBase into matColorBase
-        // so that we are able to query the original diffuse color without any modifications.
-        streams.matColorBase = streams.matDiffuse;
-
-        // Prepare the material for lighting (allows to pre-compute things which are reused during lighting computation)
-        PrepareMaterialForLightingAndShading();
-
-        // Prepare shading model
-        //foreach (var surface in surfaces)
-        //{
-        //    surface.PrepareForLightingAndShading();
-        //}
-
-        // ---------------------------------------------------------------------------
-        // Compute Direct Lighting contribution
-        // ---------------------------------------------------------------------------
-        float3 directLightingContribution = 0;
-        foreach(var lightGroup in directLightGroups)
-        {
-            lightGroup.PrepareDirectLights();
-
-            const int maxLightCount = lightGroup.GetMaxLightCount();
-            int count = lightGroup.GetLightCount();
-
-            // [unroll] Don't unroll and let the driver handle it
-            for(int i = 0; i < maxLightCount; i++)
-            {
-                if (i >= count)
-                {
-                    break;
-                }
-
-                // Compute the light color and direction
-                lightGroup.PrepareDirectLight(i);
-
-                // Compute common material shading streams (TODO: This is temporary)
-                PrepareMaterialPerDirectLight();
-
-                // Iterate on shading models
-                var diffuseColor = streams.matDiffuseVisible;
-                //if (TIsEnergyConservative)
-                //{
-                //    // Approximation see: http://research.tri-ace.com/Data/course_note_practical_implementation_at_triace.pdf
-                //    diffuseColor *= (1 - streams.matSpecularVisible);
-                //}
-                directLightingContribution += diffuseColor / PI * streams.lightColorNdotL * streams.matDiffuseSpecularAlphaBlend.x;
-                //foreach(var surface in surfaces)
-                //{
-                //    directLightingContribution += surface.ComputeDirectLightContribution();
-                //}
-            }
-        }
-
-        // ---------------------------------------------------------------------------
-        // Compute Environment Lighting contribution
-        // ---------------------------------------------------------------------------
-        float3 environmentLightingContribution = 0;
-        foreach(var environmentLight in environmentLights)
-        {
-            // Compute the environment light color (streams.lightColor)
-            environmentLight.PrepareEnvironmentLight();
-
-            // Iterate on shading models
-            var diffuseColor = streams.matDiffuseVisible;
-            //if (TIsEnergyConservative)
-            //{
-            //    diffuseColor *= (1 - streams.matSpecularVisible);
-            //}
-            environmentLightingContribution += diffuseColor * streams.envLightDiffuseColor;
-
-            //foreach(var surface in surfaces)
-            //{
-            //    environmentLightingContribution += surface.ComputeEnvironmentLightContribution();
-            //}
-        }
-
-        // Add Direct (*PI over hemisphere) and Environment Lighting
-        streams.shadingColor += directLightingContribution * PI + environmentLightingContribution;
-        streams.shadingColorAlpha = streams.matDiffuse.a;
-
-        // Do any computations after lighting and shading, like discarding pixels for example.
-        //foreach (var surface in surfaces)
-        //{
-        //    surface.AfterLightingAndShading();
-        //}
-
-        return float4(streams.shadingColor, streams.shadingColorAlpha);
+        return streams.PS_DecalColor;
     }
 };
