@@ -126,7 +126,10 @@ namespace ScreenSpaceDecalExample.DecalSystem
             // Copy world matrix
             renderMesh.World = data.TransformComponent.WorldMatrix;
             //renderMesh.IsScalingNegative = nodeTransformations[nodeIndex].IsScalingNegative;
-            renderMesh.BoundingBox = new BoundingBoxExt(data.Model.BoundingBox);
+            // RenderMesh.BoundingBox is in world space, so need to update its box position (and also its scale/rotation).
+            var worldBoundingBox = data.Model.BoundingBox;
+            BoundingBox.Transform(ref worldBoundingBox, ref data.TransformComponent.WorldMatrix, out worldBoundingBox);
+            renderMesh.BoundingBox = new BoundingBoxExt(worldBoundingBox);
             //renderMesh.BlendMatrices = meshInfo.BlendMatrices;
 
             UpdateMaterialParameters(decalComponent, data.TransformComponent, data.Material);
