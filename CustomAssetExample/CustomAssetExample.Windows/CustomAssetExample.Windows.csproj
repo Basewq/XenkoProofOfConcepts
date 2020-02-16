@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -12,10 +11,9 @@
 
     <!-- Force msbuild to check to rebuild this assembly instead of letting VS IDE guess -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <Configurations>Debug;Release;DebugExGameEditor</Configurations>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\CustomAssetExample\CustomAssetExample.csproj" />
   </ItemGroup>
-
 </Project>

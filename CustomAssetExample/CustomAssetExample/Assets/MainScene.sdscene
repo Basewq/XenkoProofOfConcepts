@@ -106,3 +106,6 @@ Hierarchy:
                         Id: f9022ca0-047c-4fed-aefd-f264999f50e7
                         Model: fac89fb8-a985-4962-b517-243c96b0e8bd:Sphere
                         Materials: {}
+                    2d4d4d48049b0d9bebe888466bde757e: !CustomAssetExample.LocalizationStringRefScript,CustomAssetExample
+                        Id: 0de45d81-dad4-4f9d-9e4f-f5f4605d208d
+                        LocalizationStringUrl: 364a96f4-cc0b-4743-ac57-1c3ddc384f6d:LocalizationStringDefinition

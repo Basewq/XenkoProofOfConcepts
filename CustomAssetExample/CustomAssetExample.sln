@@ -1,11 +1,57 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 16
-VisualStudioVersion = 16.0.0.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 16.0.0.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAssetExample.Windows", "CustomAssetExample.Windows\CustomAssetExample.Windows.csproj", "{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAssetExample.Windows", "CustomAssetExample.Windows\CustomAssetExample.Windows.csproj", "{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAssetExample", "CustomAssetExample\CustomAssetExample.csproj", "{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAssetExample", "CustomAssetExample\CustomAssetExample.csproj", "{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAssetExample.SharedData", "CustomAssetExample.SharedData\CustomAssetExample.SharedData.csproj", "{E57C9147-B945-4CF5-9454-803E18CF432C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAssetExample.GameStudioExt", "CustomAssetExample.GameStudioExt\CustomAssetExample.GameStudioExt.csproj", "{A2209AFE-53AA-4614-B724-1DAA1E86351B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAssetExample.StrideAssetExt", "CustomAssetExample.StrideAssetExt\CustomAssetExample.StrideAssetExt.csproj", "{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugExGameEditor|Any CPU = DebugExGameEditor|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E57C9147-B945-4CF5-9454-803E18CF432C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E57C9147-B945-4CF5-9454-803E18CF432C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E57C9147-B945-4CF5-9454-803E18CF432C}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{E57C9147-B945-4CF5-9454-803E18CF432C}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{E57C9147-B945-4CF5-9454-803E18CF432C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E57C9147-B945-4CF5-9454-803E18CF432C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2209AFE-53AA-4614-B724-1DAA1E86351B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2209AFE-53AA-4614-B724-1DAA1E86351B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2209AFE-53AA-4614-B724-1DAA1E86351B}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{A2209AFE-53AA-4614-B724-1DAA1E86351B}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{A2209AFE-53AA-4614-B724-1DAA1E86351B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2209AFE-53AA-4614-B724-1DAA1E86351B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25FA6EA4-D4E3-4B1A-B6C5-C5E9F7DB658E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 EndGlobal

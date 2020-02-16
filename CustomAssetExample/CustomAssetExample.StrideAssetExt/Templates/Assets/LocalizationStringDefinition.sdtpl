@@ -1,0 +1,11 @@
+!TemplateAssetFactory
+Id: 1383FFC9-86C0-4877-86BD-CE165F124DEC
+AssetTypeName: LocalizationStringDefinitionAsset
+Name: Localization String Definition
+Scope: Asset
+Description: Localization String for multiple languages
+Group: Localization
+Icon: ..\.sdtpl\Localization.png
+Order: 1000
+DefaultOutputName: LocalizationStringDefinition
+FactoryTypeName: LocalizationStringDefinitionAssetFactory

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Configurations>Debug;Release;DebugExGameEditor</Configurations>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Stride.Core.Assets" Version="4.2.0.2232" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\.sdtpl\*.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomAssetExample.SharedData\CustomAssetExample.SharedData.csproj" />
+  </ItemGroup>
+</Project>
