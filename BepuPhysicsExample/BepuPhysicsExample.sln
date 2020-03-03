@@ -1,0 +1,11 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BepuPhysicsExample.Windows", "BepuPhysicsExample.Windows\BepuPhysicsExample.Windows.csproj", "{5F16417E-F1E3-4FB1-B097-A6084BD284F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BepuPhysicsExample.Game", "BepuPhysicsExample.Game\BepuPhysicsExample.Game.csproj", "{FF5CD84A-B2AE-4AED-95F1-3718AB92B4C2}"
+EndProject
+Global
+EndGlobal
