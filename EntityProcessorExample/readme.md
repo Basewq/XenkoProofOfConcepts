@@ -18,4 +18,4 @@ The Sphere moves with WASD keys.
 
 ![Scene Setup](images/scene_setup.png)
 
-**Game Studio Note:** When you create a custom component, ensure it is a `public` class, and you must do a *hard* reload for the Game Studio to detect the component (ie. `File -> Reload project`).
+**Game Studio Note:** When you create a custom component, ensure it is a `public` class, and you must do a *hard* reload for the Game Studio to detect the component (ie. `File -> Reload project`).  Also ensure the class has an **empty constructor**, as this is required for the Game Studio to be able to detect the component and to be able to serialize/deserialize it as an asset.
