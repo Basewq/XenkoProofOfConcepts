@@ -1,0 +1,10 @@
+!TemplateAssetFactory
+Id: E89DECDA-8C12-4809-8C64-1119CA2AA116
+AssetTypeName: BepuColliderShapeAsset
+Name: Capsule (Bepu)
+Scope: Asset
+Description: A capsule-shaped collider
+Group: Physics
+Icon: ..\.xktpl\ColliderCapsule.png
+DefaultOutputName: BepuColliderCapsule
+FactoryTypeName: BepuColliderShapeCapsuleFactory

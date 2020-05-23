@@ -6,6 +6,7 @@ using Xenko.Physics;
 using System.Threading.Tasks;
 using Xenko.Core;
 using Xenko.Engine.Events;
+using BepuPhysicsExample.BepuPhysicsIntegration;
 
 namespace BepuPhysicsExample
 {
@@ -16,7 +17,7 @@ namespace BepuPhysicsExample
 
         public override async Task Execute()
         {
-            var trigger = Entity.Get<PhysicsComponent>();
+            var trigger = Entity.Get<BepuPhysicsComponent>();
             trigger.ProcessCollisions = true;
 
             while (Game.IsRunning)
@@ -36,7 +37,7 @@ namespace BepuPhysicsExample
                 // Wait for the collision to end and broadcast that event
                 Func<Task> collisionEndTask = async () =>
                 {
-                    Collision collision;
+                    BepuCollision collision;
                     do
                     {
                         collision = await trigger.CollisionEnded();

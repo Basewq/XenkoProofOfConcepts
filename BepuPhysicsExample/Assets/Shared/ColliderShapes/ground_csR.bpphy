@@ -1,0 +1,8 @@
+!BepuColliderShapeAsset
+Id: 70c65881-6318-47bf-9735-584c4e606773
+SerializedVersion: {BepuPhysicsExample: 1.0.0.0}
+Tags: []
+ColliderShapes:
+    7107ddc00d8be146887f6c682efdee3e: !BepuStaticPlaneColliderShapeDesc
+        Normal: {X: 0.0, Y: 1.0, Z: 0.0}
+        Offset: 0.0

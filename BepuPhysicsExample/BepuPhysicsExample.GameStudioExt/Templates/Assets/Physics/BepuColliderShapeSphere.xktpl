@@ -1,0 +1,10 @@
+!TemplateAssetFactory
+Id: 078E36A9-DA6B-4AEF-BAD4-8580B2C50589
+AssetTypeName: BepuColliderShapeAsset
+Name: Sphere (Bepu)
+Scope: Asset
+Description: A spherical collider
+Group: Physics
+Icon: ..\.xktpl\ColliderSphere.png
+DefaultOutputName: BepuColliderSphere
+FactoryTypeName: BepuColliderShapeSphereFactory

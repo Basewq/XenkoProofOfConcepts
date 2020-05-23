@@ -1,5 +1,6 @@
 // Copyright (c) Xenko contributors (https://xenko.com) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
+using BepuPhysicsExample.BepuPhysicsIntegration;
 using System.Linq;
 using Xenko.Core.Mathematics;
 using Xenko.Engine;
@@ -11,13 +12,13 @@ namespace BepuPhysicsExample
 {
     public class RaycastingScript : SyncScript
     {
-        private Simulation simulation;
+        private BepuSimulation simulation;
         private CameraComponent camera;
 
         public override void Start()
         {
             camera = Entity.Get<CameraComponent>();
-            simulation = this.GetSimulation();
+            simulation = this.GetBepuSimulation();
         }
 
         public override void Update()
@@ -53,7 +54,7 @@ namespace BepuPhysicsExample
             var result = simulation.Raycast(unprojectedNear, unprojectedFar);
             if (!result.Succeeded || result.Collider == null) return;
 
-            var rigidBody = result.Collider as RigidbodyComponent;
+            var rigidBody = result.Collider as BepuRigidbodyComponent;
             if (rigidBody == null) return;
 
             rigidBody.Activate();

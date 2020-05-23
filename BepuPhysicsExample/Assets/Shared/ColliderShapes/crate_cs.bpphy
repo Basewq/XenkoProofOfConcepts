@@ -1,9 +1,9 @@
-!ColliderShapeAsset
+!BepuColliderShapeAsset
 Id: a9014178-3593-4598-9d38-c1db609fd7de
-SerializedVersion: {Xenko: 3.0.0.0}
+SerializedVersion: {BepuPhysicsExample: 1.0.0.0}
 Tags: []
 ColliderShapes:
-    74528ec25c6e7247be2bb1132ba4fd1e: !ConvexHullColliderShapeDesc
+    74528ec25c6e7247be2bb1132ba4fd1e: !BepuConvexHullColliderShapeDesc
         ConvexHulls: null
         ConvexHullsIndices: null
         Model: aa73c111-e09e-494b-92c0-a9948749bdcc:Models/BoxE

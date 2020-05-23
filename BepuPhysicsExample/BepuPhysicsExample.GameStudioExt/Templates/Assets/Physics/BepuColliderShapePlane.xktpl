@@ -1,0 +1,10 @@
+!TemplateAssetFactory
+Id: E66E24E4-15FD-4579-A2B1-CEAB9ED096C9
+AssetTypeName: BepuColliderShapeAsset
+Name: Infinite plane (Bepu)
+Scope: Asset
+Description: A collider covering an infinite plane
+Group: Physics
+Icon: ..\.xktpl\ColliderPlane.png
+DefaultOutputName: BepuColliderPlane
+FactoryTypeName: BepuColliderShapePlaneFactory

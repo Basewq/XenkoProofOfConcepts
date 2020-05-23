@@ -72,11 +72,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 88c5c6b8-61b5-4401-adb1-357b024c4015
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -85,11 +84,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: 619893f8-b3c2-449c-94f0-61673c9dfdcd
@@ -112,18 +116,21 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: -0.707106769, W: 0.707106769}
                         Scale: {X: 0.3, Y: 0.4, Z: 0.4}
                         Children: {}
-                    98dd040862ed394997c363d697c8f29f: !StaticColliderComponent
+                    98dd040862ed394997c363d697c8f29f: !BepuStaticColliderComponent
                         Id: 0804dd98-ed62-4939-97c3-63d697c8f29f
                         CanCollideWith: DefaultFilter, SensorTrigger, CharacterFilter
-                        CanSleep: true
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
                         IsTrigger: false
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         ColliderShapes:
-                            92d70e42157bc34c85a91efcafd60da4: !StaticPlaneColliderShapeDesc
+                            92d70e42157bc34c85a91efcafd60da4: !BepuStaticPlaneColliderShapeDesc
                                 Normal: {X: 0.0, Y: 1.0, Z: 0.0}
                                 Offset: 0.0
         -   Entity:
@@ -172,11 +179,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 93336ed9-cf93-4e74-8da9-63df61f816db
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -185,11 +191,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: c359792b-982b-4ddb-a503-3fcb591313dd
@@ -261,11 +272,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 31538b07-a8e0-4ebf-9fb7-97e2135cdd30
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -274,11 +284,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: 67737096-09b6-4269-a9fe-af34f6b6cffe
@@ -301,18 +316,21 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.707106769, W: 0.707106769}
                         Scale: {X: 0.3, Y: 0.4, Z: 0.4}
                         Children: {}
-                    98dd040862ed394997c363d697c8f29f: !StaticColliderComponent
+                    98dd040862ed394997c363d697c8f29f: !BepuStaticColliderComponent
                         Id: 8bbd58aa-719b-4862-94bf-8edd54caa9a5
                         CanCollideWith: DefaultFilter, SensorTrigger, CharacterFilter
-                        CanSleep: true
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
                         IsTrigger: false
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         ColliderShapes:
-                            92d70e42157bc34c85a91efcafd60da4: !StaticPlaneColliderShapeDesc
+                            92d70e42157bc34c85a91efcafd60da4: !BepuStaticPlaneColliderShapeDesc
                                 Normal: {X: 0.0, Y: 1.0, Z: 0.0}
                                 Offset: 0.0
         -   Entity:
@@ -351,11 +369,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: f15c0263-e0ef-4b40-b4a1-d78af5ada570
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -364,11 +381,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: ee0d6490-adb2-4133-9d5e-bb2c1e45121c
@@ -391,11 +413,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: b2da8550-7dd6-419c-973e-e1bcc1f88f26
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -404,11 +425,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: f8ee20aa-b21d-4d19-87a9-e89b2858527d
@@ -498,12 +524,11 @@ Hierarchy:
                     a4c85bb65e797946ac125062f07f8507: !BepuPhysicsExample.AutoResetRigidbody,BepuPhysicsExample.Game
                         Id: b65bc8a4-795e-4679-ac12-5062f07f8507
                         TriggerEntity*: ref!! cfe82ef3-b615-435c-a9b6-15793dca565d
-                    00e095c410fef143bbac85640eafd46e: !RigidbodyComponent
+                    00e095c410fef143bbac85640eafd46e: !BepuRigidbodyComponent
                         Id: c495e000-fe10-43f1-bbac-85640eafd46e
                         CanCollideWith: DefaultFilter, CharacterFilter
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -512,12 +537,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            4fe40eebb1def0459086bc680ce3386c: !SphereColliderShapeDesc
-                                Is2D: false
+                            4fe40eebb1def0459086bc680ce3386c: !BepuSphereColliderShapeDesc
                                 LocalOffset: {X: 0.0, Y: 0.0, Z: 0.0}
                     99a4b625c60911438f882cfb1100888d: !ModelComponent
                         Id: 25b6a499-09c6-4311-8f88-2cfb1100888d
@@ -568,11 +597,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 9d35a335-68ae-4f40-ad43-6168933ef813
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -581,11 +609,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: 3c730cd9-bd7f-467e-8e70-2bd627b9dc00
@@ -610,19 +643,21 @@ Hierarchy:
                         Children: {}
                     5d6de4ce7b5060409f85b53ba7134ac7: !BepuPhysicsExample.Trigger,BepuPhysicsExample.Game
                         Id: cee46d5d-507b-4060-9f85-b53ba7134ac7
-                    7f34238497e6e6468a4f8df5679744e9: !StaticColliderComponent
+                    7f34238497e6e6468a4f8df5679744e9: !BepuStaticColliderComponent
                         Id: 8423347f-e697-46e6-8a4f-8df5679744e9
                         CanCollideWith: CharacterFilter
-                        CanSleep: true
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
                         IsTrigger: true
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         ColliderShapes:
-                            a52f6e60d5ff6c458591787370feb4e5: !BoxColliderShapeDesc
-                                Is2D: false
+                            a52f6e60d5ff6c458591787370feb4e5: !BepuBoxColliderShapeDesc
                                 Size: {X: 1.0, Y: 1.0, Z: 1.0}
                                 LocalOffset: {X: 0.0, Y: 0.0, Z: 0.0}
                                 LocalRotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
@@ -641,11 +676,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 27aa568d-fd34-4711-82e3-4aa2a95ee63e
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -654,11 +688,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: 991c1f68-c1e6-4fe9-b3b0-b7769531513c
@@ -681,11 +720,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 21ed55ac-d912-4c62-96bc-6c9e83a85ce4
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -694,11 +732,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: 4bb9512a-d9a2-42b4-9c7b-d4c75ec34fe5
@@ -721,11 +764,10 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
-                    b8c6c588b5610144adb1357b024c4015: !RigidbodyComponent
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
                         Id: 72d7d166-640c-4699-9da9-cbaf55c20c47
                         CanSleep: false
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
@@ -734,11 +776,16 @@ Hierarchy:
                         Mass: 1.0
                         LinearDamping: 0.0
                         AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         OverrideGravity: false
                         Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
                         NodeName: null
                         ColliderShapes:
-                            7d102f94372bb148b1442fd78041aa91: !ColliderShapeAssetDesc
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
                                 Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
                     f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
                         Id: 6b934a09-793a-45b3-b060-91427abf3021
@@ -776,18 +823,21 @@ Hierarchy:
                         Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
                         Scale: {X: 0.3, Y: 0.4, Z: 0.4}
                         Children: {}
-                    98dd040862ed394997c363d697c8f29f: !StaticColliderComponent
+                    98dd040862ed394997c363d697c8f29f: !BepuStaticColliderComponent
                         Id: 75f76ce0-13fa-4cf0-96a7-31c16e64f578
                         CanCollideWith: DefaultFilter, SensorTrigger, CharacterFilter
-                        CanSleep: true
                         Restitution: 0.0
-                        Friction: 0.5
                         RollingFriction: 0.0
                         CcdMotionThreshold: 0.0
                         CcdSweptSphereRadius: 0.0
                         IsTrigger: false
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
                         ColliderShapes:
-                            92d70e42157bc34c85a91efcafd60da4: !StaticPlaneColliderShapeDesc
+                            92d70e42157bc34c85a91efcafd60da4: !BepuStaticPlaneColliderShapeDesc
                                 Normal: {X: 0.0, Y: 1.0, Z: 0.0}
                                 Offset: 0.0
                     7e137400e2eda7499b8235359ec18a1a: !ModelComponent

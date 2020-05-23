@@ -10,35 +10,37 @@ using Xenko.UI;
 using Xenko.UI.Controls;
 using Xenko.UI.Panels;
 using System.Threading.Tasks;
+using BepuPhysicsExample.BepuPhysicsIntegration;
 
 namespace PhysicsSample12
 {
     public class DemoScript : StartupScript
     {
-        private Simulation simulation;
+        private BepuSimulation simulation;
 
         public Entity cube;
         public Entity sphere;
 
         public SpriteFont Font;
 
-        private Constraint currentConstraint;
+        private BepuConstraint currentConstraint;
         private readonly List<Action> PhysicsSampleList = new List<Action>();
         private int constraintIndex;
 
-        private RigidbodyComponent cubeRigidBody;
-        private RigidbodyComponent sphereRigidBody;
+        private BepuRigidbodyComponent cubeRigidBody;
+        private BepuRigidbodyComponent sphereRigidBody;
 
         private TextBlock constraintNameBlock;
 
         public override void Start()
         {
-            simulation = this.GetSimulation();
+            //simulation = this.GetSimulation();
+            simulation = SceneSystem.SceneInstance.GetProcessor<BepuPhysicsProcessor>()?.Simulation;
             simulation.Gravity = new Vector3(0, -9, 0);
 
-            cubeRigidBody = cube.Get<RigidbodyComponent>();
+            cubeRigidBody = cube.Get<BepuRigidbodyComponent>();
             cubeRigidBody.CanSleep = false;
-            sphereRigidBody = sphere.Get<RigidbodyComponent>();
+            sphereRigidBody = sphere.Get<BepuRigidbodyComponent>();
             sphereRigidBody.CanSleep = false;
 
             // Create the UI
@@ -66,11 +68,11 @@ namespace PhysicsSample12
 
             // Create and initialize constraint
             PhysicsSampleList.Add(CreatePoint2PointConstraint);
-            PhysicsSampleList.Add(CreateHingeConstraint);
-            PhysicsSampleList.Add(CreateGearConstraint);
-            PhysicsSampleList.Add(CreateSliderConstraint);
-            PhysicsSampleList.Add(CreateConeTwistConstraint);
-            PhysicsSampleList.Add(CreateGeneric6DoFConstraint);
+            //PhysicsSampleList.Add(CreateHingeConstraint);
+            //PhysicsSampleList.Add(CreateGearConstraint);
+            //PhysicsSampleList.Add(CreateSliderConstraint);
+            //PhysicsSampleList.Add(CreateConeTwistConstraint);
+            //PhysicsSampleList.Add(CreateGeneric6DoFConstraint);
 
             RemoveConstraint();
             PhysicsSampleList[constraintIndex]();
@@ -82,7 +84,7 @@ namespace PhysicsSample12
                 while (Game.IsRunning)
                 {
                     var collision = await cubeRigidBody.NewCollision();
-                    if (!(currentConstraint is SliderConstraint)) continue;
+                    //if (!(currentConstraint is SliderConstraint)) continue;
                     if (collision.ColliderA != sphereRigidBody && collision.ColliderB != sphereRigidBody) continue;
                     sphereRigidBody.LinearVelocity = Vector3.Zero; //clear any existing velocity
                     sphereRigidBody.ApplyImpulse(new Vector3(-25, 0, 0)); //fire impulse
@@ -97,7 +99,7 @@ namespace PhysicsSample12
             sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
             sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
 
-            currentConstraint = Simulation.CreateConstraint(ConstraintTypes.Point2Point, cubeRigidBody, sphereRigidBody,
+            currentConstraint = BepuSimulation.CreateConstraint(ConstraintTypes.Point2Point, cubeRigidBody, sphereRigidBody,
                 Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
             simulation.AddConstraint(currentConstraint);
             constraintNameBlock.Text = "Point to Point";
@@ -106,96 +108,96 @@ namespace PhysicsSample12
             sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
         }
 
-        void CreateHingeConstraint()
-        {
-            cubeRigidBody.LinearFactor = Vector3.Zero;
-            cubeRigidBody.AngularFactor = Vector3.Zero;
-            sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
-            sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
+        //void CreateHingeConstraint()
+        //{
+        //    cubeRigidBody.LinearFactor = Vector3.Zero;
+        //    cubeRigidBody.AngularFactor = Vector3.Zero;
+        //    sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
+        //    sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
 
-            currentConstraint = Simulation.CreateConstraint(ConstraintTypes.Hinge, cubeRigidBody, sphereRigidBody,
-                Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
-            simulation.AddConstraint(currentConstraint);
-            constraintNameBlock.Text = "Hinge";
+        //    currentConstraint = BepuSimulation.CreateConstraint(ConstraintTypes.Hinge, cubeRigidBody, sphereRigidBody,
+        //        Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
+        //    simulation.AddConstraint(currentConstraint);
+        //    constraintNameBlock.Text = "Hinge";
 
-            //applying this impulse will show the hinge limits stopping it
-            sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
-        }
+        //    //applying this impulse will show the hinge limits stopping it
+        //    sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
+        //}
 
-        void CreateGearConstraint()
-        {
-            cubeRigidBody.LinearFactor = Vector3.Zero;
-            cubeRigidBody.AngularFactor = new Vector3(1, 1, 1);
-            sphereRigidBody.LinearFactor = Vector3.Zero;
-            sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
+        //void CreateGearConstraint()
+        //{
+        //    cubeRigidBody.LinearFactor = Vector3.Zero;
+        //    cubeRigidBody.AngularFactor = new Vector3(1, 1, 1);
+        //    sphereRigidBody.LinearFactor = Vector3.Zero;
+        //    sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
 
-            currentConstraint = Simulation.CreateConstraint(ConstraintTypes.Gear, sphereRigidBody, cubeRigidBody,
-                Matrix.Translation(new Vector3(1, 0, 0)), Matrix.Translation(new Vector3(1, 0, 0)));
-            simulation.AddConstraint(currentConstraint);
-            constraintNameBlock.Text = "Gear";
+        //    currentConstraint = BepuSimulation.CreateConstraint(ConstraintTypes.Gear, sphereRigidBody, cubeRigidBody,
+        //        Matrix.Translation(new Vector3(1, 0, 0)), Matrix.Translation(new Vector3(1, 0, 0)));
+        //    simulation.AddConstraint(currentConstraint);
+        //    constraintNameBlock.Text = "Gear";
 
-            var gear = (GearConstraint)currentConstraint;
-            gear.Ratio = 0.5f;
+        //    var gear = (GearConstraint)currentConstraint;
+        //    gear.Ratio = 0.5f;
 
-            //this force will start a motion in the sphere which gets propagated into the cube
-            sphereRigidBody.AngularVelocity = new Vector3(25, 0, 0);
-        }
+        //    //this force will start a motion in the sphere which gets propagated into the cube
+        //    sphereRigidBody.AngularVelocity = new Vector3(25, 0, 0);
+        //}
 
-        void CreateSliderConstraint()
-        {
-            cubeRigidBody.LinearFactor = Vector3.Zero;
-            cubeRigidBody.AngularFactor = Vector3.Zero;
-            sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
-            sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
+        //void CreateSliderConstraint()
+        //{
+        //    cubeRigidBody.LinearFactor = Vector3.Zero;
+        //    cubeRigidBody.AngularFactor = Vector3.Zero;
+        //    sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
+        //    sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
 
-            currentConstraint = Simulation.CreateConstraint(ConstraintTypes.Slider, cubeRigidBody, sphereRigidBody, Matrix.Identity, Matrix.Identity, true);
-            simulation.AddConstraint(currentConstraint);
-            constraintNameBlock.Text = "Slider";
+        //    currentConstraint = BepuSimulation.CreateConstraint(ConstraintTypes.Slider, cubeRigidBody, sphereRigidBody, Matrix.Identity, Matrix.Identity, true);
+        //    simulation.AddConstraint(currentConstraint);
+        //    constraintNameBlock.Text = "Slider";
 
-            var slider = (SliderConstraint)currentConstraint;
-            slider.LowerLinearLimit = -4;
-            slider.UpperLinearLimit = 0;
-            //avoid strange movements
-            slider.LowerAngularLimit = (float)-Math.PI / 3.0f;
-            slider.UpperAngularLimit = (float)Math.PI / 3.0f;
+        //    var slider = (SliderConstraint)currentConstraint;
+        //    slider.LowerLinearLimit = -4;
+        //    slider.UpperLinearLimit = 0;
+        //    //avoid strange movements
+        //    slider.LowerAngularLimit = (float)-Math.PI / 3.0f;
+        //    slider.UpperAngularLimit = (float)Math.PI / 3.0f;
 
-            //applying this impulse will let the sphere reach the lower linear limit and afterwards will be dragged back towards the cube
-            sphereRigidBody.ApplyImpulse(new Vector3(-25, 0, 0));
-        }
+        //    //applying this impulse will let the sphere reach the lower linear limit and afterwards will be dragged back towards the cube
+        //    sphereRigidBody.ApplyImpulse(new Vector3(-25, 0, 0));
+        //}
 
-        void CreateConeTwistConstraint()
-        {
-            cubeRigidBody.LinearFactor = Vector3.Zero;
-            cubeRigidBody.AngularFactor = Vector3.Zero;
-            sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
-            sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
+        //void CreateConeTwistConstraint()
+        //{
+        //    cubeRigidBody.LinearFactor = Vector3.Zero;
+        //    cubeRigidBody.AngularFactor = Vector3.Zero;
+        //    sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
+        //    sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
 
-            currentConstraint = Simulation.CreateConstraint(ConstraintTypes.ConeTwist, cubeRigidBody, sphereRigidBody,
-                Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
-            simulation.AddConstraint(currentConstraint);
-            constraintNameBlock.Text = "Cone Twist";
+        //    currentConstraint = BepuSimulation.CreateConstraint(ConstraintTypes.ConeTwist, cubeRigidBody, sphereRigidBody,
+        //        Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
+        //    simulation.AddConstraint(currentConstraint);
+        //    constraintNameBlock.Text = "Cone Twist";
 
-            var coneTwist = (ConeTwistConstraint)currentConstraint;
-            coneTwist.SetLimit(0.5f, 0.5f, 0.5f);
+        //    var coneTwist = (ConeTwistConstraint)currentConstraint;
+        //    coneTwist.SetLimit(0.5f, 0.5f, 0.5f);
 
-            //applying this impulse will show the cone limits
-            sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
-        }
+        //    //applying this impulse will show the cone limits
+        //    sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
+        //}
 
-        void CreateGeneric6DoFConstraint()
-        {
-            cubeRigidBody.LinearFactor = Vector3.Zero;
-            cubeRigidBody.AngularFactor = Vector3.Zero;
-            sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
-            sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
+        //void CreateGeneric6DoFConstraint()
+        //{
+        //    cubeRigidBody.LinearFactor = Vector3.Zero;
+        //    cubeRigidBody.AngularFactor = Vector3.Zero;
+        //    sphereRigidBody.LinearFactor = new Vector3(1, 1, 1);
+        //    sphereRigidBody.AngularFactor = new Vector3(1, 1, 1);
 
-            currentConstraint = Simulation.CreateConstraint(ConstraintTypes.Generic6DoF, cubeRigidBody, sphereRigidBody,
-                Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
-            simulation.AddConstraint(currentConstraint);
-            constraintNameBlock.Text = "Generic 6D of Freedom";
+        //    currentConstraint = BepuSimulation.CreateConstraint(ConstraintTypes.Generic6DoF, cubeRigidBody, sphereRigidBody,
+        //        Matrix.Identity, Matrix.Translation(new Vector3(4, 0, 0)));
+        //    simulation.AddConstraint(currentConstraint);
+        //    constraintNameBlock.Text = "Generic 6D of Freedom";
 
-            sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
-        }
+        //    sphereRigidBody.ApplyImpulse(new Vector3(0, 0, 18));
+        //}
 
         private void RemoveConstraint()
         {
@@ -204,7 +206,7 @@ namespace PhysicsSample12
             {
                 simulation.RemoveConstraint(currentConstraint);
                 currentConstraint.Dispose();
-				currentConstraint = null;
+                currentConstraint = null;
             }
 
             //Stop motion and reset the rigid bodies
