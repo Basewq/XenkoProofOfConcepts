@@ -1,0 +1,8 @@
+!Sound
+Id: 44666f76-1009-4c59-bbfa-253eb11307e6
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Audio/FishLampByUlrick-EvensSalies.mp3
+CompressionRatio: 15
+StreamFromDisk: false
+Spatialized: false

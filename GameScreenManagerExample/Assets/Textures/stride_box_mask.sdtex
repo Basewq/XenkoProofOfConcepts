@@ -1,0 +1,11 @@
+!Texture
+Id: 0ad748f1-226e-4967-84b3-d2110424505f
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Textures/stride_box_mask_mark.png
+Type: !ColorTextureType
+    ColorKeyEnabled: true
+    ColorKeyColor: {R: 0, G: 0, B: 0, A: 255}
+    Alpha: Mask
+GenerateMipmaps: false
+IsStreamable: false
