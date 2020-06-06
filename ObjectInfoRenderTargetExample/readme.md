@@ -1,6 +1,6 @@
 # Object Info Render Target Example [OIRT]
 
-This projects renders object (entity) information (ModelComponent ID, Mesh & Material Indices) onto a render target, which is then read by a Material shader to display.
+This project renders object (entity) information (ModelComponent ID, Mesh & Material Indices) onto a render target, which is then read by a Material shader to display.
 
 This code is adapted from Xenko's `PickingSceneRenderer` class, except made to output the entire view and to make it accessible to custom shaders on materials.
 
