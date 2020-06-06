@@ -3,7 +3,7 @@ Id: 1f200ebb-518b-44ca-827b-c76eaa2f8be3
 SerializedVersion: {Stride: 3.1.0.1}
 Tags: []
 ChildrenIds: []
-Parent: 1aa45e6a-fd5a-4ea4-9f79-c47b9686c673:DynamicScene
+Parent: 1aa45e6a-fd5a-4ea4-9f79-c47b9686c673:Scenes/DynamicScene
 Offset: {X: -20.0, Y: 0.0, Z: 0.0}
 Hierarchy:
     RootParts:

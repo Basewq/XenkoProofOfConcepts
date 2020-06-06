@@ -1,0 +1,34 @@
+!SceneAsset
+Id: 7aad2a4f-c1dd-4bfc-ae8a-41ca277c2aae
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! 9de48182-0261-4788-bbb2-2c155b603a1c
+    Parts:
+        -   Entity:
+                Id: 9de48182-0261-4788-bbb2-2c155b603a1c
+                Name*: GameScreenController
+                Components:
+                    2507aa30e48c1da2331030dc5935cc48: !TransformComponent
+                        Id: 11a92e2c-b626-4be6-8974-794eda3a4345
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    491f03533f264d1ed245adaed07b8ee2: !GameScreenManagerExample.GameScreens.GameScreenController,GameScreenManagerExample.Game
+                        Id: 50c1ae3c-01e0-41fd-b4cd-45964e77b3e0
+                        GameScreen*: !GameScreenManagerExample.GameScreens.InGameScreen,GameScreenManagerExample.Game
+                            InGameSubScreenSceneUrl: 918eb53b-3d0b-42e4-bb32-1df916a71cf9:Scenes/SubScreens/InGameSubScreenScene
+                    af1d357191366b792034c9d8d1dc29f6: !UIComponent
+                        Id: 7df0bc8b-d905-449b-ab54-3c07a469e232
+                        Page*: 4e482b15-cac2-42ca-8f1f-53d73d398332:UI/InGameScreenPage
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.0, Y: 1.0, Z: 1.0}
+                        RenderGroup: Group31
+            Base:
+                BasePartAsset: 178a8f28-6556-4fa4-addc-fba81ab9a49b:GameScreenPrefabs/GameScreenController
+                BasePartId: 303b39f2-f5b4-4bff-b2e3-795fa6e6cdcc
+                InstanceId: 64f15fd3-0e52-44f0-a74d-df68bb3373c3

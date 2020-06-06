@@ -6,6 +6,7 @@ ChildrenIds: []
 Offset: {X: 0.0, Y: 0.0, Z: 0.0}
 Hierarchy:
     RootParts:
+        - ref!! 8ac18b2e-3f41-46fb-86ef-95da073e6e85
         - ref!! 27a91eaf-7622-42b4-89a2-3495a753b8d9
         - ref!! e1d761e6-634d-4773-8d81-75dfc8e8b1c4
         - ref!! 5fc52dcf-f9f8-4c6d-b32d-3fc989aea8ad
@@ -4284,6 +4285,30 @@ Hierarchy:
                 BasePartAsset: 8edc6e6a-96c6-4b62-873d-dca8b24983a5:BlocksPrefabs/Ramp1x1_2x1
                 BasePartId: dcbcec6d-0b9a-404a-87ee-0a0f69fc314e
                 InstanceId: 16f629d3-37d7-4a39-9e71-e7fbae2d3477
+        -   Entity:
+                Id: 8ac18b2e-3f41-46fb-86ef-95da073e6e85
+                Name: SubScreenController
+                Components:
+                    cd880c34c5f78bf7c5585de293f1cb10: !TransformComponent
+                        Id: b3ca4bf6-940a-47ca-94cb-230a83389b87
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ede1ef833bea16cd57f59f7f57979bbf: !GameScreenManagerExample.GameScreens.SubScreens.SubScreenController,GameScreenManagerExample.Game
+                        Id: d7c5db17-e49a-45d7-a42c-6f89354c2bb2
+                        SubScreen*: !GameScreenManagerExample.GameScreens.SubScreens.InGameSubScreen,GameScreenManagerExample.Game
+                            InGameOptionsSubScreenSceneUrl: 56e8c2a3-e57e-4aa2-babd-3dd91b39ca9b:Scenes/SubScreens/InGameOptionsSubScreen
+                    bee5086dbcf36a1a8f9e0832ee1c6b94: !UIComponent
+                        Id: b7dfc224-9fc0-4dec-bd5d-e77e2a2bd8e9
+                        Page*: d7067e81-1cd5-4c64-b310-43deea591c6c:UI/InGameSubScreenPage
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.0, Y: 1.0, Z: 1.0}
+                        RenderGroup: Group31
+            Base:
+                BasePartAsset: f10b016e-1009-456f-8423-1983030cd810:GameScreenPrefabs/SubScreenController
+                BasePartId: ba2218a5-0500-4945-8dc2-c166ab36edda
+                InstanceId: f5f4d8a8-0a9d-4bb6-9a70-f5b750739575
         -   Entity:
                 Id: 8b83f433-cefc-47a9-b493-c5f871e422d6
                 Name: Box3x1x1

@@ -32,5 +32,10 @@ namespace GameScreenManagerExample.Gameplay
                 await Script.NextFrame();
             }
         }
+
+        public override void Cancel()
+        {
+            music?.Stop();
+        }
     }
 }

@@ -1,0 +1,27 @@
+!PrefabAsset
+Id: f10b016e-1009-456f-8423-1983030cd810
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! ba2218a5-0500-4945-8dc2-c166ab36edda
+    Parts:
+        -   Entity:
+                Id: ba2218a5-0500-4945-8dc2-c166ab36edda
+                Name: SubScreenController
+                Components:
+                    cd880c34c5f78bf7c5585de293f1cb10: !TransformComponent
+                        Id: 44d80bd9-6af0-45e6-8d34-87fa135dfd7a
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ede1ef833bea16cd57f59f7f57979bbf: !GameScreenManagerExample.GameScreens.SubScreens.SubScreenController,GameScreenManagerExample.Game
+                        Id: 7c66c5d3-3f2f-4e2e-98cd-f664bf03de7f
+                        SubScreen: null
+                    bee5086dbcf36a1a8f9e0832ee1c6b94: !UIComponent
+                        Id: ec4500fd-bb64-4d7a-97d5-3f91bf669f39
+                        Page: null
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.0, Y: 1.0, Z: 1.0}
+                        RenderGroup: Group31

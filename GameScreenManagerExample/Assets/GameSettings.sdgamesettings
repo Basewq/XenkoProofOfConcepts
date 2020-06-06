@@ -2,7 +2,7 @@
 Id: 89b90422-1038-4697-8a49-dba3acc30d1a
 SerializedVersion: {Stride: 3.1.0.1}
 Tags: []
-DefaultScene: 918eb53b-3d0b-42e4-bb32-1df916a71cf9:MainScene
+DefaultScene: 66f25cbe-8687-4614-aee9-d6786bf55503:Scenes/RootScene
 GraphicsCompositor: 0c6395dc-4d28-4482-af19-c41157cc085a:GraphicsCompositor
 Defaults:
     - !Stride.Graphics.RenderingSettings,Stride.Graphics
@@ -58,5 +58,5 @@ PlatformFilters:
     - ^Mali\-4
     - ^Mali\-T6
     - ^Mali\-T7
-SplashScreenTexture: d26edb11-10bd-403c-b3c2-9c7fcccf25e5:StrideDefaultSplashScreen
+SplashScreenTexture: null
 SplashScreenColor: {R: 0, G: 0, B: 0, A: 255}

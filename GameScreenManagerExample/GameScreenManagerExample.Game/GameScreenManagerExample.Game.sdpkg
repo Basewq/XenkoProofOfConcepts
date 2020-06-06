@@ -16,8 +16,8 @@ ExplicitFolders: []
 Bundles: []
 TemplateFolders: []
 RootAssets:
-    - 1f200ebb-518b-44ca-827b-c76eaa2f8be3:EasternChunk
-    - 26a707ab-431c-484b-81ce-a8016a198078:NorthernChunk
-    - 4219cdc9-f45e-4629-b15d-cd5d125a0937:SouthernChunk
-    - b0a33707-8125-4e8e-8ddc-5988569a4e9c:CentralChunk
-    - bcc5c9ec-9bad-45c2-8c71-0eaa9f2a4485:WesternChunk
+    - 1f200ebb-518b-44ca-827b-c76eaa2f8be3:Scenes/EasternChunk
+    - 26a707ab-431c-484b-81ce-a8016a198078:Scenes/NorthernChunk
+    - 4219cdc9-f45e-4629-b15d-cd5d125a0937:Scenes/SouthernChunk
+    - b0a33707-8125-4e8e-8ddc-5988569a4e9c:Scenes/CentralChunk
+    - bcc5c9ec-9bad-45c2-8c71-0eaa9f2a4485:Scenes/WesternChunk

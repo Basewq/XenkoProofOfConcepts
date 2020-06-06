@@ -1,0 +1,51 @@
+!UIPageAsset
+Id: 9fd680b5-95b9-44f4-bcdb-02e32a797f31
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 7a01009d-d2ec-4f38-96a2-e66e9a48afad
+    Parts:
+        -   UIElement: !TextBlock
+                Id: 0c8b087b-db90-4750-838f-e9a75f64427b
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Bottom
+                Margin: {Left: 40.0, Top: 20.0, Right: 40.0, Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Loading...
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Right
+        -   UIElement: !Grid
+                Id: 7a01009d-d2ec-4f38-96a2-e66e9a48afad
+                DependencyProperties: {}
+                BackgroundColor: {R: 71, G: 159, B: 255, A: 100}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    18c445e81343b738d74dd8d87727e693: !TextBlock ref!! 8120af77-89a4-428f-84dc-dc62833b5892
+                    33ec19187e03540d560b20065cdf64a4: !TextBlock ref!! 0c8b087b-db90-4750-838f-e9a75f64427b
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: 8120af77-89a4-428f-84dc-dc62833b5892
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {Left: 40.0, Top: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Title Screen (New Game)
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}

@@ -1,0 +1,36 @@
+!SceneAsset
+Id: 329115a2-2da7-4d10-9563-da4c94d09f90
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! d9c1c187-1dce-4818-8fca-3353daa0fde3
+    Parts:
+        -   Entity:
+                Id: d9c1c187-1dce-4818-8fca-3353daa0fde3
+                Name: SubScreenController
+                Components:
+                    cd880c34c5f78bf7c5585de293f1cb10: !TransformComponent
+                        Id: 560be4d3-d5f3-47c8-80be-2c50498176a0
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ede1ef833bea16cd57f59f7f57979bbf: !GameScreenManagerExample.GameScreens.SubScreens.SubScreenController,GameScreenManagerExample.Game
+                        Id: 13f3989d-65ae-4f82-a4c6-572e3f7bebc3
+                        SubScreen*: !GameScreenManagerExample.GameScreens.SubScreens.TitleInitialSubScreen,GameScreenManagerExample.Game
+                            NewGameSubScreenSceneUrl: 24c6c08e-5e56-42cf-832f-ab32c5552678:Scenes/SubScreens/NewGameSubScreen
+                            ContinueGameSubScreenSceneUrl: bed5167b-695c-49e4-8b3c-8e1c908ca848:Scenes/SubScreens/LoadGameSubScreen
+                            OptionsSubScreenSceneUrl: 6870a393-301f-4cd6-94d8-8e6684bb0b30:Scenes/SubScreens/OptionsSubScreen
+                    bee5086dbcf36a1a8f9e0832ee1c6b94: !UIComponent
+                        Id: b99af957-cc9d-42c2-82bb-8d9729979496
+                        Page*: b1a48ffb-e80a-4165-8a86-e67e0cfd187a:UI/TitleInitialSubScreenPage
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.0, Y: 1.0, Z: 1.0}
+                        RenderGroup: Group31
+            Base:
+                BasePartAsset: f10b016e-1009-456f-8423-1983030cd810:GameScreenPrefabs/SubScreenController
+                BasePartId: ba2218a5-0500-4945-8dc2-c166ab36edda
+                InstanceId: e6500f8c-04ec-4a56-8f59-f69a42591f16

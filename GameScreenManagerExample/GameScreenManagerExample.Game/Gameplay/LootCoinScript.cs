@@ -8,6 +8,8 @@ using Stride.Audio;
 using Stride.Engine;
 using Stride.Engine.Events;
 using GameScreenManagerExample.Core;
+using GameScreenManagerExample.GameScreens;
+using GameScreenManagerExample.GameScreens.SubScreens;
 
 namespace GameScreenManagerExample.Gameplay
 {
@@ -85,6 +87,9 @@ namespace GameScreenManagerExample.Gameplay
             };
 
             Script.AddTask(cleanupTask);
+
+            var subScreen = SceneSystem.SceneInstance.RootScene.FindSubScreenFromRootScene<InGameSubScreen>();
+            subScreen.OnCoinCollected();
         }
     }
 }

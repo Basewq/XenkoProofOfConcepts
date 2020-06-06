@@ -2,7 +2,7 @@
 Id: a2363781-9844-428d-8d98-f2b5dc6906c4
 SerializedVersion: {Stride: 2.0.0.0}
 Tags: []
-Scene: 918eb53b-3d0b-42e4-bb32-1df916a71cf9:MainScene
+Scene: 918eb53b-3d0b-42e4-bb32-1df916a71cf9:Scenes/SubScreens/InGameSubScreenScene
 IncludedCollisionGroups: CustomFilter1
 BuildSettings:
     CellHeight: 0.1

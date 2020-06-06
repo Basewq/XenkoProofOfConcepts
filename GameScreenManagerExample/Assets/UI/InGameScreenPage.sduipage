@@ -1,0 +1,38 @@
+!UIPageAsset
+Id: 4e482b15-cac2-42ca-8f1f-53d73d398332
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 2f66eaf8-14a9-42f3-a9b2-ee4671cbc07d
+    Parts:
+        -   UIElement: !Grid
+                Id: 2f66eaf8-14a9-42f3-a9b2-ee4671cbc07d
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 255}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    8b51ac15eab234ae6a180a46e51f993f: !TextBlock ref!! d2109e7d-e21c-4c6e-b713-f4f74254bcd5
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: d2109e7d-e21c-4c6e-b713-f4f74254bcd5
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Bottom
+                Margin: {Right: 40.0, Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: LoadingText
+                Text: Loading...
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Right

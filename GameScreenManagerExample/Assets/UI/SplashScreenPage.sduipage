@@ -1,0 +1,81 @@
+!UIPageAsset
+Id: 5de394b6-0285-4f07-a5d1-4934e1837a72
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 7a823d30-b604-4ff5-bf03-8a935d45bed5
+    Parts:
+        -   UIElement: !ImageElement
+                Id: 095acd20-8161-4fcd-8a1f-94efe237527d
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: SplashContent1
+                Source: !SpriteFromTexture
+                    Texture: d26edb11-10bd-403c-b3c2-9c7fcccf25e5:StrideDefaultSplashScreen
+                    Center: {X: 0.0, Y: 0.0}
+                Color: {R: 255, G: 255, B: 255, A: 255}
+        -   UIElement: !TextBlock
+                Id: 1711e4e1-a1c7-49ac-a6e3-21c3424a1fbb
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Bottom
+                Margin: {Right: 40.0, Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: LoadingText
+                Text: Loading...
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Right
+        -   UIElement: !TextBlock
+                Id: 52e5179d-9b3f-49e9-a4ea-e59f6f6bceab
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Game Screen Manager Example
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 32.0
+                TextColor: {R: 255, G: 255, B: 255, A: 255}
+                TextAlignment: Center
+        -   UIElement: !Grid
+                Id: 7a823d30-b604-4ff5-bf03-8a935d45bed5
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 255}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    9a6dab6c8d5e9e62b93f3682c3045e15: !ImageElement ref!! 095acd20-8161-4fcd-8a1f-94efe237527d
+                    d25b7c3095101c3d2ceec98fb6bd8518: !Grid ref!! 823e3c6e-4a1a-4f19-aee2-8c380915b158
+                    8b51ac15eab234ae6a180a46e51f993f: !TextBlock ref!! 1711e4e1-a1c7-49ac-a6e3-21c3424a1fbb
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !Grid
+                Id: 823e3c6e-4a1a-4f19-aee2-8c380915b158
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: SplashContent2
+                Children:
+                    c0a1f3f0319c9eccc02ce8eebb345e7d: !TextBlock ref!! 52e5179d-9b3f-49e9-a4ea-e59f6f6bceab
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
