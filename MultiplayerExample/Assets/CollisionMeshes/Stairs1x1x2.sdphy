@@ -1,0 +1,21 @@
+!ColliderShapeAsset
+Id: 7e4c5547-da85-42fe-a3bc-e597771ffdc9
+SerializedVersion: {Stride: 3.0.0.0}
+Tags: []
+ColliderShapes:
+    dd1b93604c80c24fa67766d259000d5f: !ConvexHullColliderShapeDesc
+        ConvexHulls: null
+        ConvexHullsIndices: null
+        Model: b4549d46-a2ef-40d9-93a4-2c3294d3e0de:Models/Stairs1x1x2
+        LocalOffset: {X: 0.0, Y: 0.0, Z: 0.0}
+        LocalRotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+        Scaling: {X: 1.0, Y: 1.0, Z: 1.0}
+        Decomposition:
+            Depth: 10
+            PosSampling: 10
+            AngleSampling: 10
+            PosRefine: 5
+            AngleRefine: 5
+            Alpha: 0.01
+            Threshold: 0.01
+            Enabled: false

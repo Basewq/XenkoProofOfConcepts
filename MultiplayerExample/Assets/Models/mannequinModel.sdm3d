@@ -1,0 +1,35 @@
+!Model
+Id: c9aec25a-fb63-4f1c-9975-cf4433ad5299
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Models/mannequinModel.fbx
+Skeleton: f7a8b249-ff7c-4f75-81aa-8abde1d542cf:Models/mannequinModel Skeleton
+PivotPosition: {X: 0.0, Y: 0.0, Z: 0.0}
+Materials:
+    98c4d20c91aa1618068f92bf068f92bf:
+        Name: glossMT
+        MaterialInstance:
+            Material: 39da0f36-14af-4daa-909d-db89bca19e18:Materials/BodyWhite
+    7b8394fb681bf353e28097d3e28097d3:
+        Name: glowMT
+        MaterialInstance:
+            Material: e0b85d6f-7616-4308-b482-0dd2ba9a5f46:Materials/Emissive
+    b158ca41e15b46f8b2746c0a97fdd6ee:
+        Name: semiGlossMT
+        MaterialInstance:
+            Material: 30ccf9c4-18a8-42f5-8541-d1cd64b580a1:Materials/BodyGray
+    faa4a3f8305ed27cc904838a9cc19a82:
+        Name: upperMatteMT
+        MaterialInstance:
+            Material: 5be59375-1c61-433e-9b01-37666c5b551e:Materials/MattBlackUpper
+    a0e1f0d3ce4733ac659a460caa2e5120:
+        Name: lowerMatteMT
+        MaterialInstance:
+            Material: 4dd3ce0d-1267-45a9-8a77-b1955bc73eaf:Materials/MattBlackLower
+    e3befa98ad23d3cfa84708dda84708dd:
+        Name: lambert1
+        MaterialInstance:
+            Material: 0c55e20a-c429-4bed-97ae-2f8a3ccbae99:Materials/LambertMT
+Modifiers: {}
+~SourceHashes:
+    6b7e5b3e9c4180ffe5d731fa352283a4~../../Resources/Models/mannequinModel.fbx: 41531d1299044bd0f0b265374610fb1d

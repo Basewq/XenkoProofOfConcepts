@@ -1,0 +1,32 @@
+!MaterialAsset
+Id: 11bf29cf-92a9-4050-9f22-c312f3a35a19
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Attributes:
+    MicroSurface: !MaterialGlossinessMapFeature
+        GlossinessMap: !ComputeFloat
+            Value: 0.5
+    Diffuse: !MaterialDiffuseMapFeature
+        DiffuseMap: !ComputeBinaryColor
+            Operator: Add
+            LeftChild: !ComputeTextureColor
+                Texture: 296ab3ed-715d-40d9-84f3-1b02859664a3:Textures/CheckerGrid1x1
+                FallbackValue:
+                    Value: {R: 1.0, G: 1.0, B: 1.0, A: 1.0}
+                Scale: {X: 1.0, Y: 1.0}
+                Offset: {X: 0.0, Y: 0.0}
+                Swizzle: null
+            RightChild: !ComputeColor
+                Value: {R: 0.369999975, G: 0.0, B: 0.435294122, A: 1.0}
+    DiffuseModel: !MaterialDiffuseLambertModelFeature {}
+    Specular: !MaterialMetalnessMapFeature
+        MetalnessMap: !ComputeFloat
+            Value: 0.5
+    SpecularModel: !MaterialSpecularMicrofacetModelFeature
+        Fresnel: !MaterialSpecularMicrofacetFresnelSchlick {}
+        Visibility: !MaterialSpecularMicrofacetVisibilitySmithSchlickGGX {}
+        NormalDistribution: !MaterialSpecularMicrofacetNormalDistributionGGX {}
+        Environment: !MaterialSpecularMicrofacetEnvironmentGGXLUT {}
+    Overrides:
+        UVScale: {X: 1.0, Y: 1.0}
+Layers: {}

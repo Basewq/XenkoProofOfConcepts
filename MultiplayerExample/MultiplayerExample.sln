@@ -1,0 +1,11 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerExample.Windows", "MultiplayerExample.Windows\MultiplayerExample.Windows.csproj", "{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerExample.Game", "MultiplayerExample.Game\MultiplayerExample.Game.csproj", "{3552F0E9-AA91-4A9F-B143-AC79351FD969}"
+EndProject
+Global
+EndGlobal
