@@ -1,0 +1,43 @@
+!PrefabAsset
+Id: c9024dd0-ac55-483f-bcac-cdd74e164332
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 3b0519c6-9e51-4be8-9ec4-12e4aef08b18
+        - ref!! b2a08cb2-9885-41ee-825e-d2da899cdfc1
+    Parts:
+        -   Entity:
+                Id: 3b0519c6-9e51-4be8-9ec4-12e4aef08b18
+                Name: UIManager
+                Components:
+                    7e377b3b9dd53c863b2499fbfc6bacdd: !TransformComponent
+                        Id: 4ec35aa5-1862-48ed-9b77-2747aab0e957
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    90f3b9a8f23a7020353ce1530ba3d1fc: !GameScreenManagerExample.GameScreens.UIManager,GameScreenManagerExample.Game
+                        Id: d8caab8d-b238-414e-b38e-32581673af67
+                        SplashScreenUIUrl: 8dbb51b6-c49d-4aab-8d8d-307a37e9a5e8:UI/SplashScreenUI
+                        TitleScreenUIUrl: 329115a2-2da7-4d10-9563-da4c94d09f90:UI/TitleScreenUI
+                        NewGameScreenUIUrl: 24c6c08e-5e56-42cf-832f-ab32c5552678:UI/NewGameScreenUI
+                        LoadGameScreenUIUrl: bed5167b-695c-49e4-8b3c-8e1c908ca848:UI/LoadGameScreenUI
+                        OptionsScreenUIUrl: 6870a393-301f-4cd6-94d8-8e6684bb0b30:UI/OptionsScreenUI
+                        InGameScreenUIUrl: 918eb53b-3d0b-42e4-bb32-1df916a71cf9:UI/InGameScreenUI
+                        InGameOptionsScreenUIUrl: 56e8c2a3-e57e-4aa2-babd-3dd91b39ca9b:UI/InGameOptionsScreenUI
+        -   Entity:
+                Id: b2a08cb2-9885-41ee-825e-d2da899cdfc1
+                Name: RootUICamera
+                Components:
+                    a116d811cab5bf4da5211050e1d34e10: !TransformComponent
+                        Id: 40087ef4-ff21-4c66-bfa6-92372872e6fb
+                        Position: {X: 0.0, Y: 0.0, Z: 12.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
+                        Id: 47e84ed7-5609-40f2-add2-d6f7de3b4968
+                        Name: null
+                        Projection: Perspective
+                        Slot: e46e5154-2e12-4f13-9219-ea7f208c330d

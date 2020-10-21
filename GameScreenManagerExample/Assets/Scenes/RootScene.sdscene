@@ -7,9 +7,7 @@ Offset: {X: 0.0, Y: 0.0, Z: 0.0}
 Hierarchy:
     RootParts:
         - ref!! 1f069b59-a132-4722-bc95-079757688c95
-        - ref!! bff1f57e-57f2-4e5e-89b3-a0efa9eb38be
         - ref!! 8f133fe6-2450-4db8-bd99-019b939f2b5a
-        - ref!! e6925869-15b5-4e85-bdc6-88385096982c
     Parts:
         -   Entity:
                 Id: 1f069b59-a132-4722-bc95-079757688c95
@@ -23,6 +21,13 @@ Hierarchy:
                         Children: {}
                     383281c42178b2b25b0ce29ba9a80502: !GameScreenManagerExample.GameServices.GameManager,GameScreenManagerExample.Game
                         Id: 6320ce4d-ba2e-4f6b-82f2-81fa5233fb0d
+                    6dcf4cf215edaa7d7792924fca16466b: !GameScreenManagerExample.GameServices.SceneManager,GameScreenManagerExample.Game
+                        Id: f925b394-25d2-4b82-a163-1d22441cd250
+                        UiSystemUrl: c9024dd0-ac55-483f-bcac-cdd74e164332:UI/UISystem
+                        InitialScreenSceneUrl: 3b98d371-2e99-470c-97f3-450b8b5340a1:Scenes/SplashScreen
+                        SplashScreenSceneUrl: 3b98d371-2e99-470c-97f3-450b8b5340a1:Scenes/SplashScreen
+                        TitleScreenSceneUrl: 4dcae764-6202-44a7-a3cc-937f9dc26b2e:Scenes/TitleScreen
+                        InGameSceneUrl: 099c534d-2db6-403c-b193-90dee3d32a45:Scenes/InGame
         -   Entity:
                 Id: 8f133fe6-2450-4db8-bd99-019b939f2b5a
                 Name: RootMainCamera
@@ -35,38 +40,6 @@ Hierarchy:
                         Children: {}
                     1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
                         Id: dae329c5-b040-4149-a0b8-fcd88f5bf3ea
-                        Name: null
+                        Name: RootMain
                         Projection: Perspective
                         Slot: c15adccd-88f4-4cd9-a45a-55ce9f8e89e5
-        -   Entity:
-                Id: bff1f57e-57f2-4e5e-89b3-a0efa9eb38be
-                Name: GameScreenManager
-                Components:
-                    7cf5ef8ddfab22b119dd5bb6634d20e6: !TransformComponent
-                        Id: b0e2ee46-a39a-4768-ac0a-865dcab482f9
-                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
-                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
-                        Children: {}
-                    6dcf4cf215edaa7d7792924fca16466b: !GameScreenManagerExample.GameScreens.GameScreenManager,GameScreenManagerExample.Game
-                        Id: f925b394-25d2-4b82-a163-1d22441cd250
-                        InitialScreenSceneUrl: 3b98d371-2e99-470c-97f3-450b8b5340a1:Scenes/GameScreens/SplashScreen
-                        SplashScreenSceneUrl: 3b98d371-2e99-470c-97f3-450b8b5340a1:Scenes/GameScreens/SplashScreen
-                        TitleScreenSceneUrl: 4dcae764-6202-44a7-a3cc-937f9dc26b2e:Scenes/GameScreens/TitleScreen
-                        InGameScreenSceneUrl: 7aad2a4f-c1dd-4bfc-ae8a-41ca277c2aae:Scenes/GameScreens/InGameScreen
-        -   Folder: null
-            Entity:
-                Id: e6925869-15b5-4e85-bdc6-88385096982c
-                Name: RootUICamera
-                Components:
-                    a116d811cab5bf4da5211050e1d34e10: !TransformComponent
-                        Id: 4b12c9a5-ce8a-45ab-a5a1-bd3f028d32ad
-                        Position: {X: 0.0, Y: 0.0, Z: 12.0}
-                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
-                        Children: {}
-                    1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
-                        Id: 50366eef-42fe-4abc-9eb7-20ccf41c3f97
-                        Name: null
-                        Projection: Perspective
-                        Slot: e46e5154-2e12-4f13-9219-ea7f208c330d

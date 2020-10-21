@@ -1,15 +1,15 @@
 // Copyright (c) Stride contributors (https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
-using System.Linq;
+using GameScreenManagerExample.Core;
+using GameScreenManagerExample.GameScreens;
+using GameScreenManagerExample.GameScreens.PageHandlers;
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Engine.Events;
 using Stride.Input;
 using Stride.Physics;
 using Stride.Rendering;
-using GameScreenManagerExample.Core;
-using GameScreenManagerExample.GameScreens;
-using GameScreenManagerExample.GameScreens.SubScreens;
+using System.Linq;
 
 namespace GameScreenManagerExample.Player
 {
@@ -36,12 +36,22 @@ namespace GameScreenManagerExample.Player
 
         private ClickResult lastClickResult;
 
-        private InGameSubScreen _inGameSubScreen;
+        private InGameScreenPageHandler _inGameScreenPageHandler;
 
         public override void Update()
         {
-            _inGameSubScreen ??= SceneSystem.SceneInstance.RootScene.FindSubScreenFromRootScene<InGameSubScreen>();
-            if (!_inGameSubScreen.IsTopMostScreen)
+            // HACK: should probably not rely on accessing this UI component directly.
+            if (_inGameScreenPageHandler == null)
+            {
+                var uiManager = SceneSystem.GetUIManagerFromRootScene();
+                _inGameScreenPageHandler = uiManager.TopPageHandler as InGameScreenPageHandler;
+                if (_inGameScreenPageHandler == null)
+                {
+                    // UI not loaded yet
+                    return;
+                }
+            }
+            if (!_inGameScreenPageHandler.IsTopMostScreen)
             {
                 // Don't process any input, since it's probably in a sub-menu!
                 return;

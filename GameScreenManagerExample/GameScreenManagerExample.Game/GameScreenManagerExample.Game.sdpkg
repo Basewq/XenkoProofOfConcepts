@@ -16,8 +16,9 @@ ExplicitFolders: []
 Bundles: []
 TemplateFolders: []
 RootAssets:
-    - 1f200ebb-518b-44ca-827b-c76eaa2f8be3:Scenes/EasternChunk
-    - 26a707ab-431c-484b-81ce-a8016a198078:Scenes/NorthernChunk
-    - 4219cdc9-f45e-4629-b15d-cd5d125a0937:Scenes/SouthernChunk
-    - b0a33707-8125-4e8e-8ddc-5988569a4e9c:Scenes/CentralChunk
-    - bcc5c9ec-9bad-45c2-8c71-0eaa9f2a4485:Scenes/WesternChunk
+    - 099c534d-2db6-403c-b193-90dee3d32a45:Scenes/InGame
+    - 3b98d371-2e99-470c-97f3-450b8b5340a1:Scenes/SplashScreen
+    - 4dcae764-6202-44a7-a3cc-937f9dc26b2e:Scenes/TitleScreen
+    - 56e8c2a3-e57e-4aa2-babd-3dd91b39ca9b:UI/InGameOptionsScreenUI
+    - 66f25cbe-8687-4614-aee9-d6786bf55503:Scenes/RootScene
+    - f10b016e-1009-456f-8423-1983030cd810:UI/UIPageControllerBase

@@ -1,0 +1,31 @@
+!PrefabAsset
+Id: 918eb53b-3d0b-42e4-bb32-1df916a71cf9
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 8ac18b2e-3f41-46fb-86ef-95da073e6e85
+    Parts:
+        -   Entity:
+                Id: 8ac18b2e-3f41-46fb-86ef-95da073e6e85
+                Name: PageController
+                Components:
+                    cd880c34c5f78bf7c5585de293f1cb10: !TransformComponent
+                        Id: b3ca4bf6-940a-47ca-94cb-230a83389b87
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    ede1ef833bea16cd57f59f7f57979bbf: !GameScreenManagerExample.GameScreens.PageController,GameScreenManagerExample.Game
+                        Id: d7c5db17-e49a-45d7-a42c-6f89354c2bb2
+                        PageHandler*: !GameScreenManagerExample.GameScreens.PageHandlers.InGameScreenPageHandler,GameScreenManagerExample.Game {}
+                    bee5086dbcf36a1a8f9e0832ee1c6b94: !UIComponent
+                        Id: b7dfc224-9fc0-4dec-bd5d-e77e2a2bd8e9
+                        Page*: d7067e81-1cd5-4c64-b310-43deea591c6c:UI/InGameScreenPage
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.0, Y: 1.0, Z: 1.0}
+                        RenderGroup: Group31
+            Base:
+                BasePartAsset: f10b016e-1009-456f-8423-1983030cd810:UI/UIPageControllerBase
+                BasePartId: ba2218a5-0500-4945-8dc2-c166ab36edda
+                InstanceId: ad979bad-1688-4b74-a440-7fce1dfde7bb

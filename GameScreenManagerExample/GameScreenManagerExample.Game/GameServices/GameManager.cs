@@ -1,13 +1,14 @@
 ﻿using Stride.Core;
 using Stride.Engine;
 using Stride.Engine.Design;
+using System;
 
 namespace GameScreenManagerExample.GameServices
 {
     /// <summary>
-    /// The GameManager component on the GameManager entity. This is mainly used to set up the <see cref="GameManager"/> which
-    /// is actually a service.
-    /// Note that the GameManager entity must exist on the root scene, and persist for the entire lifetime of the game.
+    /// The GameManager component on the GameManager entity.
+    /// This component is to be used like a service.
+    /// Note that the GameManager entity must exist on the <b>root</b> scene, and persist for the entire lifetime of the game.
     /// </summary>
     [DataContract]
     [DefaultEntityComponentProcessor(typeof(GameManagerProcessor), ExecutionMode = ExecutionMode.Runtime)]
@@ -24,5 +25,17 @@ namespace GameScreenManagerExample.GameServices
         }
 
         // Add any game play related method/properties here
+        public event Action<int> CoinCollectedChanged;
+
+        private int _coinCollected;
+        public int CoinCollected
+        {
+            get => _coinCollected;
+            internal set
+            {
+                _coinCollected = value;
+                CoinCollectedChanged?.Invoke(_coinCollected);
+            }
+        }
     }
 }

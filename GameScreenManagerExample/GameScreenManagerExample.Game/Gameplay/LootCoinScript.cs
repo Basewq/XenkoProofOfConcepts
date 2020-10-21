@@ -1,15 +1,14 @@
 // Copyright (c) Stride contributors (https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
-using System;
-using System.Threading.Tasks;
+using GameScreenManagerExample.Core;
+using GameScreenManagerExample.GameServices;
+using Stride.Audio;
 using Stride.Core;
 using Stride.Core.Mathematics;
-using Stride.Audio;
 using Stride.Engine;
 using Stride.Engine.Events;
-using GameScreenManagerExample.Core;
-using GameScreenManagerExample.GameScreens;
-using GameScreenManagerExample.GameScreens.SubScreens;
+using System;
+using System.Threading.Tasks;
 
 namespace GameScreenManagerExample.Gameplay
 {
@@ -31,6 +30,8 @@ namespace GameScreenManagerExample.Gameplay
         private bool activated = false;
 
         private float animationTime = (float)(Math.PI * 3 / 2);
+
+        private GameManager _gameManager;
 
         public override void Update()
         {
@@ -88,8 +89,8 @@ namespace GameScreenManagerExample.Gameplay
 
             Script.AddTask(cleanupTask);
 
-            var subScreen = SceneSystem.SceneInstance.RootScene.FindSubScreenFromRootScene<InGameSubScreen>();
-            subScreen.OnCoinCollected();
+            _gameManager ??= SceneSystem.GetGameManagerFromRootScene();
+            _gameManager.CoinCollected++;
         }
     }
 }
