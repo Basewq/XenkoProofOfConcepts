@@ -1,0 +1,133 @@
+!UIPageAsset
+Id: d7067e81-1cd5-4c64-b310-43deea591c6c
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 9b9f7a51-0480-4099-844b-4745745a20d5
+    Parts:
+        -   UIElement: !TextBlock
+                Id: 28b4c36e-4cec-4e04-8be0-3bb446424933
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: PlayerNameText
+                Text: 'Player: -'
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: 310f273b-bae3-4108-9239-791b994c46f4
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: PlayerNameText
+                Text: 'Player: -'
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: 5698819e-0950-4b65-8973-1f7c71c00d7a
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: ClockTimeText
+                Text: 'Time: 0'
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: 7da64988-4a6f-426e-94aa-c10955713a73
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: In-Game
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Grid
+                Id: 9b9f7a51-0480-4099-844b-4745745a20d5
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    9dfdb9efbace5cd2107100c1c695b64d: !StackPanel ref!! c28eee62-9184-43f7-bb52-ec9172d9f144
+                    35f4386f2cb593e4ef409b93365844d5: !StackPanel ref!! ec5aedab-4890-4881-b5e7-3665178e6b95
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: bf736e28-fc57-4c64-8d1b-47f7acd631c9
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: PlayerNameText
+                Text: 'Player: -'
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !StackPanel
+                Id: c28eee62-9184-43f7-bb52-ec9172d9f144
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Left
+                Margin: {Left: 40.0, Top: 20.0, Right: 40.0, Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    da1d53a2d7004e8e1603638c1b81b0ba: !TextBlock ref!! 7da64988-4a6f-426e-94aa-c10955713a73
+                    ab759e250ed72d23597310f937f81c05: !TextBlock ref!! 28b4c36e-4cec-4e04-8be0-3bb446424933
+                    32ab6b22a4974f65efaa4dea1838784b: !TextBlock ref!! bf736e28-fc57-4c64-8d1b-47f7acd631c9
+                    df01078562155923c786e3ddac110326: !TextBlock ref!! 310f273b-bae3-4108-9239-791b994c46f4
+                    39082cdd0f56cec031520271d9c8b1e5: !TextBlock ref!! e031ed66-d2d4-4983-a3da-e1ccced56959
+        -   UIElement: !TextBlock
+                Id: e031ed66-d2d4-4983-a3da-e1ccced56959
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: PlayerNameText
+                Text: 'Player: -'
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !StackPanel
+                Id: ec5aedab-4890-4881-b5e7-3665178e6b95
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Right
+                Margin: {Left: 40.0, Top: 20.0, Right: 40.0, Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    ab759e250ed72d23597310f937f81c05: !TextBlock ref!! 5698819e-0950-4b65-8973-1f7c71c00d7a

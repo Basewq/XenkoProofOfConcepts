@@ -1,0 +1,362 @@
+!UIPageAsset
+Id: b1a48ffb-e80a-4165-8a86-e67e0cfd187a
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 818edbb8-a3a7-4020-a6ce-e5c8a7b59df9
+    Parts:
+        -   UIElement: !TextBlock
+                Id: 0ff887fd-3747-41c0-9332-f41a9c59f3cc
+                DependencyProperties:
+                    662a7479c96d8877ada4efdf0de367d5~GridBase.ColumnPropertyKey: 0
+                    a84300b377989d3aac2258a8f8da5766~GridBase.RowPropertyKey: 0
+                    d36e910b3963c0bae8e8b69a4f907165~GridBase.ColumnSpanPropertyKey: 2
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {Right: 10.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: 
+                Text: Multiplayer Game
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Grid
+                Id: 1b377347-6996-40e1-b429-cb5d35c7e624
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    1857952f62b5ca274c1757bb5282bf45: !TextBlock ref!! 0ff887fd-3747-41c0-9332-f41a9c59f3cc
+                    534cf03261cec1e06d56ef55a7a9615f: !TextBlock ref!! 44730540-bc99-4f90-bdd4-3c86333ebbaa
+                    84740210ef08aae84839c5a4966ba1fc: !EditText ref!! 78485e86-d4a5-4757-938f-84a5e77506f2
+                    758acf821c79bfaa3d51d0c2348f9bd2: !TextBlock ref!! a6a14c13-0ea7-4001-86f2-9735cd86f53c
+                    b7d316d03fb47d546c0ddb5aefbd43b8: !EditText ref!! 46568d5c-d017-4770-b018-65344ac39cc9
+                RowDefinitions:
+                    bab9b84393dec128c7d49cae9ecdbb33:
+                        Type: Auto
+                    92589b796f5d7a2d1e4607aed340287f:
+                        Type: Auto
+                    955684732b45d9922749ae05b081e40c:
+                        Type: Auto
+                ColumnDefinitions:
+                    64d5b5714f3008697ed7056e7a1eb5c7:
+                        Type: Auto
+                    9f0430594c957fdd1dd63231e90366b0: {}
+                LayerDefinitions:
+                    94df4a11e2d097dd9722189db63a6d4c:
+                        Type: Auto
+        -   UIElement: !Grid
+                Id: 2a91c3c1-b098-42bc-9252-26739dae31b0
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    5768045bc19c7447afc64b637eef655f: !TextBlock ref!! c0360b3b-69be-4c4d-81ca-c9f3e710301e
+                    92568035b29499c4e3f1d22ade723a5c: !EditText ref!! 7ab52666-2ee0-4281-a00e-c54453be214b
+                RowDefinitions:
+                    e4fe623ffea478f3b0ddd1b14e9e93aa:
+                        Type: Auto
+                ColumnDefinitions:
+                    64d5b5714f3008697ed7056e7a1eb5c7:
+                        Type: Auto
+                    9f0430594c957fdd1dd63231e90366b0: {}
+                LayerDefinitions:
+                    94df4a11e2d097dd9722189db63a6d4c:
+                        Type: Auto
+        -   UIElement: !TextBlock
+                Id: 44730540-bc99-4f90-bdd4-3c86333ebbaa
+                DependencyProperties:
+                    662a7479c96d8877ada4efdf0de367d5~GridBase.ColumnPropertyKey: 0
+                    a84300b377989d3aac2258a8f8da5766~GridBase.RowPropertyKey: 1
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Center
+                Margin: {Right: 10.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: 
+                Text: Svr IP
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !EditText
+                Id: 46568d5c-d017-4770-b018-65344ac39cc9
+                DependencyProperties:
+                    2af24ff6ed4079d8128abb7f4e782ea4~GridBase.ColumnPropertyKey: 1
+                    4abbff2dd63c1db5edff45c2c717f735~GridBase.RowPropertyKey: 2
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: true
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: ServerPortNumberEditText
+                Padding: {Left: 8.0, Top: 4.0, Right: 8.0, Bottom: 8.0}
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                ActiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 3
+                InactiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 4
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 5
+                CaretColor: {R: 240, G: 240, B: 240, A: 255}
+                CaretWidth: 1.0
+                SelectionColor: {R: 240, G: 240, B: 240, A: 255}
+                IMESelectionColor: {R: 240, G: 255, B: 240, A: 255}
+                CaretFrequency: 1.0
+                Text: 60000
+        -   UIElement: !StackPanel
+                Id: 5c503cbb-3c0f-4423-9bf0-5388e9e4da4b
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 300.0
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    20541b9eeba1a70ee3c508c075a1b34f: !Grid ref!! 2a91c3c1-b098-42bc-9252-26739dae31b0
+                    0b11d244a0d1ce671a0f035a0832a848: !Button ref!! f02e4df1-7e8d-430c-8cd5-d88a2f1310f3
+                    9e7495824ba41725971ce3257c0056d9: !Grid ref!! 1b377347-6996-40e1-b429-cb5d35c7e624
+                    6caf58f9e54ffaa547fb3d47d5371d1c: !Button ref!! f980d6d6-129a-46c4-83e9-c99fd9523e1b
+                    c15854c3236a67e4c4772c05752524bd: !Button ref!! f9dffded-b406-4a05-af4d-59f3d3533946
+        -   UIElement: !TextBlock
+                Id: 6f03b0ec-d2d1-47cb-92e9-ca83a1b1cfb0
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Single Player Game
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: 77fb8352-ac8d-464e-bce6-a8a5539c92a2
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Join Multiplayer
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !EditText
+                Id: 78485e86-d4a5-4757-938f-84a5e77506f2
+                DependencyProperties:
+                    2af24ff6ed4079d8128abb7f4e782ea4~GridBase.ColumnPropertyKey: 1
+                    4abbff2dd63c1db5edff45c2c717f735~GridBase.RowPropertyKey: 1
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: true
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: ServerIpEditText
+                Padding: {Left: 8.0, Top: 4.0, Right: 8.0, Bottom: 8.0}
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                ActiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 3
+                InactiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 4
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 5
+                CaretColor: {R: 240, G: 240, B: 240, A: 255}
+                CaretWidth: 1.0
+                SelectionColor: {R: 240, G: 240, B: 240, A: 255}
+                IMESelectionColor: {R: 240, G: 255, B: 240, A: 255}
+                CaretFrequency: 1.0
+                Text: 127.0.0.1
+        -   UIElement: !EditText
+                Id: 7ab52666-2ee0-4281-a00e-c54453be214b
+                DependencyProperties:
+                    2af24ff6ed4079d8128abb7f4e782ea4~GridBase.ColumnPropertyKey: 1
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: true
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: PlayerNameEditText
+                Padding: {Left: 8.0, Top: 4.0, Right: 8.0, Bottom: 8.0}
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                ActiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 3
+                InactiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 4
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 5
+                CaretColor: {R: 240, G: 240, B: 240, A: 255}
+                CaretWidth: 1.0
+                SelectionColor: {R: 240, G: 240, B: 240, A: 255}
+                IMESelectionColor: {R: 240, G: 255, B: 240, A: 255}
+                CaretFrequency: 1.0
+                Text: MyPlayer
+        -   UIElement: !Grid
+                Id: 818edbb8-a3a7-4020-a6ce-e5c8a7b59df9
+                DependencyProperties: {}
+                BackgroundColor: {R: 71, G: 159, B: 255, A: 100}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    18c445e81343b738d74dd8d87727e693: !TextBlock ref!! 9bbe2370-1c48-49dc-9080-c4db7e0e1979
+                    10ead598c00d814ac90ccd5e57b44e36: !StackPanel ref!! 5c503cbb-3c0f-4423-9bf0-5388e9e4da4b
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: 9bbe2370-1c48-49dc-9080-c4db7e0e1979
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Top
+                Margin: {Left: 40.0, Top: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Title Screen
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: a6a14c13-0ea7-4001-86f2-9735cd86f53c
+                DependencyProperties:
+                    662a7479c96d8877ada4efdf0de367d5~GridBase.ColumnPropertyKey: 0
+                    a84300b377989d3aac2258a8f8da5766~GridBase.RowPropertyKey: 2
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Center
+                Margin: {Right: 10.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: 
+                Text: Svr Port
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: c0360b3b-69be-4c4d-81ca-c9f3e710301e
+                DependencyProperties:
+                    662a7479c96d8877ada4efdf0de367d5~GridBase.ColumnPropertyKey: 0
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Center
+                Margin: {Right: 10.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: 
+                Text: Name
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: eda4b338-71ba-4fda-814b-4662cea2a888
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Quit
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Button
+                Id: f02e4df1-7e8d-430c-8cd5-d88a2f1310f3
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                IsEnabled: false
+                Margin: {Top: 5.0, Bottom: 5.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: SinglePlayerGameButton
+                Content: !TextBlock ref!! 6f03b0ec-d2d1-47cb-92e9-ca83a1b1cfb0
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !Button
+                Id: f980d6d6-129a-46c4-83e9-c99fd9523e1b
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {Top: 5.0, Bottom: 5.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: MultiplayerGameButton
+                Content: !TextBlock ref!! 77fb8352-ac8d-464e-bce6-a8a5539c92a2
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !Button
+                Id: f9dffded-b406-4a05-af4d-59f3d3533946
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {Top: 5.0, Bottom: 5.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: QuitButton
+                Content: !TextBlock ref!! eda4b338-71ba-4fda-814b-4662cea2a888
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns

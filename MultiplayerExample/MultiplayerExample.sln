@@ -1,11 +1,43 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 16
+# Visual Studio Version 16
 VisualStudioVersion = 16.0.0.0
 MinimumVisualStudioVersion = 16.0.0.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerExample.Windows", "MultiplayerExample.Windows\MultiplayerExample.Windows.csproj", "{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiplayerExample.Windows", "MultiplayerExample.Windows\MultiplayerExample.Windows.csproj", "{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerExample.Game", "MultiplayerExample.Game\MultiplayerExample.Game.csproj", "{3552F0E9-AA91-4A9F-B143-AC79351FD969}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiplayerExample.Game", "MultiplayerExample.Game\MultiplayerExample.Game.csproj", "{3552F0E9-AA91-4A9F-B143-AC79351FD969}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiplayerExample.Server", "MultiplayerExample.Server\MultiplayerExample.Server.csproj", "{CDE67E46-8C3C-4380-9140-9D322015B7BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetLib", "..\libs\LiteNetLib\LiteNetLib\LiteNetLib.csproj", "{07B8F8A0-02C3-4B58-A7FF-3F01845B5166}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B8DF1C-C6A2-40F3-9EB2-4A636F6E582E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3552F0E9-AA91-4A9F-B143-AC79351FD969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3552F0E9-AA91-4A9F-B143-AC79351FD969}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3552F0E9-AA91-4A9F-B143-AC79351FD969}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3552F0E9-AA91-4A9F-B143-AC79351FD969}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDE67E46-8C3C-4380-9140-9D322015B7BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDE67E46-8C3C-4380-9140-9D322015B7BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDE67E46-8C3C-4380-9140-9D322015B7BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDE67E46-8C3C-4380-9140-9D322015B7BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07B8F8A0-02C3-4B58-A7FF-3F01845B5166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B8F8A0-02C3-4B58-A7FF-3F01845B5166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07B8F8A0-02C3-4B58-A7FF-3F01845B5166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07B8F8A0-02C3-4B58-A7FF-3F01845B5166}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28F1877F-AEF6-4F73-A0C0-FF92C4F23715}
+	EndGlobalSection
 EndGlobal

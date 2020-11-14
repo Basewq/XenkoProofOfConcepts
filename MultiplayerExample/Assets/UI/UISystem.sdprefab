@@ -1,0 +1,40 @@
+!PrefabAsset
+Id: c9024dd0-ac55-483f-bcac-cdd74e164332
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 3b0519c6-9e51-4be8-9ec4-12e4aef08b18
+        - ref!! e6925869-15b5-4e85-bdc6-88385096982c
+    Parts:
+        -   Entity:
+                Id: 3b0519c6-9e51-4be8-9ec4-12e4aef08b18
+                Name: UIManager
+                Components:
+                    7e377b3b9dd53c863b2499fbfc6bacdd: !TransformComponent
+                        Id: 4ec35aa5-1862-48ed-9b77-2747aab0e957
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    90f3b9a8f23a7020353ce1530ba3d1fc: !MultiplayerExample.GameScreens.UIManager,MultiplayerExample.Game
+                        Id: d8caab8d-b238-414e-b38e-32581673af67
+                        TitleScreenUIUrl: 329115a2-2da7-4d10-9563-da4c94d09f90:UI/TitleScreenUI
+                        ServerConnectionScreenUIUrl: 56a4255a-57ca-4dff-a2dc-c398fe801316:UI/ServerConnectionScreenUI
+                        InGameScreenUIUrl: 7aad2a4f-c1dd-4bfc-ae8a-41ca277c2aae:UI/InGameScreenUI
+                        InGameOptionsScreenUIUrl: 56e8c2a3-e57e-4aa2-babd-3dd91b39ca9b:UI/InGameOptionsScreenUI
+        -   Entity:
+                Id: e6925869-15b5-4e85-bdc6-88385096982c
+                Name: RootUICamera
+                Components:
+                    a116d811cab5bf4da5211050e1d34e10: !TransformComponent
+                        Id: 4b12c9a5-ce8a-45ab-a5a1-bd3f028d32ad
+                        Position: {X: 0.0, Y: 0.0, Z: 12.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
+                        Id: 50366eef-42fe-4abc-9eb7-20ccf41c3f97
+                        Name: null
+                        Projection: Perspective
+                        Slot: 2e8b0d71-9bca-4c87-b95c-3f95d0012264

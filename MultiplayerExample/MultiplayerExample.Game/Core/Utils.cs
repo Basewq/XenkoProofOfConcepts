@@ -2,6 +2,7 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using Stride.Core.Mathematics;
 using Stride.Engine;
+using System.Linq;
 
 namespace MultiplayerExample.Core
 {
@@ -18,6 +19,15 @@ namespace MultiplayerExample.Core
             var worldDirection = forward * logicDirection.Y + right * logicDirection.X;
             worldDirection.Normalize();
             return worldDirection;
+        }
+
+        public static void MergeSceneTo(this Scene sourceScene, Scene destinationScene)
+        {
+            var srcEntities = sourceScene.Entities;
+            while (srcEntities.Count > 0)
+            {
+                srcEntities[0].Scene = destinationScene;
+            }
         }
     }
 }

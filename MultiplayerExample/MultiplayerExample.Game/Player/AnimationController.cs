@@ -1,13 +1,15 @@
 // Copyright (c) Stride contributors (https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
-using System;
+using MultiplayerExample.Network;
+using MultiplayerExample.Network.SnapshotStores;
+using Stride.Animations;
 using Stride.Core;
 using Stride.Core.Annotations;
 using Stride.Core.Collections;
 using Stride.Core.Mathematics;
-using Stride.Animations;
 using Stride.Engine;
-using Stride.Engine.Events;
+using System;
+using System.Diagnostics;
 
 namespace MultiplayerExample.Player
 {
@@ -59,14 +61,29 @@ namespace MultiplayerExample.Player
         // Internal state
         private bool isGrounded = false;
         private AnimationState state = AnimationState.Airborne;
-        private readonly EventReceiver<float> runSpeedEvent = new EventReceiver<float>(PlayerController.RunSpeedEventKey);
-        private readonly EventReceiver<bool> isGroundedEvent = new EventReceiver<bool>(PlayerController.IsGroundedEventKey);
 
-        float runSpeed;
+        private float runSpeed;
+
+        private GameClockManager _gameClockManager;
+
+        private NetworkEntityComponent _networkEntityComponent;
+        private MovementSnapshotsComponent _movementSnapshotsComponent;
+        private ClientPredictionSnapshotsComponent _clientPredictionSnapshotsComponent;     // Optional component
 
         public override void Start()
         {
             base.Start();
+
+            var parentEntity = Entity.GetParent();
+            Debug.Assert(parentEntity != null);
+
+            _networkEntityComponent = parentEntity.Get<NetworkEntityComponent>();
+            Debug.Assert(_networkEntityComponent != null);
+            _movementSnapshotsComponent = parentEntity.Get<MovementSnapshotsComponent>();
+            Debug.Assert(_movementSnapshotsComponent != null);
+            _clientPredictionSnapshotsComponent = parentEntity.Get<ClientPredictionSnapshotsComponent>();
+
+            _gameClockManager = Services.GetSafeServiceAs<GameClockManager>();
 
             if (AnimationComponent == null)
                 throw new InvalidOperationException("The animation component is not set");
@@ -141,8 +158,7 @@ namespace MultiplayerExample.Player
             // Use DrawTime rather than UpdateTime
             var time = Game.DrawTime;
             // This update function will account for animation with different durations, keeping a current time relative to the blended maximum duration
-            long blendedMaxDuration = 0;
-            blendedMaxDuration =
+            long blendedMaxDuration =
                 (long)MathUtil.Lerp(animationClipWalkLerp1.Duration.Ticks, animationClipWalkLerp2.Duration.Ticks, walkLerpFactor);
 
             var currentTicks = TimeSpan.FromTicks((long)(currentTime * blendedMaxDuration));
@@ -205,10 +221,44 @@ namespace MultiplayerExample.Player
 
         public override void Update()
         {
-            // State control
-            runSpeedEvent.TryReceive(out runSpeed);
             bool isGroundedNewValue;
-            isGroundedEvent.TryReceive(out isGroundedNewValue);
+            if (_clientPredictionSnapshotsComponent != null)
+            {
+                var predictedMovements = _clientPredictionSnapshotsComponent.PredictedMovements;
+                if (predictedMovements.Count <= 0)
+                {
+                    return;
+                }
+                ref var curMovementData = ref predictedMovements.Items[predictedMovements.Count - 1];
+                // State control
+                runSpeed = curMovementData.MoveSpeedDecimalPercentage;
+
+                isGroundedNewValue = curMovementData.IsGrounded;
+            }
+            else
+            {
+                var animTime = _gameClockManager.SimulationClock.TotalTime;
+                if (!_networkEntityComponent.IsLocalEntity)
+                {
+                    animTime -= _gameClockManager.RemoteEntityRenderTimeDelay;
+                }
+                var simTickNumber = GameClockManager.CalculateSimulationTickNumber(animTime);
+                var snapshotStore = _movementSnapshotsComponent.SnapshotStore;
+                var movementFindResult = snapshotStore.TryFindSnapshotClosestEqualOrLessThan(simTickNumber);
+                if (!movementFindResult.IsFound)
+                {
+                    return;
+                }
+                ref var curMovementData = ref movementFindResult.Result;
+                // State control
+                runSpeed = curMovementData.MoveSpeedDecimalPercentage;
+
+                isGroundedNewValue = curMovementData.IsGrounded;
+#if DEBUG
+                //Debug.WriteLine($"AnimCtrl-Remote: RunSpeed: {runSpeed} - Sim {curMovementData.SimulationTickNumber} - FindSim {simTickNumber} - {curMovementData.SnapshotType} - Sim {curMovementData.CurrentMoveVelocity}");
+                //Console.WriteLine($"AnimCtrl-Remote: RunSpeed: {runSpeed} - Sim {curMovementData.SimulationTickNumber} - FindSim {simTickNumber} - {curMovementData.SnapshotType}");
+#endif
+            }
             if (isGrounded != isGroundedNewValue)
             {
                 currentTime = 0;

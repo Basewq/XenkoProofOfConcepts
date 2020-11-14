@@ -2,7 +2,7 @@
 Id: 4d7dd415-ad37-45b1-871b-7278af13e484
 SerializedVersion: {Stride: 3.1.0.1}
 Tags: []
-DefaultScene: 33b281c0-325b-4563-826e-27fc25dbf06b:MainScene
+DefaultScene: 66f25cbe-8687-4614-aee9-d6786bf55503:Scenes/RootScene
 GraphicsCompositor: e0286b64-761a-4f48-afa4-3b1954834e8e:GraphicsCompositor
 Defaults:
     - !Stride.Graphics.RenderingSettings,Stride.Graphics

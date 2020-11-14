@@ -1,0 +1,21 @@
+!PrefabAsset
+Id: 178a8f28-6556-4fa4-addc-fba81ab9a49b
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 303b39f2-f5b4-4bff-b2e3-795fa6e6cdcc
+    Parts:
+        -   Entity:
+                Id: 303b39f2-f5b4-4bff-b2e3-795fa6e6cdcc
+                Name: SceneController
+                Components:
+                    2507aa30e48c1da2331030dc5935cc48: !TransformComponent
+                        Id: 4f78083e-b1f7-4627-bcb4-b4e863d89e6b
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    491f03533f264d1ed245adaed07b8ee2: !MultiplayerExample.GameServices.SceneController,MultiplayerExample.Game
+                        Id: 18fb715f-3823-4148-b689-d858f6509dbc
+                        SceneHandler: null

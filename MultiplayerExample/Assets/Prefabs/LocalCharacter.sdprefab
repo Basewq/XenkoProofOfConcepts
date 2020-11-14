@@ -1,0 +1,128 @@
+!PrefabAsset
+Id: 3935b805-a8b8-40b4-9675-021a968a176e
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! db50e2ee-4adf-4bdb-8909-40417ab6b88e
+    Parts:
+        -   Entity:
+                Id: 1e5b5a0d-cda3-4e82-978f-0810f3385a98
+                Name: CameraTarget
+                Components:
+                    39d4bdb202782a41869f2a6d53da4edf: !TransformComponent
+                        Id: 3b3d7f47-50d4-4497-a5d3-df8ce4f94b95
+                        Position: {X: 0.0, Y: 1.65, Z: 0.0}
+                        Rotation: {X: -0.167157218, Y: -0.557161868, Z: -0.115674, W: 0.8051389}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children:
+                            a116d811cab5bf4da5211050e1d34e10: ref!! b92dd9a0-0808-448a-b4aa-11d319ac8cc6
+        -   Entity:
+                Id: db50e2ee-4adf-4bdb-8909-40417ab6b88e
+                Name: LocalCharacter
+                Components:
+                    b296752080481e41b569d385767428ce: !TransformComponent
+                        Id: fffab38d-66d4-464e-82f0-b12e115516db
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children:
+                            1245d3c0d097e44e8295e28dad432562: ref!! 6dcf4067-3135-4560-b004-d672b7f252d5
+                            91bd0beaa010bc111c49b3736535e973: ref!! 3b3d7f47-50d4-4497-a5d3-df8ce4f94b95
+                    b978a0332590234b9f3a3537f50e75ae: !CharacterComponent
+                        Id: 979ecbf7-6bb3-457f-9eee-0a55784a1df8
+                        CollisionGroup: KinematicFilter
+                        CanSleep: false
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        FallSpeed: 10.0
+                        MaxSlope: {Radians: 0.7853982}
+                        JumpSpeed: 13.0
+                        Gravity: {X: 0.0, Y: -40.0, Z: 0.0}
+                        ColliderShapes:
+                            56a5239435c0e54188f913fd5d2f5dee: !CapsuleColliderShapeDesc
+                                Length: 1.2
+                                Radius: 0.4
+                                LocalOffset: {X: 0.0, Y: 0.95, Z: 0.0}
+                                LocalRotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                    53beac4f38fb8efd8cb900eaa74b4ec1: !MultiplayerExample.Input.InputDeviceComponent,MultiplayerExample.Game
+                        Id: a0aa71c6-4093-4166-b508-3c8cf06fe057
+                        PlayerIndex: 0
+                        IsKeyboardControlsEnabled: true
+                        IsMouseControlsEnabled: true
+                        IsControllerEnabled: false
+                        MouseSensitivity: 50.0
+                    00443e1c19e564414910dc5d816432bf: !MultiplayerExample.Network.SnapshotStores.InputSnapshotsComponent,MultiplayerExample.Game
+                        Id: 0cf92934-9a61-489c-a91b-cdb3cd0c52c4
+                        Camera: ref!! 19c7b373-44f5-4901-8051-f3c7373d820f
+                    871027a3f0d2f1f3b0f1ccd4c481bd69: !MultiplayerExample.Network.NetworkEntityComponent,MultiplayerExample.Game
+                        Id: 0b9262bf-9098-4bae-94a4-531ca6e8150d
+                        OwnerType: Player
+                        IsLocalEntity: true
+                    21b8fe43ab5a3a30e377de67954d234b: !MultiplayerExample.Network.SnapshotStores.MovementSnapshotsComponent,MultiplayerExample.Game
+                        Id: fa5d961c-4abb-4e91-a8f3-3351f7c3fa9a
+                        MaxRunSpeed: 8.5
+                        JumpReactionThreshold: 0.15
+                    df8e6c85beaca0700f4a3b4f9ac91468: !MultiplayerExample.Network.NetworkPlayerComponent,MultiplayerExample.Game
+                        Id: 80b41862-43ba-4e78-aab0-4bce63e2d95d
+                    96c39d2f7b9a835aa036681dcb45ed1c: !MultiplayerExample.Network.SnapshotStores.ClientPredictionSnapshotsComponent,MultiplayerExample.Game
+                        Id: 37efdd47-6722-4877-9eec-61e7c22f626f
+        -   Folder: null
+            Entity:
+                Id: dba25952-9758-4438-aa07-9c291e0c9fe3
+                Name: Camera
+                Components:
+                    a116d811cab5bf4da5211050e1d34e10: !TransformComponent
+                        Id: b92dd9a0-0808-448a-b4aa-11d319ac8cc6
+                        Position: {X: 0.0, Y: 0.0, Z: 5.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
+                        Id: 19c7b373-44f5-4901-8051-f3c7373d820f
+                        Name: null
+                        Projection: Perspective
+                        Slot: 9aeac611-d1f6-46da-a235-e20cc154e170
+                    cffbc9ddf95f8544a284e04ea2d27d8a: !MultiplayerExample.Camera.ThirdPersonCamera,MultiplayerExample.Game
+                        Id: af004c2b-a993-4326-88a2-67efb3331c30
+                        InputSnapshotsComponent: ref!! 0cf92934-9a61-489c-a91b-cdb3cd0c52c4
+                        DefaultDistance: 6.0
+                        MinimumDistance: 0.4
+                        ConeRadius: 1.25
+                        InvertX: false
+                        MinVerticalAngle: -20.0
+                        MaxVerticalAngle: 70.0
+                        InvertY: false
+                        RotationSpeed: 360.0
+                        VerticalSpeed: 45.0
+        -   Entity:
+                Id: ddac3881-fbe2-4c02-aa60-640bc76300ab
+                Name: MannequinModel
+                Components:
+                    1245d3c0d097e44e8295e28dad432562: !TransformComponent
+                        Id: 6dcf4067-3135-4560-b004-d672b7f252d5
+                        Position: {X: 0.0, Y: 4.76837158E-07, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0fa4902c57c2de428808e383912863ea: !ModelComponent
+                        Id: 98faa88c-5e5c-4238-95f6-560b68563841
+                        Model: c9aec25a-fb63-4f1c-9975-cf4433ad5299:Models/mannequinModel
+                        Materials: {}
+                    8b92d82dca5eefba2a8be1f97e8d8985: !MultiplayerExample.Player.AnimationController,MultiplayerExample.Game
+                        Id: db67c7b7-62e2-476e-8806-792e713dca8a
+                        AnimationComponent: ref!! 9bf29963-e6c7-4a00-8d95-ae5f4c409773
+                        AnimationIdle: 9bbe351d-9eff-4f67-81ae-b3b08133c93e:Animations/Idle
+                        AnimationWalk: 841e7403-4706-48a3-adda-b7c611f465ab:Animations/Walk
+                        AnimationRun: 0bec43e7-e8e8-4324-9fec-e294288586ff:Animations/Run
+                        AnimationJumpStart: 02c7167f-6786-4ce6-8c18-33e49715fb43:Animations/Jump_Start
+                        AnimationJumpMid: d3c2a4cc-88a9-4ad8-a765-4a931877b027:Animations/Jump_Loop
+                        AnimationJumpEnd: 1ca2b0ea-5573-4164-9104-bfb8a17cf0b5:Animations/Jump_End
+                        WalkThreshold: 0.25
+                        TimeFactor: 1.0
+                    010c8c75fe19737b0c2b9f2fe1125ec0: !AnimationComponent
+                        Id: 9bf29963-e6c7-4a00-8d95-ae5f4c409773
+                        Animations: {}

@@ -1,0 +1,27 @@
+!SceneAsset
+Id: 4dcae764-6202-44a7-a3cc-937f9dc26b2e
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! d1ef8658-3546-4fe1-8e23-7246a0be4d3c
+    Parts:
+        -   Entity:
+                Id: d1ef8658-3546-4fe1-8e23-7246a0be4d3c
+                Name: SceneController
+                Components:
+                    2507aa30e48c1da2331030dc5935cc48: !TransformComponent
+                        Id: 181f670c-f428-45ba-8df0-ce1c16596580
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    491f03533f264d1ed245adaed07b8ee2: !MultiplayerExample.GameServices.SceneController,MultiplayerExample.Game
+                        Id: f40e0db2-0989-4274-acb8-7844457efce2
+                        SceneHandler*: !MultiplayerExample.GameServices.SceneHandlers.TitleScreenSceneHandler,MultiplayerExample.Game {}
+            Base:
+                BasePartAsset: 178a8f28-6556-4fa4-addc-fba81ab9a49b:Scenes/SceneControllerBase
+                BasePartId: 303b39f2-f5b4-4bff-b2e3-795fa6e6cdcc
+                InstanceId: b629eee9-2a2e-41ac-a311-4733e77cddae

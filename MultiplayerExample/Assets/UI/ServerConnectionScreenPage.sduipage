@@ -1,0 +1,125 @@
+!UIPageAsset
+Id: 32d2e2b1-a37a-4c8a-ae1b-bfd33f88e6e6
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! c6d7698a-0021-40c4-b1a9-4bf67a9b55ad
+    Parts:
+        -   UIElement: !TextBlock
+                Id: 0668a489-6da3-483a-9ab8-03fe1410fd58
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Back
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Button
+                Id: 098ae9ba-6cbb-4397-8b3a-57795a5b980f
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: BackButton
+                Content: !TextBlock ref!! 0668a489-6da3-483a-9ab8-03fe1410fd58
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !StackPanel
+                Id: 1e390cb3-002e-4c03-b937-c465515b78f1
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 320.0
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    4e38f2c9846a8cff9ee1ac8a38fc1dd2: !TextBlock ref!! f466d91b-a32e-476a-9fe3-7ffecc6962c8
+                    aa21b121dc8d67fb637dc3539fa39b4f: !TextBlock ref!! 7d6ff171-1f80-4650-823e-666280f7fa74
+                    029a1fab4a05c981ab9c44359ad226af: !Button ref!! 098ae9ba-6cbb-4397-8b3a-57795a5b980f
+        -   UIElement: !TextBlock
+                Id: 7d6ff171-1f80-4650-823e-666280f7fa74
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: ConnectionErrorText
+                Text: Error Message
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Grid
+                Id: aae12353-d01c-424d-a41a-bcdbdba23c14
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: ConnectionErrorContent
+                Children:
+                    917fbf1dc6f316f988ee0711658ecd01: !StackPanel ref!! 1e390cb3-002e-4c03-b937-c465515b78f1
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: b2ff8b6e-97bc-4f58-a26c-e219894aac31
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                VerticalAlignment: Bottom
+                Margin: {Right: 40.0, Bottom: 20.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: ConnectionStatusText
+                Text: Connecting...
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                TextAlignment: Right
+        -   UIElement: !Grid
+                Id: c6d7698a-0021-40c4-b1a9-4bf67a9b55ad
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 255}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    e46f587b0c55a7239a8d7afb91e2dad2: !Grid ref!! aae12353-d01c-424d-a41a-bcdbdba23c14
+                    2aef23f02d02ad8a879cf75307d74b09: !TextBlock ref!! b2ff8b6e-97bc-4f58-a26c-e219894aac31
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !TextBlock
+                Id: f466d91b-a32e-476a-9fe3-7ffecc6962c8
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {Bottom: 5.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Connection Error
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}

@@ -1,0 +1,37 @@
+!SceneAsset
+Id: 66f25cbe-8687-4614-aee9-d6786bf55503
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds:
+    - 08bd03ef-2452-4e99-831f-5af939ce0f8e
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! d2c06917-c18e-4155-ab2e-5fc329eec631
+    Parts:
+        -   Entity:
+                Id: d2c06917-c18e-4155-ab2e-5fc329eec631
+                Name: GameManager
+                Components:
+                    39c2d38103cacd4cdbcb042015c52e1c: !TransformComponent
+                        Id: 14a59945-a2a7-4f9a-8b5e-5de343a0369d
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    40ce2f3fa9bdbeb5b2dc444294ea601f: !MultiplayerExample.GameServices.GameManager,MultiplayerExample.Game
+                        Id: fae159f3-f7be-41be-9da2-1f852762c575
+                    c8d5254ff5fd67c589c272776959521d: !MultiplayerExample.GameServices.SceneManager,MultiplayerExample.Game
+                        Id: 91c0f91b-1141-4f80-8dcb-26ea4cccd3e4
+                        UiSystemUrl: c9024dd0-ac55-483f-bcac-cdd74e164332:UI/UISystem
+                        RootClientOnlyDataSceneUrl: 08bd03ef-2452-4e99-831f-5af939ce0f8e:Scenes/RootClientOnlyData
+                        InitialScreenSceneUrl: 4dcae764-6202-44a7-a3cc-937f9dc26b2e:Scenes/TitleScreen
+                        TitleScreenSceneUrl: 4dcae764-6202-44a7-a3cc-937f9dc26b2e:Scenes/TitleScreen
+                        InGameSceneUrl: 33b281c0-325b-4563-826e-27fc25dbf06b:Scenes/InGame
+                        InGameServerOnlyDataSceneUrl: 7927bd2a-fa37-4651-b2d1-eb2d9c25701e:Scenes/InGameServerOnlyData
+                    c0a9a1d925f29ae7494b9a0f3db5a1be: !MultiplayerExample.Network.NetworkAssetDefinitions,MultiplayerExample.Game
+                        Id: cebcee27-8945-4657-96c8-668b6433867e
+                        InGameScene: 33b281c0-325b-4563-826e-27fc25dbf06b:Scenes/InGame
+                        ServerPlayer: fd1c2e9f-7025-481c-b9dc-60d05f979003:Prefabs/ServerCharacter
+                        LocalPlayer: 3935b805-a8b8-40b4-9675-021a968a176e:Prefabs/LocalCharacter
+                        RemotePlayer: ae0ddd9e-28e2-4a1f-9282-2e5cc27b8232:Prefabs/RemoteCharacter

@@ -1,12 +1,13 @@
 // Copyright (c) Stride contributors (https://stride3d.net) and Silicon Studio Corp. (https://www.siliconstudio.co.jp)
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
-using System;
-using System.Collections.Generic;
+using MultiplayerExample.Network.SnapshotStores;
+using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Engine;
-using Stride.Engine.Events;
 using Stride.Physics;
-using MultiplayerExample.Player;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MultiplayerExample.Camera
 {
@@ -57,11 +58,15 @@ namespace MultiplayerExample.Camera
         /// </summary>
         public float VerticalSpeed { get; set; } = 65f;
 
+        public InputSnapshotsComponent InputSnapshotsComponent;
+
         private Vector3 cameraRotationXYZ = new Vector3(-20, 45, 0);
         private Vector3 targetRotationXYZ = new Vector3(-20, 45, 0);
-        private readonly EventReceiver<Vector2> cameraDirectionEvent = new EventReceiver<Vector2>(PlayerInput.CameraDirectionEventKey);
+
         private List<HitResult> resultsOutput;
         private ConeColliderShape coneShape;
+
+        private GameClockManager _gameClockManager;
 
         /// <summary>
         /// Raycast between the camera and its target. The script assumes the camera is a child entity of its target.
@@ -119,13 +124,12 @@ namespace MultiplayerExample.Camera
         /// <summary>
         /// Raycast between the camera and its target. The script assumes the camera is a child entity of its target.
         /// </summary>
-        private void UpdateCameraOrientation()
+        private void UpdateCameraOrientation(ref InputSnapshotsComponent.InputCommandSet curInputData)
         {
-            var dt = this.GetSimulation().FixedTimeStep;
+            var dt = (float)Game.UpdateTime.Elapsed.TotalSeconds;
 
             // Camera movement from player input
-            Vector2 cameraMovement;
-            cameraDirectionEvent.TryReceive(out cameraMovement);
+            var cameraMovement = curInputData.CameraMoveInput;
 
             if (InvertY) cameraMovement.Y *= -1;
             targetRotationXYZ.X += cameraMovement.Y * dt * VerticalSpeed;
@@ -142,14 +146,41 @@ namespace MultiplayerExample.Camera
 
         public override void Update()
         {
+            // Camera input is a special case. We need the immediately sampled input value (which is done in the snapshot data
+            // of the next tick), rather than the input value in the current tick because the input is constantly updated in
+            // the next tick data. If the current tick is used, then the input value becomes dependent on the simulation
+            // rate, which we do not want.
+            var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber + 1;
+            var inputFindResult = InputSnapshotsComponent.SnapshotStore.TryFindSnapshot(simTickNumber);
+            Debug.Assert(inputFindResult.IsFound);
+            ref var curInputData = ref inputFindResult.Result;
+
+            if (curInputData.IsCameraLockInButtonDown)
+            {
+                Input.LockMousePosition(true);
+                Game.IsMouseVisible = false;
+            }
+            if (curInputData.IsCameraUnlockButtonDown)
+            {
+                Input.UnlockMousePosition();
+                Game.IsMouseVisible = true;
+            }
+
             UpdateCameraRaycast();
 
-            UpdateCameraOrientation();
+            if (Input.IsMousePositionLocked)
+            {
+                UpdateCameraOrientation(ref curInputData);
+            }
         }
 
         public override void Start()
         {
             base.Start();
+
+            Debug.Assert(InputSnapshotsComponent != null);
+
+            _gameClockManager = Services.GetSafeServiceAs<GameClockManager>();
 
             coneShape = new ConeColliderShape(DefaultDistance, ConeRadius, ShapeOrientation.UpZ);
             resultsOutput = new List<HitResult>();

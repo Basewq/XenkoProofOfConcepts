@@ -1,0 +1,26 @@
+!SceneAsset
+Id: 08bd03ef-2452-4e99-831f-5af939ce0f8e
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Parent: 66f25cbe-8687-4614-aee9-d6786bf55503:Scenes/RootScene
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! fca0a9fd-50e4-4b3d-9c6f-b532dc5a9266
+    Parts:
+        -   Entity:
+                Id: fca0a9fd-50e4-4b3d-9c6f-b532dc5a9266
+                Name: RootMainCamera
+                Components:
+                    a116d811cab5bf4da5211050e1d34e10: !TransformComponent
+                        Id: 4254fa38-1fbb-4aa2-81ca-6cf3e318e92b
+                        Position: {X: 0.0, Y: 0.0, Z: 12.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
+                        Id: 3cf9955a-beb9-4224-b95f-3c4a4763f8a0
+                        Name: null
+                        Projection: Perspective
+                        Slot: 9aeac611-d1f6-46da-a235-e20cc154e170

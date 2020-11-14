@@ -2,13 +2,13 @@
 Id: 33b281c0-325b-4563-826e-27fc25dbf06b
 SerializedVersion: {Stride: 3.1.0.1}
 Tags: []
-ChildrenIds: []
+ChildrenIds:
+    - 7927bd2a-fa37-4651-b2d1-eb2d9c25701e
 Offset: {X: 0.0, Y: 0.0, Z: 0.0}
 Hierarchy:
     RootParts:
         - ref!! 27a91eaf-7622-42b4-89a2-3495a753b8d9
         - ref!! e1d761e6-634d-4773-8d81-75dfc8e8b1c4
-        - ref!! 5fc52dcf-f9f8-4c6d-b32d-3fc989aea8ad
         - ref!! 39790120-ebaf-43d5-8b06-e1aaa22d2f51
         - ref!! 605ce261-0f03-4563-b2d4-4ed4a7d4cd89
         - ref!! 3f6c30db-f1ee-4476-98fe-7f9a36be4874
@@ -83,6 +83,7 @@ Hierarchy:
         - ref!! 5f548076-08bc-4ae8-ac9a-c391acdfd326
         - ref!! 26a8a83d-1048-4830-8905-aa83c16df8e5
         - ref!! 76771248-c30c-4247-a20e-69306cfdb1cd
+        - ref!! ff473a9f-a922-4f2f-a2d6-27ba7cdd4d4f
     Parts:
         -   Entity:
                 Id: 003ea996-d3d5-46e1-8f7c-e934945032b4
@@ -2364,34 +2365,6 @@ Hierarchy:
                         Children:
                             c444819e77a60441a6144bd7bd8a4a23: ref!! 6ab3b76f-3b33-4273-a2f6-26e1577035b8
         -   Entity:
-                Id: 51a86f4d-298c-4fc4-964b-de29f9a624fc
-                Name: MannequinModel
-                Components:
-                    1245d3c0d097e44e8295e28dad432562: !TransformComponent
-                        Id: c0d34512-97d0-4ee4-8295-e28dad432562
-                        Position: {X: 0.0, Y: 4.76837158E-07, Z: 0.0}
-                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
-                        Children: {}
-                    0fa4902c57c2de428808e383912863ea: !ModelComponent
-                        Id: 2c90a40f-c257-42de-8808-e383912863ea
-                        Model: c9aec25a-fb63-4f1c-9975-cf4433ad5299:Models/mannequinModel
-                        Materials: {}
-                    978eabfaac453f4d9375495d32bc299f: !MultiplayerExample.Player.AnimationController,MultiplayerExample.Game
-                        Id: faab8e97-45ac-4d3f-9375-495d32bc299f
-                        AnimationComponent: ref!! c0b24758-fcad-47f3-a100-f94d96c5d325
-                        AnimationIdle: 9bbe351d-9eff-4f67-81ae-b3b08133c93e:Animations/Idle
-                        AnimationWalk: 841e7403-4706-48a3-adda-b7c611f465ab:Animations/Walk
-                        AnimationRun: 0bec43e7-e8e8-4324-9fec-e294288586ff:Animations/Run
-                        AnimationJumpStart: 02c7167f-6786-4ce6-8c18-33e49715fb43:Animations/Jump_Start
-                        AnimationJumpMid: d3c2a4cc-88a9-4ad8-a765-4a931877b027:Animations/Jump_Loop
-                        AnimationJumpEnd: 1ca2b0ea-5573-4164-9104-bfb8a17cf0b5:Animations/Jump_End
-                        WalkThreshold: 0.25
-                        TimeFactor: 1.0
-                    5847b2c0adfcf347a100f94d96c5d325: !AnimationComponent
-                        Id: c0b24758-fcad-47f3-a100-f94d96c5d325
-                        Animations: {}
-        -   Entity:
                 Id: 522c2220-4fce-440d-9463-c475dd1ba4f5
                 Name: Box2x1x1
                 Components:
@@ -2877,60 +2850,6 @@ Hierarchy:
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children:
                             10c0801cc1dd4143933cbc13534ebf54: ref!! dd001cfe-5325-4164-94e2-28e3916d7c30
-        -   Entity:
-                Id: 5fc52dcf-f9f8-4c6d-b32d-3fc989aea8ad
-                Name: PlayerCharacter
-                Components:
-                    b296752080481e41b569d385767428ce: !TransformComponent
-                        Id: 207596b2-4880-411e-b569-d385767428ce
-                        Position: {X: -5.0, Y: 0.09678906, Z: 5.0}
-                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
-                        Children:
-                            1245d3c0d097e44e8295e28dad432562: ref!! c0d34512-97d0-4ee4-8295-e28dad432562
-                            39d4bdb202782a41869f2a6d53da4edf: ref!! b2bdd439-7802-412a-869f-2a6d53da4edf
-                    b978a0332590234b9f3a3537f50e75ae: !CharacterComponent
-                        Id: 33a078b9-9025-4b23-9f3a-3537f50e75ae
-                        CollisionGroup: KinematicFilter
-                        CanSleep: false
-                        Restitution: 0.0
-                        Friction: 0.5
-                        RollingFriction: 0.0
-                        CcdMotionThreshold: 0.0
-                        CcdSweptSphereRadius: 0.0
-                        FallSpeed: 10.0
-                        MaxSlope: {Radians: 0.7853982}
-                        JumpSpeed: 13.0
-                        Gravity: {X: 0.0, Y: -40.0, Z: 0.0}
-                        ColliderShapes:
-                            56a5239435c0e54188f913fd5d2f5dee: !CapsuleColliderShapeDesc
-                                Length: 1.2
-                                Radius: 0.4
-                                LocalOffset: {X: 0.0, Y: 0.95, Z: 0.0}
-                                LocalRotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                    f722a19496166946a5d26eaf23d2ae03: !MultiplayerExample.Player.PlayerController,MultiplayerExample.Game
-                        Id: 94a122f7-1696-4669-a5d2-6eaf23d2ae03
-                        MaxRunSpeed: 8.5
-                        JumpReactionThreshold: 0.15
-                    809bf66aef692646891c293be4ca17b2: !MultiplayerExample.Player.PlayerInput,MultiplayerExample.Game
-                        Id: 6af69b80-69ef-4626-891c-293be4ca17b2
-                        MouseSensitivity: 100.0
-                        DeadZone: 0.25
-                        Camera: ref!! 65d1b71f-4862-4efc-b7c1-3c9d933979c7
-                        KeysLeft:
-                            188e93f66916cf656ff39c2c364a16ce: A
-                            209be0885cbd15e2824ee34abbf1e993: Left
-                        KeysRight:
-                            b19f9a0fb9749d53d2cf6e353c2dde59: D
-                            da3e9e9055cb7a4648d733f34b8a6afb: Right
-                        KeysUp:
-                            6f9526aa5d381de305cc00fa39927ff8: W
-                            0bf61a77531d87ca4bc6697a5d3a9a73: Up
-                        KeysDown:
-                            d074974d39648acf3dd67ba90125999c: S
-                            47b7f2884469c9d74a4712034dba6f5a: Down
-                        KeysJump:
-                            23fe5ceb28bd9649fa594f451bbef24b: Space
         -   Folder: Platform/Grid
             Entity:
                 Id: 605ce261-0f03-4563-b2d4-4ed4a7d4cd89
@@ -5107,43 +5026,6 @@ Hierarchy:
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children:
                             4eecb3c27affe3478bcc584553d59e41: ref!! 4451ee48-5587-4a2c-82b5-47104c29000f
-        -   Entity:
-                Id: a7564c4c-7704-4354-a353-9207a2232954
-                Name: CameraTarget
-                Components:
-                    39d4bdb202782a41869f2a6d53da4edf: !TransformComponent
-                        Id: b2bdd439-7802-412a-869f-2a6d53da4edf
-                        Position: {X: 0.0, Y: 1.65, Z: 0.0}
-                        Rotation: {X: -0.167157218, Y: -0.557161868, Z: -0.115674, W: 0.8051389}
-                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
-                        Children:
-                            a116d811cab5bf4da5211050e1d34e10: ref!! 11d816a1-b5ca-4dbf-a521-1050e1d34e10
-        -   Entity:
-                Id: a7b68422-0fb4-45c9-b853-8e17a08a3953
-                Name: Camera
-                Components:
-                    a116d811cab5bf4da5211050e1d34e10: !TransformComponent
-                        Id: 11d816a1-b5ca-4dbf-a521-1050e1d34e10
-                        Position: {X: 0.0, Y: 0.0, Z: 5.0}
-                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
-                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
-                        Children: {}
-                    1fb7d1656248fc4eb7c13c9d933979c7: !CameraComponent
-                        Id: 65d1b71f-4862-4efc-b7c1-3c9d933979c7
-                        Name: null
-                        Projection: Perspective
-                        Slot: 9aeac611-d1f6-46da-a235-e20cc154e170
-                    cffbc9ddf95f8544a284e04ea2d27d8a: !MultiplayerExample.Camera.ThirdPersonCamera,MultiplayerExample.Game
-                        Id: ddc9fbcf-5ff9-4485-a284-e04ea2d27d8a
-                        DefaultDistance: 6.0
-                        MinimumDistance: 0.4
-                        ConeRadius: 1.25
-                        InvertX: false
-                        MinVerticalAngle: -20.0
-                        MaxVerticalAngle: 70.0
-                        InvertY: false
-                        RotationSpeed: 360.0
-                        VerticalSpeed: 45.0
         -   Entity:
                 Id: aab47dbd-67b9-4755-9732-7bd90cf990ad
                 Name: Wall0x2x5
@@ -7457,6 +7339,23 @@ Hierarchy:
                 BasePartAsset: 5b70e491-129d-42a2-a922-41e14ed1ac37:BlocksPrefabs/Pillar0x5x0
                 BasePartId: 9a9e7e72-7cc0-4631-aee3-8ec36aad1662
                 InstanceId: 346b13aa-6a2a-4268-8cfd-e613117e4faa
+        -   Entity:
+                Id: ff473a9f-a922-4f2f-a2d6-27ba7cdd4d4f
+                Name: SceneController
+                Components:
+                    2507aa30e48c1da2331030dc5935cc48: !TransformComponent
+                        Id: bd178285-fff1-4199-92ff-6bb62c8235cf
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    491f03533f264d1ed245adaed07b8ee2: !MultiplayerExample.GameServices.SceneController,MultiplayerExample.Game
+                        Id: 1b699de7-f640-4883-9412-9481f5bcb76d
+                        SceneHandler*: !MultiplayerExample.GameServices.SceneHandlers.InGameSceneHandler,MultiplayerExample.Game {}
+            Base:
+                BasePartAsset: 178a8f28-6556-4fa4-addc-fba81ab9a49b:Scenes/SceneControllerBase
+                BasePartId: 303b39f2-f5b4-4bff-b2e3-795fa6e6cdcc
+                InstanceId: f4518dfa-6d39-4af8-8408-e13018c01d71
         -   Entity:
                 Id: ff5caf7c-c20d-4550-8328-5062e22c51a0
                 Name: Pillar0x5x0
