@@ -1,0 +1,4 @@
+[submodule "libs/LiteNetLib"]
+	path = libs/LiteNetLib
+	url = https://github.com/RevenantX/LiteNetLib.git
+	branch = master
