@@ -1,5 +1,7 @@
 ﻿using MultiplayerExample.Core;
 using MultiplayerExample.Engine;
+using MultiplayerExample.Network.SnapshotStores;
+using Stride.Core;
 using Stride.Core.Annotations;
 using Stride.Core.Mathematics;
 using Stride.Engine;
@@ -7,68 +9,72 @@ using Stride.Rendering;
 using System;
 using System.Diagnostics;
 
-namespace MultiplayerExample.Network.SnapshotStores
+namespace MultiplayerExample.Network
 {
-    class MovementSnapshotsRenderProcessor : EntityProcessor<MovementSnapshotsComponent, MovementSnapshotsRenderProcessor.AssociatedData>,
-        IInGameProcessor
+    class NetworkMovementViewProcessor : EntityProcessor<NetworkEntityViewComponent, NetworkMovementViewProcessor.AssociatedData>
     {
         private GameClockManager _gameClockManager;
-        private GameEngineContext _gameEngineContext;
 
-        public bool IsEnabled { get; set; }
+        private SceneSystem _sceneSystem;
 
-        public MovementSnapshotsRenderProcessor() : base(typeof(TransformComponent), typeof(NetworkEntityComponent))
+        public NetworkMovementViewProcessor()
         {
             Order = -100000;         // Ensure this occurs before the mesh renderer processor to get the models in the right positions
-            // Not using Enabled property, because that completely disables the processor, where it doesn't even pick up newly added entities
-            IsEnabled = true;
         }
 
         protected override void OnSystemAdd()
         {
+            var gameEngineContext = Services.GetService<GameEngineContext>();
+            Enabled = gameEngineContext.IsClient;
+
             _gameClockManager = Services.GetService<GameClockManager>();
-            _gameEngineContext = Services.GetService<GameEngineContext>();
-            Enabled = _gameEngineContext.IsClient;
+            _sceneSystem = Services.GetSafeServiceAs<SceneSystem>();
         }
 
-        protected override AssociatedData GenerateComponentData([NotNull] Entity entity, [NotNull] MovementSnapshotsComponent component)
+        protected override void OnSystemRemove()
+        {
+        }
+
+        protected override AssociatedData GenerateComponentData([NotNull] Entity entity, [NotNull] NetworkEntityViewComponent component)
         {
             return new AssociatedData
             {
                 // Can also add other info/components here
                 TransformComponent = entity.Transform,
-                NetworkEntityComponent = entity.Get<NetworkEntityComponent>(),
-                ModelChildTransform = entity.GetChild(0).Transform,
-
-                ClientPredictionSnapshotsComponent = entity.Get<ClientPredictionSnapshotsComponent>(),
+                ModelChildTransformComponent = entity.GetChild(0).Transform
             };
         }
 
-        protected override void OnEntityComponentRemoved(Entity entity, [NotNull] MovementSnapshotsComponent component, [NotNull] AssociatedData data)
+        protected override void OnEntityComponentAdding(Entity entity, [NotNull] NetworkEntityViewComponent component, [NotNull] AssociatedData data)
+        {
+            var networkedEntity = component.NetworkedEntity;
+            Debug.Assert(networkedEntity != null, $"{nameof(NetworkEntityViewComponent)} must reference another entity.");
+            Debug.Assert(networkedEntity != entity, $"{nameof(NetworkEntityViewComponent)} cannot reference itself.");
+
+            // Networked entity's components - Assume these never get reassigned,
+            data.NetworkEntityComponent = networkedEntity.Get<NetworkEntityComponent>();
+            data.MovementSnapshotsComponent = networkedEntity.Get<MovementSnapshotsComponent>();
+            data.ClientPredictionSnapshotsComponent = networkedEntity.Get<ClientPredictionSnapshotsComponent>();
+        }
+
+        protected override void OnEntityComponentRemoved(Entity entity, [NotNull] NetworkEntityViewComponent component, [NotNull] AssociatedData data)
         {
             data.TransformComponent = null;
-            data.ModelChildTransform = null;
+            data.ModelChildTransformComponent = null;
+
+            data.NetworkEntityComponent = null;
+            data.MovementSnapshotsComponent = null;
             data.ClientPredictionSnapshotsComponent = null;
         }
 
-        protected override bool IsAssociatedDataValid([NotNull] Entity entity, [NotNull] MovementSnapshotsComponent component, [NotNull] AssociatedData associatedData)
+        protected override bool IsAssociatedDataValid([NotNull] Entity entity, [NotNull] NetworkEntityViewComponent component, [NotNull] AssociatedData associatedData)
         {
             return associatedData.TransformComponent == entity.Transform
-                && associatedData.NetworkEntityComponent == entity.Get<NetworkEntityComponent>()
-                && associatedData.ModelChildTransform == entity.GetChild(0).Transform;
+                && associatedData.ModelChildTransformComponent == entity.GetChild(0).Transform;
         }
-
-#if DEBUG
-        private Vector3 _lastRendPos;
-#endif
 
         public override void Draw(RenderContext context)
         {
-            if (!IsEnabled)
-            {
-                return;
-            }
-
             var localFromSimTickNo = _gameClockManager.SimulationClock.SimulationTickNumber - 1;
             var localToSimTickNo = localFromSimTickNo + 1;
             var localSimTickElapsedRatio = (float)(_gameClockManager.SimulationClock.CurrentTickTimeElapsed.TotalMilliseconds / GameConfig.PhysicsFixedTimeStep.TotalMilliseconds);
@@ -88,7 +94,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             foreach (var kv in ComponentDatas)
             {
                 var data = kv.Value;
-                var movementSnapshotsComp = kv.Key;
+                var movementSnapshotsComp = data.MovementSnapshotsComponent;
                 var clientPredictionSnapshotsComp = data.ClientPredictionSnapshotsComponent;
                 if (clientPredictionSnapshotsComp != null)
                 {
@@ -110,11 +116,10 @@ namespace MultiplayerExample.Network.SnapshotStores
                     Vector3.Lerp(ref fromMovementData.LocalPosition, ref toMovementData.LocalPosition, interpAmount, out var renderPos);
                     Quaternion.Slerp(ref fromMovementData.LocalRotation, ref toMovementData.LocalRotation, interpAmount, out var renderRot);
                     data.TransformComponent.Position = renderPos;
-                    data.ModelChildTransform.Rotation = renderRot;
+                    data.ModelChildTransformComponent.Rotation = renderRot;
 #if DEBUG
-                    _lastRendPos = renderPos;
-                    //DebugWriteLine(@$"Render SimFrom {fromMovementData.SimulationTickNumber} - SimTo {toMovementData.SimulationTickNumber} - Pos {renderPos} - Lerp {interpAmount} {fromMovementData.SnapshotType} {toMovementData.SnapshotType}
-                    //OrigSimFrom {localFromSimTickNo} - OrigSimTo {localToSimTickNo} - Lerp {interpAmount} - TimeElapsed {_gameClockManager.SimulationClock.CurrentTickTimeElapsed}");
+//                    DebugWriteLine(@$"Render PIDFrom {fromMovementData.PlayerInputSequenceNumberApplied} - PIDTo {toMovementData.PlayerInputSequenceNumberApplied} - RndPos {renderPos} - RndRot {renderRot} - FromRot {fromMovementData.LocalRotation} - ToRot {toMovementData.LocalRotation}
+//                    OrigSimFrom {localFromSimTickNo} - OrigSimTo {localToSimTickNo} - Lerp {interpAmount} - TimeElapsed {_gameClockManager.SimulationClock.CurrentTickTimeElapsed}");
 #endif
                 }
                 else
@@ -160,15 +165,15 @@ namespace MultiplayerExample.Network.SnapshotStores
                         Vector3.Lerp(ref fromMovementData.LocalPosition, ref toMovementData.LocalPosition, interpAmount, out var renderPos);
                         Quaternion.Slerp(ref fromMovementData.LocalRotation, ref toMovementData.LocalRotation, interpAmount, out var renderRot);
                         data.TransformComponent.Position = renderPos;
-                        data.ModelChildTransform.Rotation = renderRot;
+                        data.ModelChildTransformComponent.Rotation = renderRot;
 
 #if DEBUG
-            //            if (!networkComp.IsLocalEntity)
-            //            {
-            //                //DebugWriteLine($"Render SimFrom {fromSimTickNo} - SimTo {toSimTickNo} - Id {networkComp.NetworkEntityId} - Pos {renderPos} - Lerp {simTickElapsedRatio}");
-            //                DebugWriteLine(@$"Render SimFrom {fromMovementData.SimulationTickNumber} - SimTo {toMovementData.SimulationTickNumber} - Id {networkComp.NetworkEntityId} - Pos {renderPos} - Lerp {interpAmount} {fromMovementData.SnapshotType} {toMovementData.SnapshotType}
-            //OrigSimFrom {fromSimTickNo} - OrigSimTo {toSimTickNo} - Lerp {simTickElapsedRatio} - TimeElapsed {_gameClockManager.SimulationClock.CurrentTickTimeElapsed}");
-            //            }
+//                        if (!networkComp.IsLocalEntity)
+//                        {
+//                            //DebugWriteLine($"Render SimFrom {fromSimTickNo} - SimTo {toSimTickNo} - Id {networkComp.NetworkEntityId} - Pos {renderPos} - Lerp {simTickElapsedRatio}");
+//                            DebugWriteLine(@$"Render SimFrom {fromMovementData.SimulationTickNumber} - SimTo {toMovementData.SimulationTickNumber} - Id {networkComp.NetworkEntityId} - Pos {renderPos}
+//            OrigSimFrom {fromSimTickNo} - OrigSimTo {toSimTickNo} - Lerp {simTickElapsedRatio} - TimeElapsed {_gameClockManager.SimulationClock.CurrentTickTimeElapsed}");
+//                        }
 #endif
                     }
                 }
@@ -214,10 +219,12 @@ namespace MultiplayerExample.Network.SnapshotStores
         internal class AssociatedData
         {
             internal TransformComponent TransformComponent;
-            internal NetworkEntityComponent NetworkEntityComponent;
-            internal TransformComponent ModelChildTransform;
+            internal TransformComponent ModelChildTransformComponent;
 
-            internal ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;   // Optional
+            // Components on the Networked entity
+            internal NetworkEntityComponent NetworkEntityComponent;
+            internal MovementSnapshotsComponent MovementSnapshotsComponent;
+            internal ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;   // Optional component
         }
     }
 }

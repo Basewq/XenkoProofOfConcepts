@@ -36,5 +36,17 @@ namespace MultiplayerExample.GameServices
         public void ExitGame() => _exitGameService.Exit();
 
         // Add any game play related method/properties here
+        public event Action<Entity> PlayerAdded;
+        public event Action<Entity> PlayerRemoved;
+
+        public void RaisePlayerAddedEvent(Entity entity)
+        {
+            PlayerAdded?.Invoke(entity);
+        }
+
+        public void RaisePlayerRemovedEntity(Entity entity)
+        {
+            PlayerRemoved?.Invoke(entity);
+        }
     }
 }

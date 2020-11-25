@@ -54,7 +54,7 @@ namespace MultiplayerExample.Network.SnapshotStores
         {
             return new AssociatedData
             {
-                InputComponent = component,
+                InputDeviceComponent = component,
                 // Can also add other info/components here
                 InputSnapshotsComponent = entity.Get<InputSnapshotsComponent>(),
             };
@@ -81,31 +81,33 @@ namespace MultiplayerExample.Network.SnapshotStores
         {
             // Check the all the components are still the same.
             // This can fail if any component is removed from the entity.
-            return associatedData.InputComponent == component
+            return associatedData.InputDeviceComponent == component
                 && associatedData.InputSnapshotsComponent == entity.Get<InputSnapshotsComponent>();
         }
 
         public void PreUpdate(GameTime gameTime)
         {
-            // Special case: input must be generated AHEAD of the simulation
-            var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber + 1;
+            // Special case: input must be generated AHEAD of the simulation, except when it's exactly on a new sim step
+            // because it can be processed immediately instead of being delayed by one 'frame'.
+            var simTickNumber = _gameClockManager.SimulationClock.IsNextSimulation ? _gameClockManager.SimulationClock.SimulationTickNumber : _gameClockManager.SimulationClock.SimulationTickNumber + 1;
             foreach (var kv in ComponentDatas)
             {
-                var inputComp = kv.Key;
-                CheckDeviceRegistration(inputComp, kv.Value);
-                ProcessInput(gameTime, simTickNumber, kv.Value);
+                var data = kv.Value;
+                CheckDeviceRegistration(data);
+                ProcessInput(simTickNumber, data);
             }
         }
 
-        private void CheckDeviceRegistration(InputDeviceComponent inputComp, AssociatedData data)
+        private void CheckDeviceRegistration(AssociatedData data)
         {
             // TODO: should probably read a user's game settings for what they want mapped
+            var inputDeviceComp = data.InputDeviceComponent;
             var virtualButtons = data.VirtualButtons;
             var keyboardBindings = data.KeyboardBindings;
             var mouseBindings = data.MouseBindings;
             var controllerBindings = data.ControllerBindings;
 
-            if (inputComp.IsKeyboardControlsEnabled && !data.IsKeyboardVirtualButtonsAssigned)
+            if (inputDeviceComp.IsKeyboardControlsEnabled && !data.IsKeyboardVirtualButtonsAssigned)
             {
                 RemoveBindings(keyboardBindings, virtualButtons);
 
@@ -121,16 +123,16 @@ namespace MultiplayerExample.Network.SnapshotStores
                 virtualButtons.AddRange(keyboardBindings);
                 data.IsKeyboardVirtualButtonsAssigned = true;
             }
-            else if (!inputComp.IsKeyboardControlsEnabled && data.IsKeyboardVirtualButtonsAssigned)
+            else if (!inputDeviceComp.IsKeyboardControlsEnabled && data.IsKeyboardVirtualButtonsAssigned)
             {
                 RemoveBindings(keyboardBindings, virtualButtons);
             }
 
-            if (inputComp.IsMouseControlsEnabled && !data.IsMouseVirtualButtonsAssigned)
+            if (inputDeviceComp.IsMouseControlsEnabled && !data.IsMouseVirtualButtonsAssigned)
             {
                 RemoveBindings(mouseBindings, virtualButtons);
 
-                float mouseScale = inputComp.MouseSensitivity;
+                float mouseScale = inputDeviceComp.MouseSensitivity;
                 mouseBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotateYaw, VirtualButton.Mouse.DeltaX, scaleValue: mouseScale));
                 mouseBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotatePitch, VirtualButton.Mouse.DeltaY, scaleValue: -mouseScale));
 
@@ -139,17 +141,17 @@ namespace MultiplayerExample.Network.SnapshotStores
                 virtualButtons.AddRange(mouseBindings);
                 data.IsMouseVirtualButtonsAssigned = true;
             }
-            else if (!inputComp.IsMouseControlsEnabled && data.IsMouseVirtualButtonsAssigned)
+            else if (!inputDeviceComp.IsMouseControlsEnabled && data.IsMouseVirtualButtonsAssigned)
             {
                 RemoveBindings(mouseBindings, virtualButtons);
             }
 
-            if (inputComp.IsControllerEnabled && !data.IsControllerVirtualButtonsAssigned && inputComp.ActiveController != null)
+            if (inputDeviceComp.IsControllerEnabled && !data.IsControllerVirtualButtonsAssigned && inputDeviceComp.ActiveController != null)
             {
                 RemoveBindings(controllerBindings, virtualButtons);
 
-                int padIndex = inputComp.ActiveController.Index;
-                float deadZoneThreshold = inputComp.DeadZoneThreshold;
+                int padIndex = inputDeviceComp.ActiveController.Index;
+                float deadZoneThreshold = inputDeviceComp.DeadZoneThreshold;
 
                 controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterMoveStrafe, VirtualButton.GamePad.LeftThumbAxisX.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
                 controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterMoveForwardOrBackward, VirtualButton.GamePad.LeftThumbAxisY.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
@@ -164,7 +166,7 @@ namespace MultiplayerExample.Network.SnapshotStores
                 virtualButtons.AddRange(controllerBindings);
                 data.IsControllerVirtualButtonsAssigned = true;
             }
-            else if (!inputComp.IsControllerEnabled && data.IsControllerVirtualButtonsAssigned)
+            else if (!inputDeviceComp.IsControllerEnabled && data.IsControllerVirtualButtonsAssigned)
             {
                 RemoveBindings(controllerBindings, virtualButtons);
             }
@@ -178,7 +180,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             }
         }
 
-        private void ProcessInput(GameTime gameTime, SimulationTickNumber simTickNumber, AssociatedData data)
+        private void ProcessInput(SimulationTickNumber simTickNumber, AssociatedData data)
         {
             var configExt = data.VirtualButtons;
             int btnConfigIndex = _inputManager.VirtualButtonConfigSet.IndexOf(configExt);
@@ -237,7 +239,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             internal List<VirtualButtonBinding> MouseBindings = new List<VirtualButtonBinding>();
             internal List<VirtualButtonBinding> ControllerBindings = new List<VirtualButtonBinding>();
 
-            internal InputDeviceComponent InputComponent;
+            internal InputDeviceComponent InputDeviceComponent;
             internal InputSnapshotsComponent InputSnapshotsComponent;
         }
 

@@ -1,0 +1,101 @@
+!PrefabAsset
+Id: fd1c2e9f-7025-481c-b9dc-60d05f979003
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! fb3ebbbd-47d8-4ff5-988f-44c19a1661b8
+        - ref!! 91cdaa45-2fae-4187-b0b2-bd87cfb1ec6e
+    Parts:
+        -   Entity:
+                Id: 91cdaa45-2fae-4187-b0b2-bd87cfb1ec6e
+                Name: RemotePlayerView
+                Components:
+                    1e83e454d9b76420e62f6008eb1c6cfe: !TransformComponent
+                        Id: f268fd6c-bca5-45f6-a0d2-1cde5b70cd36
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children:
+                            35a15bc00a95e8328095a2ea33b0b3ac: ref!! 15cf2730-671a-40cf-a54b-e540d3f02cb6
+                    2664ad00b4819d957f043f57edf92341: !MultiplayerExample.Network.NetworkEntityViewComponent,MultiplayerExample.Game
+                        Id: 47de3ef8-67ab-42d5-a3fb-911a83145127
+                        NetworkedEntity: ref!! fb3ebbbd-47d8-4ff5-988f-44c19a1661b8
+        -   Entity:
+                Id: 978f690e-cbad-4685-9896-75a67d28e1a0
+                Name: MannequinModel
+                Components:
+                    1245d3c0d097e44e8295e28dad432562: !TransformComponent
+                        Id: 15cf2730-671a-40cf-a54b-e540d3f02cb6
+                        Position*: {X: 0.0, Y: 4.76837158E-07, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0fa4902c57c2de428808e383912863ea: !ModelComponent
+                        Id: 4f1d2011-371d-4640-abb3-e74c6a8e0c87
+                        Model: c9aec25a-fb63-4f1c-9975-cf4433ad5299:Models/mannequinModel
+                        Materials: {}
+                    dc49002a22543a227669f8b333258239: !MultiplayerExample.Player.AnimationController,MultiplayerExample.Game
+                        Id: 25a5c0e2-30e0-49d6-9b71-68d35f49a418
+                        AnimationComponent: ref!! c1e5b0ee-7311-44db-8925-3573a0353249
+                        AnimationIdle: 9bbe351d-9eff-4f67-81ae-b3b08133c93e:Animations/Idle
+                        AnimationWalk: 841e7403-4706-48a3-adda-b7c611f465ab:Animations/Walk
+                        AnimationRun: 0bec43e7-e8e8-4324-9fec-e294288586ff:Animations/Run
+                        AnimationJumpStart: 02c7167f-6786-4ce6-8c18-33e49715fb43:Animations/Jump_Start
+                        AnimationJumpMid: d3c2a4cc-88a9-4ad8-a765-4a931877b027:Animations/Jump_Loop
+                        AnimationJumpEnd: 1ca2b0ea-5573-4164-9104-bfb8a17cf0b5:Animations/Jump_End
+                        WalkThreshold: 0.25
+                        TimeFactor: 1.0
+                    e8615b13239a312ea6ae7c4f68c2c32c: !AnimationComponent
+                        Id: c1e5b0ee-7311-44db-8925-3573a0353249
+                        Animations: {}
+            Base:
+                BasePartAsset: 208c4507-1bc6-4dc5-a41e-8e9f67d9bbc3:Prefabs/PlayerModel
+                BasePartId: 3c1d76fa-41c0-4339-81b6-2c2433c80bcf
+                InstanceId: dcb6f67d-4e0c-463c-9337-fae88b48fc4a
+        -   Entity:
+                Id: fb3ebbbd-47d8-4ff5-988f-44c19a1661b8
+                Name: RemotePlayer
+                Components:
+                    b296752080481e41b569d385767428ce: !TransformComponent
+                        Id: 529dcc98-0534-43e1-889e-4faeecf760f1
+                        Position*: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    b978a0332590234b9f3a3537f50e75ae: !CharacterComponent
+                        Id: 2b824939-d293-4bcd-b450-5cd46e4eac84
+                        CollisionGroup: KinematicFilter
+                        CanSleep: false
+                        Restitution: 0.0
+                        Friction: 0.5
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        FallSpeed: 10.0
+                        MaxSlope: {Radians: 0.7853982}
+                        JumpSpeed: 13.0
+                        Gravity: {X: 0.0, Y: -40.0, Z: 0.0}
+                        ColliderShapes:
+                            56a5239435c0e54188f913fd5d2f5dee: !CapsuleColliderShapeDesc
+                                Length: 1.2
+                                Radius: 0.4
+                                LocalOffset: {X: 0.0, Y: 0.95, Z: 0.0}
+                                LocalRotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                    e2612809a05738939cba935d7083a9e8: !MultiplayerExample.Network.NetworkEntityComponent,MultiplayerExample.Game
+                        Id: 9e2ccb22-69e8-48a6-a920-23769be938c9
+                        OwnerType: Player
+                        IsLocalEntity: false
+                    8f9cc7e441b2d4945308c433a06e94d7: !MultiplayerExample.Network.NetworkPlayerComponent,MultiplayerExample.Game
+                        Id: 251ad549-a514-4f7e-a40e-f1fc81954bf0
+                    cb84bfc3becb1cce0e09a3fb5f7080a0: !MultiplayerExample.Network.SnapshotStores.InputSnapshotsComponent,MultiplayerExample.Game
+                        Id: 39c047b9-2c58-4ca6-98d3-8f6d6d68033d
+                        Camera: null
+                    07b3f3537ced82e9f09c6326f895fda6: !MultiplayerExample.Network.SnapshotStores.MovementSnapshotsComponent,MultiplayerExample.Game
+                        Id: 2c806ef9-56a0-4ccb-8e30-267c0f3a4d42
+                        MaxRunSpeed: 8.5
+                        JumpReactionThreshold: 0.15
+            Base:
+                BasePartAsset: ae0ddd9e-28e2-4a1f-9282-2e5cc27b8232:Prefabs/ServerRemotePlayer
+                BasePartId: 0c3d243d-14c5-459b-9233-40ee0b1c0432
+                InstanceId: a407a466-5c98-4455-ab5a-482f21136a6a

@@ -8,28 +8,28 @@ namespace MultiplayerExample.Network.SnapshotStores
 {
     class SnapshotStore<T> : IObjectPoolItem where T : struct, ISnapshotData
     {
-        private readonly RingBuffer<T> _snapshotData;
+        private readonly RingBuffer<T> _snapshotRingBuffer;
 
-        public bool IsEmpty => _snapshotData.IsEmpty;
+        public bool IsEmpty => _snapshotRingBuffer.IsEmpty;
 
-        public bool IsFull => _snapshotData.Capacity == _snapshotData.Count;
+        public bool IsFull => _snapshotRingBuffer.Capacity == _snapshotRingBuffer.Count;
 
-        public int Capacity => _snapshotData.Capacity;
+        public int Capacity => _snapshotRingBuffer.Capacity;
 
-        public int Count => _snapshotData.Count;
+        public int Count => _snapshotRingBuffer.Count;
 
         public SnapshotStore(int snapshotBufferSize)
         {
-            _snapshotData = new RingBuffer<T>(snapshotBufferSize);
+            _snapshotRingBuffer = new RingBuffer<T>(snapshotBufferSize);
         }
 
         public FindSnapshotResult TryFindSnapshot(SimulationTickNumber simTickNumber)
         {
             var matcher = new MatchEqualToSimNumber(simTickNumber);
-            bool isFound = _snapshotData.TryFindLastIndex(matcher, out int index);
+            bool isFound = _snapshotRingBuffer.TryFindLastIndex(matcher, out int index);
             if (isFound)
             {
-                return new FindSnapshotResult(_snapshotData, index);
+                return new FindSnapshotResult(_snapshotRingBuffer, index);
             }
             else
             {
@@ -42,12 +42,12 @@ namespace MultiplayerExample.Network.SnapshotStores
             bool isFound = false;
             var closestSimTickNo = new SimulationTickNumber(long.MaxValue);
             int closestIndex = -1;
-            for (int i = 0; i < _snapshotData.Count; i++)
+            for (int i = 0; i < _snapshotRingBuffer.Count; i++)
             {
-                var curSimTickNo = _snapshotData[i].SimulationTickNumber;
+                var curSimTickNo = _snapshotRingBuffer[i].SimulationTickNumber;
                 if (simTickNumber == curSimTickNo)
                 {
-                    return new FindSnapshotResult(_snapshotData, i);
+                    return new FindSnapshotResult(_snapshotRingBuffer, i);
                 }
                 else if (curSimTickNo > simTickNumber && curSimTickNo < closestSimTickNo)
                 {
@@ -58,7 +58,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             }
             if (isFound)
             {
-                return new FindSnapshotResult(_snapshotData, closestIndex);
+                return new FindSnapshotResult(_snapshotRingBuffer, closestIndex);
             }
             else
             {
@@ -71,12 +71,12 @@ namespace MultiplayerExample.Network.SnapshotStores
             bool isFound = false;
             var closestSimTickNo = new SimulationTickNumber(0);
             int closestIndex = -1;
-            for (int i = 0; i < _snapshotData.Count; i++)
+            for (int i = 0; i < _snapshotRingBuffer.Count; i++)
             {
-                var curSimTickNo = _snapshotData[i].SimulationTickNumber;
+                var curSimTickNo = _snapshotRingBuffer[i].SimulationTickNumber;
                 if (simTickNumber == curSimTickNo)
                 {
-                    return new FindSnapshotResult(_snapshotData, i);
+                    return new FindSnapshotResult(_snapshotRingBuffer, i);
                 }
                 else if (curSimTickNo < simTickNumber && curSimTickNo > closestSimTickNo)
                 {
@@ -87,7 +87,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             }
             if (isFound)
             {
-                return new FindSnapshotResult(_snapshotData, closestIndex);
+                return new FindSnapshotResult(_snapshotRingBuffer, closestIndex);
             }
             else
             {
@@ -102,12 +102,12 @@ namespace MultiplayerExample.Network.SnapshotStores
             int closestIndexGreater = -1;
             var closestSimTickNoLesser = new SimulationTickNumber(0);
             int closestIndexLesser = -1;
-            for (int i = 0; i < _snapshotData.Count; i++)
+            for (int i = 0; i < _snapshotRingBuffer.Count; i++)
             {
-                var curSimTickNo = _snapshotData[i].SimulationTickNumber;
+                var curSimTickNo = _snapshotRingBuffer[i].SimulationTickNumber;
                 if (simTickNumber == curSimTickNo)
                 {
-                    return new FindSnapshotResult(_snapshotData, i);
+                    return new FindSnapshotResult(_snapshotRingBuffer, i);
                 }
                 if (curSimTickNo > simTickNumber && curSimTickNo < closestSimTickNoGreater)
                 {
@@ -126,11 +126,11 @@ namespace MultiplayerExample.Network.SnapshotStores
             {
                 if ((closestSimTickNoGreater - simTickNumber) < (simTickNumber - closestSimTickNoLesser))
                 {
-                    return new FindSnapshotResult(_snapshotData, closestIndexGreater);
+                    return new FindSnapshotResult(_snapshotRingBuffer, closestIndexGreater);
                 }
                 else
                 {
-                    return new FindSnapshotResult(_snapshotData, closestIndexLesser);
+                    return new FindSnapshotResult(_snapshotRingBuffer, closestIndexLesser);
                 }
             }
             else
@@ -139,7 +139,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             }
         }
 
-        public void Clear() => _snapshotData.Clear();
+        public void Clear() => _snapshotRingBuffer.Clear();
 
         public ref T GetOrCreate(SimulationTickNumber simTickNumber)
         {
@@ -150,8 +150,8 @@ namespace MultiplayerExample.Network.SnapshotStores
             }
             else
             {
-                _snapshotData.Add(default);
-                return ref _snapshotData.GetLatest();
+                _snapshotRingBuffer.Add(default);
+                return ref _snapshotRingBuffer.GetLatest();
             }
         }
 
@@ -166,9 +166,15 @@ namespace MultiplayerExample.Network.SnapshotStores
             else
             {
                 wasCreated = true;
-                _snapshotData.Add(default);
-                return ref _snapshotData.GetLatest();
+                _snapshotRingBuffer.Add(default);
+                return ref _snapshotRingBuffer.GetLatest();
             }
+        }
+
+        public ref T Create()
+        {
+            _snapshotRingBuffer.Add(default);
+            return ref _snapshotRingBuffer.GetLatest();
         }
 
         /// <summary>
@@ -178,12 +184,12 @@ namespace MultiplayerExample.Network.SnapshotStores
         /// <returns></returns>
         public ref T GetLatest()
         {
-            return ref _snapshotData.GetLatest();
+            return ref _snapshotRingBuffer.GetLatest();
         }
 
         public ref T GetPrevious(int indexOffset)
         {
-            return ref _snapshotData.GetPrevious(indexOffset);
+            return ref _snapshotRingBuffer.GetPrevious(indexOffset);
         }
 
         /// <summary>
@@ -192,7 +198,7 @@ namespace MultiplayerExample.Network.SnapshotStores
         /// <exception cref="InvalidOperationException">Thrown if the store is empty.</exception>
         public ref T GetLast()
         {
-            return ref _snapshotData.GetLast();
+            return ref _snapshotRingBuffer.GetLast();
         }
 
         public readonly struct FindSnapshotResult

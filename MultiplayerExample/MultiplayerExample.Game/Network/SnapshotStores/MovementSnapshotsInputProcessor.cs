@@ -25,7 +25,7 @@ namespace MultiplayerExample.Network.SnapshotStores
 
         public MovementSnapshotsInputProcessor() : base(typeof(TransformComponent), typeof(CharacterComponent), typeof(InputSnapshotsComponent))
         {
-            Order = 10;         // Ensure this occurs after InGamePlayerInputProcessor
+            Order = 10;         // Ensure this occurs after MovementSnapshotsProcessor & InputSnapshotsInGameInputProcessor
             // Not using Enabled property, because that completely disables the processor, where it doesn't even pick up newly added entities
             IsEnabled = true;
         }
@@ -48,8 +48,6 @@ namespace MultiplayerExample.Network.SnapshotStores
                 InputSnapshotsComponent = entity.Get<InputSnapshotsComponent>(),
 
                 ClientPredictionSnapshotsComponent = entity.Get<ClientPredictionSnapshotsComponent>(),
-
-                ModelChildEntity = entity.GetChild(0),
             };
         }
 
@@ -77,59 +75,70 @@ namespace MultiplayerExample.Network.SnapshotStores
 
             var simDeltaTime = _simulation.FixedTimeStep;
             var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber;
-            foreach (var kv in ComponentDatas)
+            if (_gameEngineContext.IsClient)
             {
-                var movementSnapshotsComp = kv.Key;
-                var data = kv.Value;
-                var inputSnapshotsComp = data.InputSnapshotsComponent;
-                var clientPredictionSnapshotsComp = data.ClientPredictionSnapshotsComponent;
-                var characterComp = data.CharacterComponent;
-                if (_gameEngineContext.IsClient && clientPredictionSnapshotsComp != null)
+                // Client sets predicted movement list from input data (movement data will be set when it receives it from the server).
+                foreach (var kv in ComponentDatas)
                 {
-                    Debug.Assert(characterComp != null, $"Client predicted entity requires {nameof(CharacterComponent)}.");
-                    // Add new predicted position
-                    var inputFindResult = inputSnapshotsComp.SnapshotStore.TryFindSnapshot(simTickNumber);
-                    ref var curInputData = ref inputFindResult.Result;
-                    if (!inputFindResult.IsFound)
+                    var data = kv.Value;
+                    var clientPredictionSnapshotsComp = data.ClientPredictionSnapshotsComponent;
+                    if (clientPredictionSnapshotsComp != null)
                     {
-                        continue;
-                    }
+                        var movementSnapshotsComp = kv.Key;
+                        var inputSnapshotsComp = data.InputSnapshotsComponent;
+                        var characterComp = data.CharacterComponent;
+                        Debug.Assert(characterComp != null, $"Client predicted entity requires {nameof(CharacterComponent)}.");
+                        // Add new predicted position
+                        var inputFindResult = inputSnapshotsComp.SnapshotStore.TryFindSnapshot(simTickNumber);
+                        ref var curInputData = ref inputFindResult.Result;
+                        if (!inputFindResult.IsFound)
+                        {
+                            continue;
+                        }
 
-                    var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
-                    ref var predictedMovementData = ref ClientPredictionSnapshotsInitializerProcessor.CreateNewSnapshotData(
-                        predictedMovements, simTickNumber, movementSnapshotsComp, data.TransformComponent, data.ModelChildEntity.Transform);
-                    SetPredictedMovementData(simDeltaTime, movementSnapshotsComp, characterComp,
-                        ref predictedMovementData, ref curInputData);
+                        var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
+                        ref var predictedMovementData = ref ClientPredictionSnapshotsInitializerProcessor.CreateNewSnapshotData(
+                            predictedMovements, simTickNumber, movementSnapshotsComp, data.TransformComponent);
+                        SetMovementDataFromInput(simDeltaTime, movementSnapshotsComp, characterComp,
+                            ref predictedMovementData, ref curInputData);
+                    }
                 }
-                else if (_gameEngineContext.IsServer)
+            }
+            else
+            {
+                // Server sets the movement data directly from input data.
+                foreach (var kv in ComponentDatas)
                 {
-                    // Update positions
+                    var movementSnapshotsComp = kv.Key;
+                    var data = kv.Value;
+                    var inputSnapshotsComp = data.InputSnapshotsComponent;
                     var movementFindResult = movementSnapshotsComp.SnapshotStore.TryFindSnapshot(simTickNumber);
                     var inputFindResult = inputSnapshotsComp.SnapshotStore.TryFindSnapshot(simTickNumber);
                     if (!movementFindResult.IsFound || !inputFindResult.IsFound)
                     {
+#if DEBUG
+                        Debug.WriteLine($"Svr SkippingPlayerInput: Sim {simTickNumber}");
+#endif
                         continue;
                     }
 
+                    var characterComp = data.CharacterComponent;
                     ref var curMovementData = ref movementFindResult.Result;
                     ref var curInputData = ref inputFindResult.Result;
-                    Move(movementSnapshotsComp, data.CharacterComponent, ref curMovementData, ref curInputData);
-                    TryJump(simDeltaTime, movementSnapshotsComp, data.CharacterComponent, ref curMovementData, ref curInputData);
+                    // Update character's velocity (actual position change is done in the physics simulation)
+                    SetMovementDataFromInput(simDeltaTime, movementSnapshotsComp, characterComp,
+                        ref curMovementData, ref curInputData);
+
 #if DEBUG
                     //if (curInputData.MoveInput.LengthSquared() > 0)
                     //{
-                    //    Debug.WriteLine($"MovementSnapshotsInputProcessor.Update: {curInputData.MoveInput} - Sim {simTickNumber}");
+                    //    Debug.WriteLine($"SvrMovementSnapshotsInputProcessor.Update: {curInputData.MoveInput} - Sim {simTickNumber}");
                     //}
 #endif
                 }
             }
         }
 
-#if DEBUG
-        int debugPrint = 0;
-        int triggerDebugPrint1 = 2;
-        int triggerDebugPrint2 = 3;
-#endif
         internal void Resimulate(SimulationTickNumber currentSimulationTickNumber, FastList<PredictMovementEntityData> resimulateEntities)
         {
             _physicsProcessor ??= _sceneSystem.SceneInstance.GetProcessor<PhysicsProcessor>();
@@ -151,9 +160,26 @@ namespace MultiplayerExample.Network.SnapshotStores
                 Debug.Assert(!movementSnapshotsComp.SnapshotStore.IsEmpty);
 
                 ref var movementData = ref movementSnapshotsComp.SnapshotStore.GetLatest();
+
+#if DEBUG
+                {
+                    var pmmm = entityData.ClientPredictionSnapshotsComponent.PredictedMovements;
+                    var confirmedPID = movementData.PlayerInputSequenceNumberApplied;
+                    var iindex = pmmm.FindIndex(x => x.PlayerInputSequenceNumberApplied == confirmedPID);
+                    if (iindex >= 0)
+                    {
+                        var mmm = pmmm[iindex];
+                        if (mmm.LocalPosition != movementData.LocalPosition)
+                        {
+                            // Misprediction.... TODO?
+                        }
+                    }
+                }
+#endif
                 transformComp.Position = movementData.LocalPosition;
                 //modelChildTransform.Rotation  movementData.LocalRotation;
                 BulletPhysicsExt.SetLinearVelocity(characterComp, ref movementData.PhysicsEngineLinearVelocity);
+                characterComp.SetVelocity(Vector3.Zero);    // Need to set to zero here because even simulating with zero delta time moves the character...
                 transformComp.UpdateWorldMatrix();
                 characterComp.UpdatePhysicsTransformation();        // Update in the physics engine
                 BulletPhysicsExt.SimulateCharacter(characterComp, _simulation, deltaTimeInSeconds: 0);      // We need to 'resimulate' with zero delta time to ensure character IsGround or !IsGround is reset properly
@@ -163,32 +189,16 @@ namespace MultiplayerExample.Network.SnapshotStores
                 maxResimInputCount = Math.Max(maxResimInputCount, inputSnapshotsComp.PendingInputs.Count);
 
 #if DEBUG
-                var pm = entityData.ClientPredictionSnapshotsComponent.PredictedMovements;
-                //if (pm.Count > 0 && pm[pm.Count - 1].LocalPosition.X >= 0)
-                if (transformComp.Position.X != -5)
-                {
-                    //debugPrint++;
-                    //for (int jjj = movementSnapshotsComp.SnapshotStore.Count - 1; jjj >= 0; jjj--)
-                    //{
-                    //    ref var move0 = ref movementSnapshotsComp.SnapshotStore.GetPrevious(jjj);
-                    //    Debug.WriteLine($"Resim SvrPos {move0.LocalPosition} - Sim {move0.SimulationTickNumber} - PIDApplied {move0.PlayerInputSequenceNumberApplied}");
-                    //}
-                    //Debug.WriteLine($"Resim PrevInputs - Start Sim {currentSimulationTickNumber} - PIDLastAckd {entityData.InputSnapshotsComponent.ServerLastAcknowledgedPlayerInputSequenceNumber} - PIDLastAppd {entityData.InputSnapshotsComponent.ServerLastAppliedPlayerInputSequenceNumber}");
-                    //foreach (var m in pm)
-                    //{
-                    //    Debug.WriteLine($"Resim OldPos {m.LocalPosition} - Sim {m.SimulationTickNumber} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection}");
-                    //}
-                }
-
+                //var pm = entityData.ClientPredictionSnapshotsComponent.PredictedMovements;
                 //Debug.WriteLine($"ResimPrep --- Show prev predictions:");
                 //foreach (var m in pm)
                 //{
-                //    Debug.WriteLine($"Resim Pos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - Vel {m.PhysicsEngineLinearVelocity} - IsGnd {m.IsGrounded}");
+                //    Debug.WriteLine($"Resim Pos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - InpVel {m.CurrentMoveInputVelocity} - PhyVel {m.PhysicsEngineLinearVelocity} - Yaw {m.YawOrientation} - IsGnd {m.IsGrounded}");
                 //}
                 //for (int jjjj = movementSnapshotsComp.SnapshotStore.Count - 1; jjjj >= 0; jjjj--)
                 //{
                 //    ref var m = ref movementSnapshotsComp.SnapshotStore.GetPrevious(jjjj);
-                //    Debug.WriteLine($"Resim NewPos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - Vel {m.PhysicsEngineLinearVelocity}");
+                //    Debug.WriteLine($"Resim NewPos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - InpVel {m.CurrentMoveInputVelocity} - PhyVel {m.PhysicsEngineLinearVelocity} - Yaw {m.YawOrientation}");
                 //}
 #endif
 
@@ -199,23 +209,16 @@ namespace MultiplayerExample.Network.SnapshotStores
                 // This is done so MovementSnapshotsRenderProcessor will always have two values to use for interpolation
                 // even if all input predictions have been consumed.
                 var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
-                var modelChildTransformComp = entityData.ModelChildEntity.Transform;
                 int movementCopyCount = Math.Min(2, movementSnapshotsComp.SnapshotStore.Count);
                 for (int mvmtIndex = movementCopyCount - 1; mvmtIndex >= 0; mvmtIndex--)
                 {
                     ref var predictedMovementData = ref ClientPredictionSnapshotsInitializerProcessor.CreateNewSnapshotData(
-                        predictedMovements, currentSimulationTickNumber - 1, movementSnapshotsComp, transformComp, modelChildTransformComp);
+                        predictedMovements, currentSimulationTickNumber - 1, movementSnapshotsComp, transformComp);
                     // Copy the data directly over
                     predictedMovementData = movementSnapshotsComp.SnapshotStore.GetPrevious(mvmtIndex);
                 }
             }
 
-#if DEBUG
-            if (debugPrint == triggerDebugPrint1 || debugPrint == triggerDebugPrint2)
-            {
-                Debug.WriteLine($"Resim Start Sim {currentSimulationTickNumber}");
-            }
-#endif
             float simDeltaTime = _simulation.FixedTimeStep;
             for (int inputIdx = 0; inputIdx < maxResimInputCount; inputIdx++)
             {
@@ -231,59 +234,47 @@ namespace MultiplayerExample.Network.SnapshotStores
                     }
 
                     var transformComp = entityData.TransformComponent;
-                    var modelChildTransformComp = entityData.ModelChildEntity.Transform;
                     var characterComp = entityData.CharacterComponent;
                     var movementSnapshotsComp = entityData.MovementSnapshotsComponent;
                     var clientPredictionSnapshotsComp = entityData.ClientPredictionSnapshotsComponent;
                     var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
 
                     ref var predictedMovementData = ref ClientPredictionSnapshotsInitializerProcessor.CreateNewSnapshotData(
-                        predictedMovements, currentSimulationTickNumber, movementSnapshotsComp, transformComp, modelChildTransformComp);
+                        predictedMovements, currentSimulationTickNumber, movementSnapshotsComp, transformComp);
 
                     var oldPos = transformComp.Position;
 
                     ref var inputData = ref inputSnapshotsComp.PendingInputs.Items[inputIdx];
-                    SetPredictedMovementData(simDeltaTime, movementSnapshotsComp, characterComp,
+#if DEBUG
+                    //Debug.WriteLine($"InpProc: RunSpeed: {curMovementData.MoveSpeedDecimalPercentage} - Sim {curMovementData.SimulationTickNumber} - {curMovementData.SnapshotType}");
+#endif
+                    SetMovementDataFromInput(simDeltaTime, movementSnapshotsComp, characterComp,
                         ref predictedMovementData, ref inputData);
-
+                    // Do physics step on the character
                     BulletPhysicsExt.SimulateCharacter(characterComp, _simulation, simDeltaTime);
                     // Save the new position due to physics step
                     predictedMovementData.LocalPosition = entityData.TransformComponent.Position;
                     predictedMovementData.PhysicsEngineLinearVelocity = BulletPhysicsExt.GetLinearVelocity(characterComp);
                     predictedMovementData.IsGrounded = characterComp.IsGrounded;
-#if DEBUG
-                    Debug.WriteLine($"Resim NewPos {predictedMovementData.LocalPosition} - PIDApplied {predictedMovementData.PlayerInputSequenceNumberApplied} - MvDir {predictedMovementData.MoveDirection} - Vel {predictedMovementData.PhysicsEngineLinearVelocity} - IsGnd {predictedMovementData.IsGrounded} - JmpCmd {inputData.IsJumpButtonDown}");
-                    var pm = entityData.ClientPredictionSnapshotsComponent.PredictedMovements;
-                    //if (debugPrint == triggerDebugPrint1 || debugPrint == triggerDebugPrint2)
-                    //{
-                    //    Debug.WriteLine($"Resim NewPos {predictedMovementData.LocalPosition} - OldRealPos {oldPos} - Sim {currentSimulationTickNumber} - PIDApplied {predictedMovementData.PlayerInputSequenceNumberApplied} - MvDir {predictedMovementData.MoveDirection}");
-                    //    foreach (var m in pm)
-                    //    {
-                    //        Debug.WriteLine($"Resim NewPos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - Vel {m.PhysicsEngineLinearVelocity} - IsGnd {m.IsGrounded}");
-                    //    }
-                    //}
-#endif
                 }
             }
 
 #if DEBUG
-            //if (debugPrint == triggerDebugPrint2)
             //{
             //    for (int i = 0; i < resimulateEntities.Count; i++)
             //    {
             //        ref var entityData = ref resimulateEntities.Items[i];
             //        var transformComp = entityData.TransformComponent;
-            //        var modelChildTransformComp = entityData.ModelChildEntity.Transform;
             //        var characterComp = entityData.CharacterComponent;
             //        var movementSnapshotsComp = entityData.MovementSnapshotsComponent;
             //        var clientPredictionSnapshotsComp = entityData.ClientPredictionSnapshotsComponent;
             //        var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
 
-            //        Debug.WriteLine($"Resim ---NEW PREDICTIONS!!");
+            //        Debug.WriteLine($"Resim ---NEW PREDICTION---");
             //        var pm = entityData.ClientPredictionSnapshotsComponent.PredictedMovements;
             //        foreach (var m in pm)
             //        {
-            //            Debug.WriteLine($"Resim NewPos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - Vel {m.PhysicsEngineLinearVelocity} - IsGnd {m.IsGrounded}");
+            //            Debug.WriteLine($"Resim NewPos {m.LocalPosition} - PIDApplied {m.PlayerInputSequenceNumberApplied} - MvDir {m.MoveDirection} - InpVel {m.CurrentMoveInputVelocity} - PhyVel {m.PhysicsEngineLinearVelocity} - Yaw {m.YawOrientation} - IsGnd {m.IsGrounded}");
             //        }
             //    }
             //    Debug.WriteLine($"------Resim END Sim {currentSimulationTickNumber}");
@@ -291,7 +282,7 @@ namespace MultiplayerExample.Network.SnapshotStores
 #endif
         }
 
-        private static void SetPredictedMovementData(
+        private static void SetMovementDataFromInput(
             float simulationDeltaTime,
             MovementSnapshotsComponent movementSnapshotsComp,
             CharacterComponent characterComp,
@@ -313,24 +304,29 @@ namespace MultiplayerExample.Network.SnapshotStores
             float maxSpeed = movementSnapshotsComp.MaxRunSpeed;
             // Character speed
             var newMoveDirection = new Vector3(curInputData.MoveInput.X, 0, curInputData.MoveInput.Y);
+#if DEBUG
+            var prevMoveDir = curMovementData.MoveDirection;
+#endif
 
             // Allow very simple inertia to the character to make animation transitions more fluid
             curMovementData.MoveDirection = curMovementData.MoveDirection * 0.85f + newMoveDirection * 0.15f;
 
             curMovementData.CurrentMoveInputVelocity = curMovementData.MoveDirection * maxSpeed;
+#if DEBUG
+            //Debug.WriteLine($"InpProc: RunSpeed: {curMovementData.MoveSpeedDecimalPercentage} - Sim {curMovementData.SimulationTickNumber} - {curMovementData.SnapshotType}");
+#endif
+
             characterComp.SetVelocity(curMovementData.CurrentMoveInputVelocity);
 
             // Broadcast speed as decimal percentage of the max speed
             curMovementData.MoveSpeedDecimalPercentage = curMovementData.MoveDirection.Length();
-//#if DEBUG
-//            Console.WriteLine($"InpProc: RunSpeed: {curMovementData.MoveSpeedDecimalPercentage} - Sim {curMovementData.SimulationTickNumber} - {curMovementData.SnapshotType}");
-//#endif
+#if DEBUG
+            //Debug.WriteLine($"InpProc: RunSpeed: {curMovementData.MoveSpeedDecimalPercentage} - Sim {curMovementData.SimulationTickNumber} - Inp {curInputData.MoveInput} - PID {curInputData.PlayerInputSequenceNumber} - PrevMvDir {prevMoveDir} - NextMvDir {curMovementData.MoveDirection} - NextInpVel {curMovementData.CurrentMoveInputVelocity} - PrevPos {curMovementData.LocalPosition}");
+#endif
             // Character orientation
             if (curMovementData.MoveDirection.LengthSquared() > 0.000001f)
             {
-                curMovementData.YawOrientation = MathUtil.RadiansToDegrees((float)Math.Atan2(-curMovementData.MoveDirection.Z, curMovementData.MoveDirection.X) + MathUtil.PiOverTwo);
-                curMovementData.LocalRotation = Quaternion.RotationYawPitchRoll(MathUtil.DegreesToRadians(curMovementData.YawOrientation), 0, 0);
-                characterComp.Entity.GetChild(0).Transform.Rotation = curMovementData.LocalRotation;
+                curMovementData.SetRotationFromFacingDirection(curMovementData.MoveDirection);
             }
         }
 
@@ -400,7 +396,6 @@ namespace MultiplayerExample.Network.SnapshotStores
             internal TransformComponent TransformComponent;
             // This component is the physics representation of a controllable character
             internal CharacterComponent CharacterComponent;
-            internal Entity ModelChildEntity;
             internal InputSnapshotsComponent InputSnapshotsComponent;
 
             internal ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;
@@ -410,7 +405,6 @@ namespace MultiplayerExample.Network.SnapshotStores
         {
             public readonly TransformComponent TransformComponent;
             public readonly CharacterComponent CharacterComponent;
-            public readonly Entity ModelChildEntity;
             public readonly InputSnapshotsComponent InputSnapshotsComponent;
             public readonly MovementSnapshotsComponent MovementSnapshotsComponent;
             public readonly ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;
@@ -418,14 +412,12 @@ namespace MultiplayerExample.Network.SnapshotStores
             public PredictMovementEntityData(
                 TransformComponent transformComponent,
                 CharacterComponent character,
-                Entity modelChildEntity,
                 InputSnapshotsComponent inputSnapshotsComponent,
                 MovementSnapshotsComponent movementSnapshotsComponent,
                 ClientPredictionSnapshotsComponent clientPredictionSnapshotsComponent)
             {
                 TransformComponent = transformComponent;
                 CharacterComponent = character;
-                ModelChildEntity = modelChildEntity;
                 InputSnapshotsComponent = inputSnapshotsComponent;
                 MovementSnapshotsComponent = movementSnapshotsComponent;
                 ClientPredictionSnapshotsComponent = clientPredictionSnapshotsComponent;

@@ -66,6 +66,7 @@ namespace MultiplayerExample.Player
 
         private GameClockManager _gameClockManager;
 
+        // Components from the networked entity
         private NetworkEntityComponent _networkEntityComponent;
         private MovementSnapshotsComponent _movementSnapshotsComponent;
         private ClientPredictionSnapshotsComponent _clientPredictionSnapshotsComponent;     // Optional component
@@ -77,11 +78,13 @@ namespace MultiplayerExample.Player
             var parentEntity = Entity.GetParent();
             Debug.Assert(parentEntity != null);
 
-            _networkEntityComponent = parentEntity.Get<NetworkEntityComponent>();
+            var networkEntityViewComp = parentEntity.Get<NetworkEntityViewComponent>();
+            var networkedEntity = networkEntityViewComp.NetworkedEntity;
+            _networkEntityComponent = networkedEntity.Get<NetworkEntityComponent>();
             Debug.Assert(_networkEntityComponent != null);
-            _movementSnapshotsComponent = parentEntity.Get<MovementSnapshotsComponent>();
+            _movementSnapshotsComponent = networkedEntity.Get<MovementSnapshotsComponent>();
             Debug.Assert(_movementSnapshotsComponent != null);
-            _clientPredictionSnapshotsComponent = parentEntity.Get<ClientPredictionSnapshotsComponent>();
+            _clientPredictionSnapshotsComponent = networkedEntity.Get<ClientPredictionSnapshotsComponent>();
 
             _gameClockManager = Services.GetSafeServiceAs<GameClockManager>();
 

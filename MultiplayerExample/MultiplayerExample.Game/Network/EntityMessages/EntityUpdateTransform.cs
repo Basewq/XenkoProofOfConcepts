@@ -12,7 +12,7 @@ namespace MultiplayerExample.Network.EntityMessages
         // Array Item Fields
         public SerializableGuid NetworkEntityId;
         public Vector3 Position;
-        public Quaternion Rotation;
+        public float YawOrientation;
         public float MoveSpeedDecimalPercentage;
         public Vector3 CurrentMoveInputVelocity;
         public Vector3 PhysicsEngineLinearVelocity;
@@ -34,7 +34,7 @@ namespace MultiplayerExample.Network.EntityMessages
             bool isOk = true
             && message.Read(out NetworkEntityId)
             && message.Read(out Position)
-            && message.Read(out Rotation)
+            && message.Read(out YawOrientation)
             && message.Read(out MoveSpeedDecimalPercentage)
             && message.Read(out CurrentMoveInputVelocity)
             && message.Read(out PhysicsEngineLinearVelocity)
@@ -54,7 +54,7 @@ namespace MultiplayerExample.Network.EntityMessages
         {
             message.Write(NetworkEntityId);
             message.Write(Position);
-            message.Write(Rotation);
+            message.Write(YawOrientation);
             message.Write(MoveSpeedDecimalPercentage);
             message.Write(CurrentMoveInputVelocity);
             message.Write(PhysicsEngineLinearVelocity);

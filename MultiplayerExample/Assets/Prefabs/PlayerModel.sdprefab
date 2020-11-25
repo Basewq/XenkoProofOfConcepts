@@ -1,0 +1,36 @@
+!PrefabAsset
+Id: 208c4507-1bc6-4dc5-a41e-8e9f67d9bbc3
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 3c1d76fa-41c0-4339-81b6-2c2433c80bcf
+    Parts:
+        -   Entity:
+                Id: 3c1d76fa-41c0-4339-81b6-2c2433c80bcf
+                Name: MannequinModel
+                Components:
+                    1245d3c0d097e44e8295e28dad432562: !TransformComponent
+                        Id: 10d29c0b-9f3e-4baf-9cc2-dcb66b83b459
+                        Position: {X: 0.0, Y: 4.76837158E-07, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0fa4902c57c2de428808e383912863ea: !ModelComponent
+                        Id: 91f81212-e44b-485c-afae-b6bf732155d5
+                        Model: c9aec25a-fb63-4f1c-9975-cf4433ad5299:Models/mannequinModel
+                        Materials: {}
+                    dc49002a22543a227669f8b333258239: !MultiplayerExample.Player.AnimationController,MultiplayerExample.Game
+                        Id: e8c816a7-ffc2-4dfc-8ce6-cc31185f0a19
+                        AnimationComponent: ref!! 101914f9-412a-40bb-af53-bbe4e3845918
+                        AnimationIdle: 9bbe351d-9eff-4f67-81ae-b3b08133c93e:Animations/Idle
+                        AnimationWalk: 841e7403-4706-48a3-adda-b7c611f465ab:Animations/Walk
+                        AnimationRun: 0bec43e7-e8e8-4324-9fec-e294288586ff:Animations/Run
+                        AnimationJumpStart: 02c7167f-6786-4ce6-8c18-33e49715fb43:Animations/Jump_Start
+                        AnimationJumpMid: d3c2a4cc-88a9-4ad8-a765-4a931877b027:Animations/Jump_Loop
+                        AnimationJumpEnd: 1ca2b0ea-5573-4164-9104-bfb8a17cf0b5:Animations/Jump_End
+                        WalkThreshold: 0.25
+                        TimeFactor: 1.0
+                    e8615b13239a312ea6ae7c4f68c2c32c: !AnimationComponent
+                        Id: 101914f9-412a-40bb-af53-bbe4e3845918
+                        Animations: {}

@@ -218,7 +218,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             // Push the method's arg1 (linearVelocityY)
             generator.Emit(OpCodes.Ldarg_1);
 
-            // Call characterComp.KinematicCharacter.LinearVelocityY = linearVelocityY;
+            // Call characterComp.KinematicCharacter.m_verticalVelocity = linearVelocityY;
             generator.Emit(OpCodes.Stfld, bulletKinematicCharVerticalVelocityField);
 
             // void return

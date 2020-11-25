@@ -188,7 +188,7 @@ namespace MultiplayerExample
             // HACK (kind of): Server must run at a fixed rate, which we'll manually control with _physicGameTime
             var physicsSettings = Settings.Configurations.Get<PhysicsSettings>() ?? new PhysicsSettings();
             physicsSettings.Flags = PhysicsEngineFlags.ContinuousCollisionDetection;
-            physicsSettings.MaxSubSteps = 1;    // Important to keep this at 1 since we want ALL our game processors to run every time we run a Physics simulation
+            physicsSettings.MaxSubSteps = 0;    // Important to keep this at 0 since actually makes it always simulate one step
             physicsSettings.FixedTimeStep = 1f / GameConfig.PhysicsSimulationRate;
             var physicsConfigSettings = new ConfigurationOverride
             {

@@ -56,7 +56,7 @@ namespace MultiplayerExample
             var physicsSettings = gameSettings.Configurations.Get<PhysicsSettings>();
             // Ignore whatever was set in the config asset
             physicsSettings.Flags = PhysicsEngineFlags.ContinuousCollisionDetection;
-            physicsSettings.MaxSubSteps = 1;    // Important to keep this at 1 since we want ALL our game processors to run every time we run a Physics simulation
+            physicsSettings.MaxSubSteps = 0;    // Important to keep this at 0 since actually makes it always simulate one step
             physicsSettings.FixedTimeStep = 1f / GameConfig.PhysicsSimulationRate;
         }
 

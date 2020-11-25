@@ -1,12 +1,8 @@
 ﻿using MultiplayerExample.Core;
 using MultiplayerExample.Data;
-using MultiplayerExample.Engine;
 using Stride.Core.Annotations;
 using Stride.Core.Collections;
-using Stride.Core.Mathematics;
 using Stride.Engine;
-using Stride.Games;
-using System;
 
 namespace MultiplayerExample.Network.SnapshotStores
 {
@@ -26,7 +22,6 @@ namespace MultiplayerExample.Network.SnapshotStores
                 // Can also add other info/components here
                 MovementSnapshotsComponent = entity.Get<MovementSnapshotsComponent>(),
                 TransformComponent = entity.Transform,
-                ModelChildEntity = entity.GetChild(0),
             };
         }
 
@@ -51,14 +46,13 @@ namespace MultiplayerExample.Network.SnapshotStores
         internal static ref MovementSnapshotsComponent.MovementData CreateNewSnapshotData(
             FastList<MovementSnapshotsComponent.MovementData> predictedMovements,
             SimulationTickNumber simulationTickNumber,
-            MovementSnapshotsComponent movementSnapshotsComp,
-            TransformComponent transform,
-            TransformComponent modelChildTransform)
+            MovementSnapshotsComponent movementSnapshotsComponent,
+            TransformComponent transformComponent)
         {
             predictedMovements.Add(default);
             ref var nextMovementData = ref predictedMovements.Items[predictedMovements.Count - 1];
 
-            var movementSnapshotStore = movementSnapshotsComp.SnapshotStore;
+            var movementSnapshotStore = movementSnapshotsComponent.SnapshotStore;
             if (predictedMovements.Count >= 2)
             {
                 // Just copy the previous snapshot's data
@@ -67,22 +61,15 @@ namespace MultiplayerExample.Network.SnapshotStores
             else if (movementSnapshotStore != null && movementSnapshotStore.Count > 0)  // movementSnapshotStore doesn't exist on newly created entities
             {
                 // Copy the last 'real' movement data
-                ref var movementData = ref movementSnapshotsComp.SnapshotStore.GetLatest();
+                ref var movementData = ref movementSnapshotsComponent.SnapshotStore.GetLatest();
                 nextMovementData = movementData;
             }
             else
             {
                 // New data without any previous information
-                nextMovementData.MoveDirection = Vector3.Zero;
-                var faceDir = -Vector3.UnitZ;
-                nextMovementData.YawOrientation = MathUtil.RadiansToDegrees((float)Math.Atan2(faceDir.Z, faceDir.X) + MathUtil.PiOverTwo);
-                nextMovementData.JumpReactionRemaining = movementSnapshotsComp.JumpReactionThreshold;
-                nextMovementData.LocalPosition = transform.Position;
-                nextMovementData.LocalRotation = modelChildTransform.Rotation;
-                nextMovementData.PhysicsEngineLinearVelocity = Vector3.Zero;
+                MovementSnapshotsComponent.InitializeNewMovementData(ref nextMovementData, transformComponent.Position, movementSnapshotsComponent.JumpReactionThreshold);
             }
             nextMovementData.SimulationTickNumber = simulationTickNumber;
-            nextMovementData.SnapshotType = SnapshotType.ClientPrediction;  // Technically this will always be ClientPrediction, but just set it anyway...
 
             return ref nextMovementData;
         }
@@ -93,7 +80,6 @@ namespace MultiplayerExample.Network.SnapshotStores
             internal MovementSnapshotsComponent MovementSnapshotsComponent;
 
             internal TransformComponent TransformComponent;
-            internal Entity ModelChildEntity;
         }
     }
 }

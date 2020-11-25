@@ -1,7 +1,6 @@
 ﻿using MultiplayerExample.Core;
 using MultiplayerExample.Engine;
 using MultiplayerExample.GameServices;
-using MultiplayerExample.GameServices.SceneHandlers;
 using MultiplayerExample.Network.EntityMessages;
 using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
@@ -40,29 +39,19 @@ namespace MultiplayerExample.Network
 
         private IGameNetworkService _networkService;
         private NetworkMessageWriter _networkMessageWriter;
-        private SceneSystem _sceneSystem;
-
-        private Entity _gameManagerEntity;
-        private GameManager _gameManager;
-        private LazyLoadedSceneData _lazyLoadedScene;
-
-        private NetworkAssetDefinitions _assetDefinitions;
-        private NetworkAssetDatabase _networkAssetDatabase;
 
         private ContentManager _content;
+        private NetworkAssetDatabase _networkAssetDatabase;
+
+        private LazyLoadedSceneData _lazyLoadedScene;
 
         public bool IsEnabled { get; set; }
-
-        public event Action<Entity> PlayerAdded;
-        public event Action<Entity> PlayerRemoved;
 
         public NetworkEntityProcessor()
         {
             _networkMessageWriter = new NetworkMessageWriter(new LiteNetLib.Utils.NetDataWriter());
             _serverPlayerManager = new ServerPlayerManager(4, this);
             _clientPlayerManager = new ClientPlayerManager(this);
-
-            _lazyLoadedScene = new LazyLoadedSceneData(this);
 
             Order = -20000;         // Ensure this occurs before other processors
             // Not using Enabled property, because that completely disables the processor, where it doesn't even pick up newly added entities
@@ -73,10 +62,14 @@ namespace MultiplayerExample.Network
         {
             _gameClockManager = Services.GetService<GameClockManager>();
             _gameEngineContext = Services.GetService<GameEngineContext>();
+
             _networkService = Services.GetSafeServiceAs<IGameNetworkService>();
-            _sceneSystem = Services.GetSafeServiceAs<SceneSystem>();
+
             _content = Services.GetSafeServiceAs<ContentManager>();
             _networkAssetDatabase = Services.GetSafeServiceAs<NetworkAssetDatabase>();
+
+            var sceneSystem = Services.GetSafeServiceAs<SceneSystem>();
+            _lazyLoadedScene = new LazyLoadedSceneData(sceneSystem);
         }
 
         protected override void OnSystemRemove()
@@ -110,24 +103,6 @@ namespace MultiplayerExample.Network
 
         public void PreUpdate(GameTime gameTime)
         {
-            // Lazy load gameplay related systems
-            var rootScene = _sceneSystem.SceneInstance.RootScene;
-            if (rootScene == null)
-            {
-                return;     // Not set up yet
-            }
-            if (_gameManagerEntity == null)
-            {
-                var entityManager = rootScene.Entities;
-                _gameManagerEntity = entityManager.First(x => x.Name == GameManager.EntityName);      // This entity must exist in the root scene!
-                Debug.Assert(_gameManagerEntity != null, $"Root scene must contain GameManager entity.");
-                _gameManager = _gameManagerEntity.Get<GameManager>();
-                Debug.Assert(_gameManager != null, $"GameManager entity must contain {nameof(GameManager)} component.");
-                _assetDefinitions = _gameManagerEntity.Get<NetworkAssetDefinitions>();
-                Debug.Assert(_gameManagerEntity != null, $"GameManager entity must contain {nameof(NetworkAssetDefinitions)} component.");
-                _assetDefinitions.LoadAssetIds(_networkAssetDatabase);
-            }
-
             if (_networkService.NetworkGameMode == NetworkGameMode.ListenServer
                 || _networkService.NetworkGameMode == NetworkGameMode.DedicatedServer)
             {
@@ -326,15 +301,6 @@ namespace MultiplayerExample.Network
             Console.WriteLine(message);
         }
 
-        internal class AssociatedData
-        {
-            public Entity Entity;
-            public TransformComponent TransformComponent;
-            public NetworkEntityComponent NetworkEntityComponent;
-            public MovementSnapshotsComponent MovementSnapshotsComponent;
-            public ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;   // Optional component
-        }
-
         private enum PendingPlayerState
         {
             JustConnected,
@@ -377,7 +343,7 @@ namespace MultiplayerExample.Network
             internal void UpdatePendingPlayerStates(NetworkMessageWriter networkMessageWriter)
             {
                 var networkAssetDatabase = _networkEntityProcessor._networkAssetDatabase;
-                var assetDefinitions = _networkEntityProcessor._assetDefinitions;
+                var assetDefinitions = _networkEntityProcessor._lazyLoadedScene.GetNetworkAssetDefinitions();
 
                 //lock (PendingPlayers)
                 for (int i = 0; i < PendingPlayers.Count; i++)
@@ -416,7 +382,8 @@ namespace MultiplayerExample.Network
             private void OnNewPlayerReady(ServerPendingPlayer pendingPlayer, NetworkMessageWriter networkMessageWriter)
             {
                 var networkAssetDatabase = _networkEntityProcessor._networkAssetDatabase;
-                var assetDefinitions = _networkEntityProcessor._assetDefinitions;
+                var assetDefinitions = _networkEntityProcessor._lazyLoadedScene.GetNetworkAssetDefinitions();
+                var assetDatabase = _networkEntityProcessor._networkAssetDatabase;
                 var content = _networkEntityProcessor._content;
                 var gameClockManager = _networkEntityProcessor._gameClockManager;
 
@@ -424,25 +391,27 @@ namespace MultiplayerExample.Network
 
                 var gameplayScene = _networkEntityProcessor._lazyLoadedScene.GetGameplayScene();
 
-                var simulationTickNumber = gameClockManager.SimulationClock.SimulationTickNumber;
+                var simTickNumber = gameClockManager.SimulationClock.SimulationTickNumber;
                 // Can add to the scene now
-                var playerPrefab = content.Load(assetDefinitions.ServerPlayer);
+                var prefabUrl = assetDefinitions.PlayerAssets.ServerRemotePlayer;
+                var playerPrefab = content.Load(prefabUrl);
                 var playerEntity = playerPrefab.InstantiateSingle();
                 var networkEntityComp = playerEntity.Get<NetworkEntityComponent>();
                 networkEntityComp.NetworkEntityId = pendingPlayer.PlayerId;       // Can just use the same ID
-                networkEntityComp.OwnerType = NetworkOwnerType.Player;
+                //networkEntityComp.OwnerType = NetworkOwnerType.Player;
                 networkEntityComp.OwnerClientId = pendingPlayer.PlayerId;
-                networkEntityComp.AssetId = assetDefinitions.ServerPlayerAssetId;
-                networkEntityComp.IsLocalEntity = false;
+                networkEntityComp.AssetId = assetDatabase.GetAssetIdFromUrlReference(prefabUrl);
+                //networkEntityComp.IsLocalEntity = false;
 
                 var networkPlayerComp = playerEntity.Get<NetworkPlayerComponent>();
                 networkPlayerComp.PlayerName = pendingPlayer.PlayerName;
 
-                var spawnPointEntity = gameplayScene.Entities.First(x => x.Name == "SpawnPoint");
+                var spawnPointEntity = gameplayScene.Entities.First(x => x.Name == "SpawnPoint");       // TODO: probably shouldn't hardcode it like this...
                 playerEntity.Transform.Position = spawnPointEntity.Transform.Position;
-                playerEntity.GetChild(0).Transform.Rotation = spawnPointEntity.Transform.Rotation;  // Only rotate the child model entity
-
-                _networkEntityProcessor.AddAndRegisterEntity(playerEntity, gameplayScene, simulationTickNumber);
+                _networkEntityProcessor.AddAndRegisterEntity(playerEntity, gameplayScene, simTickNumber);
+                // Note this must be set AFTER being added to the scene due to snapshot buffer needing to be instantiated by the processor
+                var movementSnapshotComp = playerEntity.Get<MovementSnapshotsComponent>();
+                MovementSnapshotsProcessor.CreateNewSnapshotData(simTickNumber, movementSnapshotComp, playerEntity.Transform);
 
                 var newPlayer = new ServerActivePlayer(pendingPlayer.PlayerId, pendingPlayer.PlayerName, playerEntity, pendingPlayer.Connection);
                 ActivePlayers.Add(newPlayer);
@@ -450,35 +419,31 @@ namespace MultiplayerExample.Network
                 for (int i = 0; i < ActivePlayers.Count - 1; i++)       // Exclude the last because that's the new player
                 {
                     ref var existingPlayer = ref ActivePlayers.Items[i];
+                    Debug.Assert(existingPlayer.PlayerId != newPlayer.PlayerId);
+
                     var existingPlayerDetails = entityExistenceStates[existingPlayer.PlayerEntity];
-                    if (ActivePlayers.Items[i].PlayerId == newPlayer.PlayerId)
+                    var spawnPlayer = new SpawnRemotePlayerMessage
                     {
-                    }
-                    else
-                    {
-                        var spawnPlayer = new SpawnRemotePlayerMessage
-                        {
-                            PlayerId = existingPlayer.PlayerId,
-                            SimulationTickNumber = existingPlayerDetails.SimulationTickNumberCreated,
-                            PlayerName = existingPlayer.PlayerName,
-                            Position = existingPlayer.PlayerEntity.Transform.Position,
-                            Rotation = existingPlayer.PlayerEntity.GetChild(0).Transform.Rotation   // Rotation is from the child model entity
-                        };
-                        networkMessageWriter.Reset();
-                        spawnPlayer.WriteTo(networkMessageWriter);
-                        var conn = newPlayer.Connection;
-                        conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
-                    }
+                        PlayerId = existingPlayer.PlayerId,
+                        SimulationTickNumber = existingPlayerDetails.SimulationTickNumberCreated,
+                        PlayerName = existingPlayer.PlayerName,
+                        Position = existingPlayer.PlayerEntity.Transform.Position,
+                        Rotation = existingPlayer.PlayerEntity.Transform.Rotation
+                    };
+                    networkMessageWriter.Reset();
+                    spawnPlayer.WriteTo(networkMessageWriter);
+                    var conn = newPlayer.Connection;
+                    conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
                 }
                 // Notify the new player of itself
                 {
                     var spawnPlayer = new SpawnLocalPlayerMessage
                     {
                         PlayerId = newPlayer.PlayerId,
-                        SimulationTickNumber = simulationTickNumber,
+                        SimulationTickNumber = simTickNumber,
                         PlayerName = newPlayer.PlayerName,
                         Position = newPlayer.PlayerEntity.Transform.Position,
-                        Rotation = newPlayer.PlayerEntity.GetChild(0).Transform.Rotation   // Rotation is from the child model entity
+                        Rotation = newPlayer.PlayerEntity.Transform.Rotation
                     };
                     networkMessageWriter.Reset();
                     spawnPlayer.WriteTo(networkMessageWriter);
@@ -490,10 +455,10 @@ namespace MultiplayerExample.Network
                     var spawnPlayer = new SpawnRemotePlayerMessage
                     {
                         PlayerId = newPlayer.PlayerId,
-                        SimulationTickNumber = simulationTickNumber,
+                        SimulationTickNumber = simTickNumber,
                         PlayerName = newPlayer.PlayerName,
                         Position = newPlayer.PlayerEntity.Transform.Position,
-                        Rotation = newPlayer.PlayerEntity.GetChild(0).Transform.Rotation   // Rotation is from the child model entity
+                        Rotation = newPlayer.PlayerEntity.Transform.Rotation
                     };
                     networkMessageWriter.Reset();
                     spawnPlayer.WriteTo(networkMessageWriter);
@@ -598,7 +563,7 @@ namespace MultiplayerExample.Network
 
                             var movementSnapshotStore = ent.MovementSnapshotsComponent.SnapshotStore.GetOrCreate(simTickNumber);
                             updateTransformMsg.Position = movementSnapshotStore.LocalPosition;
-                            updateTransformMsg.Rotation = movementSnapshotStore.LocalRotation;
+                            updateTransformMsg.YawOrientation = movementSnapshotStore.YawOrientation;
                             updateTransformMsg.MoveSpeedDecimalPercentage = movementSnapshotStore.MoveSpeedDecimalPercentage;
                             updateTransformMsg.CurrentMoveInputVelocity = movementSnapshotStore.CurrentMoveInputVelocity;
                             updateTransformMsg.IsGrounded = movementSnapshotStore.IsGrounded;
@@ -916,9 +881,8 @@ namespace MultiplayerExample.Network
                     ref var movementData = ref movementSnapshotsComp.SnapshotStore.GetOrCreate(svrSimTickNumber);
 
                     movementData.SimulationTickNumber = svrSimTickNumber;
-                    movementData.SnapshotType = SnapshotType.Server;
                     movementData.LocalPosition = updateTransform.Position;
-                    movementData.LocalRotation = updateTransform.Rotation;
+                    movementData.SetRotationFromYawOrientation(updateTransform.YawOrientation);
                     movementData.MoveSpeedDecimalPercentage = updateTransform.MoveSpeedDecimalPercentage;
                     movementData.CurrentMoveInputVelocity = updateTransform.CurrentMoveInputVelocity;
                     movementData.PhysicsEngineLinearVelocity = updateTransform.PhysicsEngineLinearVelocity;
@@ -963,11 +927,11 @@ namespace MultiplayerExample.Network
                                 break;
                             }
                         }
-                        if (!exists) {
+                        if (!exists)
+                        {
                             _resimulateEntities.Add(new MovementSnapshotsInputProcessor.PredictMovementEntityData(
                                 data.TransformComponent,
                                 data.Entity.Get<Stride.Physics.CharacterComponent>(),
-                                data.Entity.GetChild(0),
                                 data.Entity.Get<InputSnapshotsComponent>(),
                                 movementSnapshotsComp,
                                 data.ClientPredictionSnapshotsComponent
@@ -988,7 +952,13 @@ namespace MultiplayerExample.Network
                     switch (updateInput.InputActionType)
                     {
                         case InputActionType.Jump:
-                            // TODO: update animation
+                            // TODO: ??
+                            break;
+                        case InputActionType.Melee:
+                            // TODO: ??
+                            break;
+                        case InputActionType.Shoot:
+                            // TODO: ??
                             break;
                     }
 
@@ -1001,16 +971,6 @@ namespace MultiplayerExample.Network
                     movementSnapshotsInputProcessor.Resimulate(currentSimulationTickNumber, _resimulateEntities);
                     _resimulateEntities.Clear();
                 }
-                ////foreach (var entity in _resimulateEntities)
-                ////{
-                ////    var movementSnapshotsComp = entity.Get<MovementSnapshotsComponent>();
-                ////    if (movementSnapshotsComp.ServerToClientPredictionPositionDifference.LengthSquared() > 0)
-                ////    {
-                ////        // Resimulation required
-                ////        var inputSnapshotsComp = entity.Get<InputSnapshotsComponent>();
-
-                ////    }
-                ////}
             }
 
             internal void SpawnLocalPlayer(NetworkMessageReader message, Scene gameplayScene, NetworkConnection connectionToServer)
@@ -1048,42 +1008,44 @@ namespace MultiplayerExample.Network
                 )
             {
                 var networkEntityIdToEntityDataMap = _networkEntityProcessor._networkEntityIdToEntityDataMap;
-                var assetDefinitions = _networkEntityProcessor._assetDefinitions;
+                var assetDefinitions = _networkEntityProcessor._lazyLoadedScene.GetNetworkAssetDefinitions();
+                var assetDatabase = _networkEntityProcessor._networkAssetDatabase;
                 var content = _networkEntityProcessor._content;
-                var gameEngineContext = _networkEntityProcessor._gameEngineContext;
 
                 Debug.Assert(!networkEntityIdToEntityDataMap.ContainsKey(playerId));
 
                 var networkEntityId = playerId;
-                var assetId = isLocalEntity ? assetDefinitions.LocalPlayerAssetId : assetDefinitions.RemotePlayerAssetId;
-                var prefabUrl = isLocalEntity ? assetDefinitions.LocalPlayer : assetDefinitions.RemotePlayer;
+                var prefabUrl = isLocalEntity ? assetDefinitions.PlayerAssets.ClientLocalPlayer : assetDefinitions.PlayerAssets.ClientRemotePlayer;
                 var prefab = content.Load(prefabUrl);
-                var entity = prefab.InstantiateSingle();
+                var clientPlayerEntities = prefab.InstantiateClientPlayer();
 
-                var networkPlayerComp = entity.Get<NetworkPlayerComponent>();
+                var playerEntity = clientPlayerEntities.PlayerEntity;
+                var networkPlayerComp = playerEntity.Get<NetworkPlayerComponent>();
                 networkPlayerComp.PlayerName = playerName;
 
-                var networkEntityComp = entity.Get<NetworkEntityComponent>();
+                var networkEntityComp = playerEntity.Get<NetworkEntityComponent>();
                 networkEntityComp.NetworkEntityId = networkEntityId;
                 networkEntityComp.OwnerType = NetworkOwnerType.Player;
                 networkEntityComp.OwnerClientId = playerId;
                 networkEntityComp.IsLocalEntity = isLocalEntity;
-                networkEntityComp.AssetId = assetId;
+                networkEntityComp.AssetId = assetDatabase.GetAssetIdFromUrlReference(prefabUrl);
 
-                _networkEntityProcessor.AddAndRegisterEntity(entity, gameplayScene, simulationTickNumber);
+                _networkEntityProcessor.AddAndRegisterEntity(playerEntity, gameplayScene, simulationTickNumber);
                 // Set initial position
                 var data = networkEntityIdToEntityDataMap[networkEntityId];
                 var movementSnapshotsComp = data.MovementSnapshotsComponent;
                 Debug.Assert(movementSnapshotsComp != null);
-
                 ref var movementData = ref movementSnapshotsComp.SnapshotStore.GetOrCreate(simulationTickNumber);
-
-                movementData.SnapshotType = SnapshotType.Server;
                 movementData.LocalPosition = position;
-                movementData.LocalRotation = rotation;
+                movementData.SetRotationFromQuaternion(rotation);
 
-                _networkEntityProcessor.PlayerAdded?.Invoke(entity);
-                return entity;
+                // The 'viewable' player is added separately
+                var playerViewEntity = clientPlayerEntities.PlayerViewEntity;
+                gameplayScene.Entities.Add(playerViewEntity);
+
+                var gameManager = _networkEntityProcessor._lazyLoadedScene.GetGameManager();
+                gameManager.RaisePlayerAddedEvent(playerEntity);
+                return playerEntity;
             }
 
             //internal void UnregisterLocalPlayer(SerializableGuid playerId)
@@ -1103,7 +1065,8 @@ namespace MultiplayerExample.Network
                     {
                         var entity = data.Entity;
                         _networkEntityProcessor.RemoveAndUnregisterEntity(msg.PlayerId, entity, gameplayScene);
-                        _networkEntityProcessor.PlayerRemoved?.Invoke(entity);
+                        var gameManager = _networkEntityProcessor._lazyLoadedScene.GetGameManager();
+                        gameManager.RaisePlayerRemovedEntity(entity);
                     }
                     else
                     {
@@ -1138,48 +1101,13 @@ namespace MultiplayerExample.Network
             }
         }
 
-        private class LazyLoadedSceneData
+        internal class AssociatedData
         {
-            private readonly NetworkEntityProcessor _networkEntityProcessor;
-
-            private Scene _gameplayScene;
-            private MovementSnapshotsInputProcessor _movementSnapshotsInputProcessor;
-
-            public LazyLoadedSceneData(NetworkEntityProcessor networkEntityProcessor)
-            {
-                _networkEntityProcessor = networkEntityProcessor;
-            }
-
-            /// <summary>
-            /// The scene where we actually add/remove gameplay related entities.
-            /// </summary>
-            public Scene GetGameplayScene()
-            {
-                if (_gameplayScene != null)
-                {
-                    return _gameplayScene;
-                }
-
-                // Entities are added to the InGameScreen scene rather than the root scene
-                var sceneManager = _networkEntityProcessor._sceneSystem.GetSceneManagerFromRootScene();
-                Debug.Assert(sceneManager != null, $"SceneManager entity must contain {nameof(SceneManager)} component.");
-                Debug.Assert(sceneManager.ActiveMainSceneHandler is InGameSceneHandler, "Must be in-game.");
-                _gameplayScene = sceneManager.ActiveMainSceneHandler.Scene;
-                return _gameplayScene;
-            }
-
-            public MovementSnapshotsInputProcessor GetMovementSnapshotsInputProcessor()
-            {
-                if (_movementSnapshotsInputProcessor != null)
-                {
-                    return _movementSnapshotsInputProcessor;
-                }
-
-                var sceneSystem = _networkEntityProcessor._sceneSystem;
-                _movementSnapshotsInputProcessor = sceneSystem.SceneInstance.GetProcessor<MovementSnapshotsInputProcessor>();
-                Debug.Assert(_movementSnapshotsInputProcessor != null, $"You cannot call this method yet because {nameof(MovementSnapshotsInputProcessor)} hasn't been created yet.");
-                return _movementSnapshotsInputProcessor;
-            }
+            public Entity Entity;
+            public TransformComponent TransformComponent;
+            public NetworkEntityComponent NetworkEntityComponent;
+            public MovementSnapshotsComponent MovementSnapshotsComponent;
+            public ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;   // Optional component
         }
     }
 }

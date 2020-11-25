@@ -14,6 +14,10 @@ namespace MultiplayerExample.Network
     /// <summary>
     /// Database that maps IDs to asset paths.
     /// </summary>
+    /// <remarks>
+    /// Note that we define our own IDs instead of using <see cref="ContentManager"/>'s FileProvider is because the ObjectIds
+    /// are not guaranteed to be consistent between the client and server applications.
+    /// </remarks>
     class NetworkAssetDatabase
     {
         private readonly NetworkAssetMapping[] _assetMappings;
@@ -29,17 +33,17 @@ namespace MultiplayerExample.Network
             int indexOffset = 0;
             foreach (var url in assetFolderUrls)
             {
-                var filePaths = contentManager.FileProvider.ListFiles(url, "*", VirtualSearchOption.AllDirectories);
-                var assetIds = GenerateAssetIdsFromFilePaths(filePaths);
-                for (int i = 0; i < filePaths.Length; i++)
+                var contentPaths = contentManager.FileProvider.ListFiles(url, "*", VirtualSearchOption.AllDirectories);
+                var assetIds = GenerateAssetIdsFromFilePaths(contentPaths);
+                for (int i = 0; i < contentPaths.Length; i++)
                 {
-                    map.Add(new NetworkAssetMapping(assetIds[i], filePaths[i]));
+                    map.Add(new NetworkAssetMapping(assetIds[i], contentPaths[i]));
                     int mapIndex = i + indexOffset;
                     Debug.Assert(!_assetIdToMappingIndex.ContainsKey(assetIds[i]), "Asset ID collision found. GenerateAssetIdsFromFilePaths should be changed to remove ID collision.");
                     _assetIdToMappingIndex.Add(assetIds[i], mapIndex);
-                    _assetPathToMappingIndex.Add(filePaths[i], mapIndex);
+                    _assetPathToMappingIndex.Add(contentPaths[i], mapIndex);
                 }
-                indexOffset += filePaths.Length;
+                indexOffset += contentPaths.Length;
             }
             _assetMappings = map.ToArray();
         }
@@ -51,52 +55,52 @@ namespace MultiplayerExample.Network
             return assetId;
         }
 
-        public SerializableGuid GetAssetIdFromPath(string filePath)
+        public SerializableGuid GetAssetIdFromContentPath(string contentPath)
         {
-            var mapIndex = _assetPathToMappingIndex[filePath];
+            var mapIndex = _assetPathToMappingIndex[contentPath];
             var assetId = _assetMappings[mapIndex].AssetId;
             return assetId;
         }
 
-        public string GetPathFromAssetId(SerializableGuid assetId)
+        public string GetContentPathFromAssetId(SerializableGuid assetId)
         {
             var mapIndex = _assetIdToMappingIndex[assetId];
-            var filePath = _assetMappings[mapIndex].FilePath;
-            return filePath;
+            var contentPath = _assetMappings[mapIndex].FilePath;
+            return contentPath;
         }
 
         public UrlReference<T> GetUrlReferenceFromAssetId<T>(SerializableGuid assetId) where T : class
         {
             var mapIndex = _assetIdToMappingIndex[assetId];
-            var filePath = _assetMappings[mapIndex].FilePath;
-            return new UrlReference<T>(filePath);
+            var contentPath = _assetMappings[mapIndex].FilePath;
+            return new UrlReference<T>(contentPath);
         }
 
-        private static Guid[] GenerateAssetIdsFromFilePaths(string[] filePaths)
+        private static Guid[] GenerateAssetIdsFromFilePaths(string[] contentPaths)
         {
-            var assetIds = new Guid[filePaths.Length];
+            var assetIds = new Guid[contentPaths.Length];
             const int GuidSizeInBytes = 16;
             using (var sha1 = new SHA1Managed())
             {
-                for (int i = 0; i < filePaths.Length; i++)
+                for (int i = 0; i < contentPaths.Length; i++)
                 {
-                    string filePath = filePaths[i];
-                    using (var filePathBytesPool = ArrayPool<byte>.Shared.RentTemp(filePath.Length))
+                    string contentPath = contentPaths[i];
+                    using (var contentPathBytesPool = ArrayPool<byte>.Shared.RentTemp(contentPath.Length))
                     using (var guidBytesPool = ArrayPool<byte>.Shared.RentTemp(GuidSizeInBytes))
                     {
-                        var filePathBytes = filePathBytesPool.Array;
-                        Encoding.UTF8.GetBytes(filePath, charIndex: 0, charCount: filePath.Length, filePathBytes, byteIndex: 0);
-                        var hashBytes = sha1.ComputeHash(filePathBytes, offset: 0, count: filePath.Length);
+                        var contentPathBytes = contentPathBytesPool.Array;
+                        Encoding.UTF8.GetBytes(contentPath, charIndex: 0, charCount: contentPath.Length, contentPathBytes, byteIndex: 0);
+                        var hashBytes = sha1.ComputeHash(contentPathBytes, offset: 0, count: contentPath.Length);
 
                         var guidBytes = guidBytesPool.Array;
                         for (int guidIdx = 0; guidIdx < GuidSizeInBytes; guidIdx++)
                         {
                             guidBytes[guidIdx] = hashBytes[guidIdx];        // For small arrays, this is faster than calling Array.Copy
                         }
-                        // Should (hopefully) still be unique, despite truncating 160 bits to 128 bits.
-                        // If not, consider salting the path.
-                        var filePathGuid = new Guid(guidBytes);
-                        assetIds[i] = filePathGuid;
+                        // Despite truncating 160 bits to 128 bits, the IDs should still be unique (hopefully).
+                        // If not, consider salting the file path when hashing until it is all unique again.
+                        var contentPathGuid = new Guid(guidBytes);
+                        assetIds[i] = contentPathGuid;
                     }
                 }
             }

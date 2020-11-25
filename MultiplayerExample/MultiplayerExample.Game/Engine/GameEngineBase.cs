@@ -16,12 +16,6 @@ namespace MultiplayerExample.Engine
 {
     abstract class GameEngineBase
     {
-        // This is an implementation detail hack.
-        // Note that the physics engine is already forced to only do a maximum of one step per update, so this additional
-        // epilson is just to ensure there's no floating point issue in the time elapsed passed to the physics engine
-        // and that it'll always do a simulation step when called to do so.
-        private static readonly TimeSpan PhysicsFixedTimeStepWithEpilson = TimeSpan.FromSeconds((1.0 / GameConfig.PhysicsSimulationRate) + 0.001f);
-
         private readonly IServiceRegistry _globalServices;
 
         private readonly TimerTick _autoTickTimer = new TimerTick();
@@ -250,7 +244,7 @@ namespace MultiplayerExample.Engine
             if (updatePhysicsSimulation)
             {
                 // Update the physics time (which is in fixed time steps)
-                PhysicsGameTime.Update(PhysicsGameTime.Total + GameConfig.PhysicsFixedTimeStep, PhysicsFixedTimeStepWithEpilson, incrementFrameCount: true);
+                PhysicsGameTime.Update(PhysicsGameTime.Total + GameConfig.PhysicsFixedTimeStep, GameConfig.PhysicsFixedTimeStep, incrementFrameCount: true);
             }
             if (GameClockManager.SimulationClock.IsEnabled)
             {

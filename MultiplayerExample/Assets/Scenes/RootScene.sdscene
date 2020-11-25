@@ -32,6 +32,7 @@ Hierarchy:
                     c0a9a1d925f29ae7494b9a0f3db5a1be: !MultiplayerExample.Network.NetworkAssetDefinitions,MultiplayerExample.Game
                         Id: cebcee27-8945-4657-96c8-668b6433867e
                         InGameScene: 33b281c0-325b-4563-826e-27fc25dbf06b:Scenes/InGame
-                        ServerPlayer: fd1c2e9f-7025-481c-b9dc-60d05f979003:Prefabs/ServerCharacter
-                        LocalPlayer: 3935b805-a8b8-40b4-9675-021a968a176e:Prefabs/LocalCharacter
-                        RemotePlayer: ae0ddd9e-28e2-4a1f-9282-2e5cc27b8232:Prefabs/RemoteCharacter
+                        PlayerAssets:
+                            ServerRemotePlayer: ae0ddd9e-28e2-4a1f-9282-2e5cc27b8232:Prefabs/ServerRemotePlayer
+                            ClientLocalPlayer: 3935b805-a8b8-40b4-9675-021a968a176e:Prefabs/ClientLocalPlayer
+                            ClientRemotePlayer: fd1c2e9f-7025-481c-b9dc-60d05f979003:Prefabs/ClientRemotePlayer

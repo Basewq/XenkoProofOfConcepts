@@ -14,22 +14,30 @@ namespace MultiplayerExample.Network
         [DataMember(10)]
         public UrlReference<Scene> InGameScene;
 
-        [DataMember(100)]
-        public UrlReference<Prefab> ServerPlayer;
-        [DataMember(105)]
-        public UrlReference<Prefab> LocalPlayer;
-        [DataMember(110)]
-        public UrlReference<Prefab> RemotePlayer;
+        [DataMember(10000)]
+        public PlayerAssetDefinition PlayerAssets;
+    }
 
-        internal SerializableGuid ServerPlayerAssetId;
-        internal SerializableGuid LocalPlayerAssetId;
-        internal SerializableGuid RemotePlayerAssetId;
-
-        internal void LoadAssetIds(NetworkAssetDatabase networkAssetDatabase)
-        {
-            ServerPlayerAssetId = networkAssetDatabase.GetAssetIdFromUrlReference(ServerPlayer);
-            LocalPlayerAssetId = networkAssetDatabase.GetAssetIdFromUrlReference(LocalPlayer);
-            RemotePlayerAssetId = networkAssetDatabase.GetAssetIdFromUrlReference(RemotePlayer);
-        }
+    /// <summary>
+    /// Thin wrapper struct to organize all player related assets.
+    /// </summary>
+    [DataContract]
+    public struct PlayerAssetDefinition
+    {
+        /// <summary>
+        /// The player entity to load on the server.
+        /// </summary>
+        [DataMember(00)]
+        public UrlReference<Prefab> ServerRemotePlayer;
+        /// <summary>
+        /// The local player entity to load on the client.
+        /// </summary>
+        [DataMember(05)]
+        public UrlReference<Prefab> ClientLocalPlayer;
+        /// <summary>
+        /// The remote player entity to load on the client.
+        /// </summary>
+        [DataMember(10)]
+        public UrlReference<Prefab> ClientRemotePlayer;
     }
 }

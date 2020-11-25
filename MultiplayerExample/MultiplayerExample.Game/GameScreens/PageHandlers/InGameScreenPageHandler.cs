@@ -1,4 +1,5 @@
-﻿using MultiplayerExample.Network;
+﻿using MultiplayerExample.GameServices;
+using MultiplayerExample.Network;
 using MultiplayerExample.UI;
 using Stride.Core;
 using Stride.Engine;
@@ -22,7 +23,7 @@ namespace MultiplayerExample.GameScreens.PageHandlers
         private bool _ignoreInputEvents;
 
         private IGameNetworkService _networkService;
-        private NetworkEntityProcessor _networkProcessor;
+        private GameManager _gameManager;
         private GameClockManager _gameClockManager;
 
         private List<(SerializableGuid PlayerId, string PlayerName)> _uiDisplayForPlayer = new List<(SerializableGuid, string)>();
@@ -44,9 +45,9 @@ namespace MultiplayerExample.GameScreens.PageHandlers
 
             var sceneSystem = GameManager.Services.GetSafeServiceAs<SceneSystem>();
 
-            _networkProcessor = sceneSystem.SceneInstance.GetProcessor<NetworkEntityProcessor>();
-            _networkProcessor.PlayerAdded += OnPlayerAdded;
-            _networkProcessor.PlayerRemoved += OnPlayerRemoved;
+            _gameManager = sceneSystem.GetGameManagerFromRootScene();
+            _gameManager.PlayerAdded += OnPlayerAdded;
+            _gameManager.PlayerRemoved += OnPlayerRemoved;
 
             var readyTask = _networkService.Client_SendClientInGameReady();
             var readyResult = await readyTask;
@@ -60,8 +61,8 @@ namespace MultiplayerExample.GameScreens.PageHandlers
 
         public override void OnDeactivate()
         {
-            _networkProcessor.PlayerAdded -= OnPlayerAdded;
-            _networkProcessor.PlayerRemoved -= OnPlayerRemoved;
+            _gameManager.PlayerAdded -= OnPlayerAdded;
+            _gameManager.PlayerRemoved -= OnPlayerRemoved;
         }
 
         private void OnPlayerAdded(Entity e)

@@ -2,7 +2,6 @@
 using MultiplayerExample.Data;
 using MultiplayerExample.Engine;
 using Stride.Core.Annotations;
-using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Games;
 using Stride.Physics;
@@ -51,7 +50,6 @@ namespace MultiplayerExample.Network.SnapshotStores
             {
                 // Can also add other info/components here
                 TransformComponent = entity.Transform,
-                ModelChildTransform = entity.GetChild(0).Transform,
 
                 CharacterComponent = entity.Get<CharacterComponent>(),
                 ClientPredictionSnapshotsComponent = entity.Get<ClientPredictionSnapshotsComponent>()
@@ -61,8 +59,6 @@ namespace MultiplayerExample.Network.SnapshotStores
         protected override void OnEntityComponentAdding(Entity entity, [NotNull] MovementSnapshotsComponent component, [NotNull] AssociatedData data)
         {
             component.SnapshotStore = ObjectPool.GetObject();
-            //var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber;
-            //CreateNewSnapshotData(component.SnapshotStore, simTickNumber, component, data.TransformComponent, data.ModelChildTransform);
         }
 
         protected override void OnEntityComponentRemoved(Entity entity, [NotNull] MovementSnapshotsComponent component, [NotNull] AssociatedData data)
@@ -70,72 +66,33 @@ namespace MultiplayerExample.Network.SnapshotStores
             ObjectPool.PutObject(component.SnapshotStore);
             component.SnapshotStore = null;
             data.TransformComponent = null;
-            data.ModelChildTransform = null;
             data.ClientPredictionSnapshotsComponent = null;
         }
 
         protected override bool IsAssociatedDataValid([NotNull] Entity entity, [NotNull] MovementSnapshotsComponent component, [NotNull] AssociatedData associatedData)
         {
             return associatedData.TransformComponent == entity.Transform
-                && associatedData.ModelChildTransform == entity.GetChild(0).Transform
                 && associatedData.CharacterComponent == entity.Get<CharacterComponent>()
                 && associatedData.ClientPredictionSnapshotsComponent == entity.Get<ClientPredictionSnapshotsComponent>();
         }
 
         public void PreUpdate(GameTime gameTime)
         {
-            var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber;
-
-            if (_gameEngineContext.IsServer)
+            if (!_gameClockManager.SimulationClock.IsNextSimulation)
             {
-                if (_gameClockManager.SimulationClock.IsNextSimulation)
-                {
-                    // Only generate new snapshot during a new simulation update
-                    foreach (var kv in ComponentDatas)
-                    {
-                        var movementSnapshotsComp = kv.Key;
-                        var data = kv.Value;
-                        CreateNewSnapshotData(movementSnapshotsComp.SnapshotStore, simTickNumber, movementSnapshotsComp, data.TransformComponent, data.ModelChildTransform);
-                    }
-                }
-                // Server only needs to create the snapshot data
+                // Only update during a simulation update
                 return;
             }
-
-            // Update the current entity transforms to the latest for the physics engine to read and write.
-            // This is because MovementSnapshotsRenderProcessor changes the transform during Draw for interpolation which we need to undo.
-            foreach (var kv in ComponentDatas)
+            // Only server needs to create the snapshot data, client will generate snapshots based when server sends the data.
+            if (_gameEngineContext.IsServer)
             {
-                var movementSnapshotsComp = kv.Key;
-                if (movementSnapshotsComp.SnapshotStore.IsEmpty)
+                // Only generate new snapshot during a new simulation update
+                var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber;
+                foreach (var kv in ComponentDatas)
                 {
-                    continue;
-                }
-                var data = kv.Value;
-
-                var predictedMovements = data.ClientPredictionSnapshotsComponent?.PredictedMovements;
-                if (predictedMovements?.Count > 0)
-                {
-                    // Use the predicted positions
-                    ref var movementData = ref predictedMovements.Items[predictedMovements.Count - 1];
-                    data.TransformComponent.Position = movementData.LocalPosition;
-                    data.ModelChildTransform.Rotation = movementData.LocalRotation;
-                    if (data.CharacterComponent != null)
-                    {
-                        data.TransformComponent.UpdateWorldMatrix();
-                        data.CharacterComponent.UpdatePhysicsTransformation();
-                    }
-                }
-                else
-                {
-                    ref var movementData = ref movementSnapshotsComp.SnapshotStore.GetLatest();  // There should always be at least one snapshot generated.
-                    data.TransformComponent.Position = movementData.LocalPosition;
-                    data.ModelChildTransform.Rotation = movementData.LocalRotation;
-                    if (data.CharacterComponent != null)
-                    {
-                        data.TransformComponent.UpdateWorldMatrix();
-                        data.CharacterComponent.UpdatePhysicsTransformation();
-                    }
+                    var movementSnapshotsComp = kv.Key;
+                    var data = kv.Value;
+                    CreateNewSnapshotData(simTickNumber, movementSnapshotsComp, data.TransformComponent);
                 }
             }
         }
@@ -168,8 +125,8 @@ namespace MultiplayerExample.Network.SnapshotStores
 
                     // Save resulting position in the predicted movement buffer
                     predictedMovementData.LocalPosition = data.TransformComponent.Position;
-                    predictedMovementData.LocalRotation = data.ModelChildTransform.Rotation;
                     predictedMovementData.PhysicsEngineLinearVelocity = BulletPhysicsExt.GetLinearVelocity(data.CharacterComponent);
+                    // Note LocalRotation is not obtained from any transform component, this is directly set on the movement data.
 
 #if DEBUG
                     //Debug.WriteLine(@$"Sim: {predictedMovementData.SimulationTickNumber} Pos: {predictedMovementData.LocalPosition}");
@@ -192,54 +149,46 @@ namespace MultiplayerExample.Network.SnapshotStores
                     // Save resulting position in the movement snapshot buffer
                     ref var movementData = ref findResult.Result;
                     movementData.LocalPosition = data.TransformComponent.Position;
-                    movementData.LocalRotation = data.ModelChildTransform.Rotation;
                     movementData.PhysicsEngineLinearVelocity = BulletPhysicsExt.GetLinearVelocity(data.CharacterComponent);
+                    // Note LocalRotation is not obtained from any transform component, this is directly set on the movement data.
 #if DEBUG
-                    //Debug.WriteLine(@$"--FromSvr Pos: {movementData.LocalPosition} - Sim: {movementData.SimulationTickNumber} - PIDApplied {movementData.PlayerInputSequenceNumberApplied} - MvDir {movementData.MoveDirection}");
-                    Debug.WriteLine(@$"--FromSvr Pos: {movementData.LocalPosition} - Sim: {movementData.SimulationTickNumber} - PIDApplied {movementData.PlayerInputSequenceNumberApplied} - MvDir {movementData.MoveDirection} - IsGrounded {movementData.IsGrounded} - Vel {movementData.PhysicsEngineLinearVelocity}");
-                    if (movementData.MoveDirection.X != 0)
-                    {
-                    }
+                    //Debug.WriteLine(@$"--FromSvr Pos: {movementData.LocalPosition} - Yaw: {movementData.YawOrientation} - Sim: {movementData.SimulationTickNumber} - PIDApplied {movementData.PlayerInputSequenceNumberApplied} - MvDir {movementData.MoveDirection} - IsGrounded {movementData.IsGrounded} - InpVel {movementData.CurrentMoveInputVelocity} - PhyVel {movementData.PhysicsEngineLinearVelocity}");
 #endif
                 }
             }
         }
 
-        private void CreateNewSnapshotData(
-            SnapshotStore<MovementSnapshotsComponent.MovementData> snapshotStore,
+        internal static ref MovementSnapshotsComponent.MovementData CreateNewSnapshotData(
             SimulationTickNumber simulationTickNumber,
-            MovementSnapshotsComponent component,
-            TransformComponent transform,
-            TransformComponent modelChildTransform)
+            MovementSnapshotsComponent movementSnapshotsComponent,
+            TransformComponent transformComponent)
         {
-            ref var movementData = ref snapshotStore.GetOrCreate(simulationTickNumber);
-            if (_gameEngineContext.IsServer || movementData.SnapshotType != SnapshotType.Server)
+            var snapshotStore = movementSnapshotsComponent.SnapshotStore;
+            var snapshotFindResult = snapshotStore.TryFindSnapshot(simulationTickNumber);
+            if (snapshotFindResult.IsFound)
             {
-                var prevMovementFindResult = snapshotStore.TryFindSnapshot(simulationTickNumber - 1);
-                if (prevMovementFindResult.IsFound)
-                {
-                    // Just copy the previous snapshot's data
-                    movementData = prevMovementFindResult.Result;
-                }
-                else
-                {
-                    movementData.MoveDirection = Vector3.Zero;
-                    var faceDir = -Vector3.UnitZ;
-                    movementData.YawOrientation = MathUtil.RadiansToDegrees((float)Math.Atan2(faceDir.Z, faceDir.X) + MathUtil.PiOverTwo);
-                    movementData.JumpReactionRemaining = component.JumpReactionThreshold;
-                    movementData.LocalPosition = transform.Position;
-                    movementData.LocalRotation = modelChildTransform.Rotation;
-                    movementData.PhysicsEngineLinearVelocity = Vector3.Zero;
-                }
-                movementData.SimulationTickNumber = simulationTickNumber;
-                movementData.SnapshotType = _gameEngineContext.IsServer ? SnapshotType.Server : SnapshotType.ClientPrediction;
+                // Already exists, can happen when a new entity is created exactly on a new sim tick
+                return ref snapshotFindResult.Result;
             }
+            ref var movementData = ref snapshotStore.Create();
+            var prevMovementFindResult = snapshotStore.TryFindSnapshot(simulationTickNumber - 1);
+            if (prevMovementFindResult.IsFound)
+            {
+                // Just copy the previous snapshot's data
+                movementData = prevMovementFindResult.Result;
+            }
+            else
+            {
+                // New data without any previous information
+                MovementSnapshotsComponent.InitializeNewMovementData(ref movementData, transformComponent.Position, movementSnapshotsComponent.JumpReactionThreshold);
+            }
+            movementData.SimulationTickNumber = simulationTickNumber;
+            return ref movementData;
         }
 
         internal class AssociatedData
         {
             internal TransformComponent TransformComponent;
-            internal TransformComponent ModelChildTransform;
 
             internal CharacterComponent CharacterComponent;
             internal ClientPredictionSnapshotsComponent ClientPredictionSnapshotsComponent;     // Optional

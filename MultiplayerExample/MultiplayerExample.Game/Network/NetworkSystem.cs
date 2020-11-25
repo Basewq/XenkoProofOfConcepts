@@ -158,19 +158,23 @@ namespace MultiplayerExample.Network
 
         private void UpdateCurrentSceneInstance(SceneInstance newSceneInstance)
         {
-            //if (_currentSceneInstance != null && _networkEntityProcessor != null)
-            //{
-            //    _currentSceneInstance.Processors.Remove(_networkEntityProcessor);
-            //}
+            if (newSceneInstance == null)
+            {
+                _networkEntityProcessor = null;
+            }
 
             // Set the current scene
             _currentSceneInstance = newSceneInstance;
 
-            if (_currentSceneInstance != null && !_currentSceneInstance.Processors.Any(x => x is NetworkEntityProcessor))
+            if (_currentSceneInstance != null)
             {
-                // Create this NetworkEntityProcessor if it doesn't exist
-                _networkEntityProcessor = new NetworkEntityProcessor();
-                _currentSceneInstance.Processors.Add(_networkEntityProcessor);
+                _networkEntityProcessor ??= _currentSceneInstance.Processors.FirstOrDefault(x => x is NetworkEntityProcessor) as NetworkEntityProcessor;
+                if (_networkEntityProcessor == null)
+                {
+                    // Create this NetworkEntityProcessor if it doesn't exist
+                    _networkEntityProcessor = new NetworkEntityProcessor();
+                    _currentSceneInstance.Processors.Add(_networkEntityProcessor);
+                }
             }
         }
 
