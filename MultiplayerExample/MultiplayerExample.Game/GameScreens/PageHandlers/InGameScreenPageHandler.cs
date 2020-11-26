@@ -49,7 +49,8 @@ namespace MultiplayerExample.GameScreens.PageHandlers
             _gameManager.PlayerAdded += OnPlayerAdded;
             _gameManager.PlayerRemoved += OnPlayerRemoved;
 
-            var readyTask = _networkService.Client_SendClientInGameReady();
+            var networkClientHandler = _networkService.GetClientHandler();
+            var readyTask = networkClientHandler.SendClientInGameReady();
             var readyResult = await readyTask;
             if (!readyResult.IsOk)
             {
@@ -108,9 +109,10 @@ namespace MultiplayerExample.GameScreens.PageHandlers
 
         public override void Update()
         {
+            var networkClientHandler = _networkService.GetClientHandler();
             _clockTimeUI.Text = @$"LocTime: {_gameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {_gameClockManager.SimulationClock.SimulationTickNumber}
 NetTime: {_gameClockManager.NetworkServerSimulationClock.TargetTotalTime:hh\:mm\:ss\.ff} - TickNo: {_gameClockManager.NetworkServerSimulationClock.LastServerSimulationTickNumber}
-Latency: {_networkService.Client_AverageNetworkLatency.TotalMilliseconds} ms
+Latency: {networkClientHandler.AverageNetworkLatency.TotalMilliseconds} ms
 ";
             //if (_ignoreInputEvents || !IsTopMostScreen)
             //{

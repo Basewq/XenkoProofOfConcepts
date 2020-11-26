@@ -20,7 +20,6 @@ using Stride.Rendering.Sprites;
 using Stride.Shaders.Compiler;
 using Stride.UI;
 using System;
-using System.Diagnostics;
 
 namespace MultiplayerExample.Engine
 {
@@ -228,11 +227,7 @@ namespace MultiplayerExample.Engine
             {
                 _physicsSystem.TryUpdate(physicsGameTime);
 #if DEBUG
-                //Console.WriteLine($"GameTime: {gameTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
-                //if (physicsGameTime.Total.TotalMilliseconds > 34)
-                //{
-                //
-                //}
+                //System.Diagnostics.Debug.WriteLine($"GameTime: {gameTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
 #endif
             }
 

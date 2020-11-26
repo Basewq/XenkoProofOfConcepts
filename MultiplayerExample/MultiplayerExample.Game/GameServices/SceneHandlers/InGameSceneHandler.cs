@@ -12,7 +12,7 @@ namespace MultiplayerExample.GameServices.SceneHandlers
         {
             Debug.WriteLine($"{nameof(InGameSceneHandler)} Initialize");
 
-            if (!GameManager.GameEngineContext.IsServer)
+            if (GameManager.GameEngineContext.IsClient)
             {
                 // Must deactivate the root camera before attaching
                 var rootScene = SceneSystem.SceneInstance.RootScene;
@@ -29,7 +29,7 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                 gameClockManager.SimulationClock.Reset();
                 gameClockManager.SimulationClock.IsEnabled = true;
             }
-            if (!GameManager.GameEngineContext.IsServer)
+            if (GameManager.GameEngineContext.IsClient)
             {
                 var uiPageEntity = await UIManager.LoadUIEntityAsync(UIManager.InGameScreenUIUrl);
                 UIManager.SetAsMainScreen(uiPageEntity);
@@ -51,7 +51,7 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                 var gameClockManager = GameManager.Services.GetService<GameClockManager>();
                 gameClockManager.SimulationClock.IsEnabled = false;
             }
-            if (!GameManager.GameEngineContext.IsServer)
+            if (GameManager.GameEngineContext.IsClient)
             {
                 // Reactivate the root camera before attaching
                 var rootScene = SceneSystem.SceneInstance.RootScene;

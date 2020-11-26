@@ -97,7 +97,7 @@ namespace MultiplayerExample.GameScreens.PageHandlers
             _connectionStatusText.Text = "";
             _backButton.Visibility = Visibility.Collapsed;
 
-            await _sceneHandler.ConnectActivate(PlayerName, ServerIp, ServerPortNumber);
+            await _sceneHandler.BeginGameConnection(PlayerName, ServerIp, ServerPortNumber);
         }
 
         //public override void OnDeactivate()

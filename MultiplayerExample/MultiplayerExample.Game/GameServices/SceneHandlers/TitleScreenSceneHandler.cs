@@ -10,6 +10,7 @@ namespace MultiplayerExample.GameServices.SceneHandlers
     public class TitleScreenSceneHandler : SceneHandlerBase
     {
         private IGameNetworkService _networkService;
+        private IGameNetworkClientHandler _networkClientHandler;
         private NetworkAssetDatabase _networkAssetDatabase;
 
         private Scene _inGameScene = null;
@@ -32,7 +33,7 @@ namespace MultiplayerExample.GameServices.SceneHandlers
             UIManager.SetAsMainScreen(uiPageEntity);
         }
 
-        public async Task ConnectActivate(string playerName, string serverIp, ushort serverPortNumber)
+        public async Task BeginGameConnection(string playerName, string serverIp, ushort serverPortNumber)
         {
             _currentConnectionState = ConnectionState.Connecting;
             ConnectionStateChanged?.Invoke(_currentConnectionState);
@@ -41,7 +42,6 @@ namespace MultiplayerExample.GameServices.SceneHandlers
             if (string.IsNullOrEmpty(serverIp))
             {
                 // Single player mode
-                _networkService.IsEnabled = false;
                 _currentConnectionState = ConnectionState.CanEnterGame;
 
                 loadSceneTask = SceneManager.LoadSceneAsync(SceneManager.InGameSceneUrl);
@@ -49,8 +49,6 @@ namespace MultiplayerExample.GameServices.SceneHandlers
             else
             {
                 // Connect to server
-                _networkService.IsEnabled = true;
-
                 var connectTask = _networkService.BeginConnectToServer(serverIp, serverPortNumber);
                 var connectResult = await connectTask;
                 if (!connectResult.IsOk)
@@ -58,11 +56,12 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                     ConnectionError?.Invoke(connectResult.ErrorMessage);
                     return;
                 }
+                _networkClientHandler = connectResult.ClientHandler;
 
                 // Request to join the game
                 _currentConnectionState = ConnectionState.JoinGameRequest;
                 ConnectionStateChanged?.Invoke(_currentConnectionState);
-                var joinGameTask = _networkService.Client_SendJoinGameRequest(playerName);
+                var joinGameTask = _networkClientHandler.SendJoinGameRequest(playerName);
                 var joinGameResult = await joinGameTask;
                 if (!joinGameResult.IsOk)
                 {
@@ -78,7 +77,7 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                 // Synchronize the game clock
                 _currentConnectionState = ConnectionState.SynchronizingClock;
                 ConnectionStateChanged?.Invoke(_currentConnectionState);
-                var syncClockTask = _networkService.Client_SendClockSynchronization();
+                var syncClockTask = _networkClientHandler.SendClockSynchronization();
                 var syncClockResult = await syncClockTask;
                 if (!syncClockResult.IsOk)
                 {

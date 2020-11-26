@@ -23,6 +23,8 @@ namespace MultiplayerExample.Engine
         private readonly GameSystemKeyValue<ScenePostUpdateSystem> _scenePostUpdateSystem;
         //private readonly GameSystemKeyValue<DynamicNavigationMeshSystem> _dynamicNavigationMeshSystem;
 
+        private IGameNetworkService _networkService;
+
         public GameEngineServer(ContentManager contentManager, IServiceRegistry globalServices)
             : base(contentManager, globalServices)
         {
@@ -39,6 +41,8 @@ namespace MultiplayerExample.Engine
             //_dynamicNavigationMeshSystem = CreateKeyValue(new DynamicNavigationMeshSystem(Services));
 
             Services.AddService(DefaultGraphicsDeviceService);
+
+            _networkService = _networkSystem.System;
         }
 
         protected override void OnInitialize(IServiceRegistry globalServices)
@@ -93,7 +97,7 @@ namespace MultiplayerExample.Engine
 
         public override void InitialUpdate()
         {
-            _networkSystem.System.StartDedicatedServer();
+            _networkService.StartDedicatedServer();
             UpdateGameSystems(UpdateTime, updatePhysicsSimulation: true, PhysicsGameTime);
         }
 
@@ -107,16 +111,12 @@ namespace MultiplayerExample.Engine
             {
                 _physicsSystem.TryUpdate(physicsGameTime);
 #if DEBUG
-                //Console.WriteLine($"GameTime: {gameTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
-                //if (physicsGameTime.Total.TotalMilliseconds > 34)
-                //{
-
-                //}
+                //System.Diagnostics.Debug.WriteLine($"GameTime: {gameTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
 #endif
             }
 
 #if DEBUG
-            //Console.WriteLine(@$"Time: {GameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {GameClockManager.SimulationClock.SimulationTickNumber}");
+            //System.Diagnostics.Debug.WriteLine(@$"Time: {GameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {GameClockManager.SimulationClock.SimulationTickNumber}");
 #endif
             //_scriptSystem.TryUpdate(gameTime);
             _sceneSystem.TryUpdate(gameTime);   // This runs all the standard entity processors

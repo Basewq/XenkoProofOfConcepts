@@ -6,24 +6,33 @@ namespace MultiplayerExample.Network
 {
     interface IGameNetworkService
     {
-        bool IsEnabled { get; set; }
-
         NetworkGameMode NetworkGameMode { get; }
 
-        TimeSpan Client_AverageNetworkLatency { get; }
+        bool IsGameHost { get; }
 
         void StartLocalGame();
-        void StartHost();
         Task<ConnectResult> BeginConnectToServer(string serverIp, ushort serverPortNumber);
-        void EndConnectionToServer();
-        void StartDedicatedServer();
+        IGameNetworkServerHandler StartHost();
+        IGameNetworkServerHandler StartDedicatedServer();
 
-        Task<JoinGameRequestResult> Client_SendJoinGameRequest(string playerName);
-        Task<ClockSyncResult> Client_SendClockSynchronization();
+        IGameNetworkClientHandler GetClientHandler();
+        IGameNetworkServerHandler GetServerHandler();
+    }
 
-        Task<ClientInGameReadyResult> Client_SendClientInGameReady();
+    interface IGameNetworkClientHandler
+    {
+        TimeSpan AverageNetworkLatency { get; }
+        void EndConnection();
 
-        void Server_SendToAll(NetworkMessageWriter message, SendNetworkMessageType sendType);
+        Task<JoinGameRequestResult> SendJoinGameRequest(string playerName);
+        Task<ClockSyncResult> SendClockSynchronization();
+
+        Task<ClientInGameReadyResult> SendClientInGameReady();
+    }
+
+    interface IGameNetworkServerHandler
+    {
+        void SendMessageToAllPlayers(NetworkMessageWriter message, SendNetworkMessageType sendType);
     }
 
     enum NetworkGameMode
@@ -53,13 +62,15 @@ namespace MultiplayerExample.Network
         string ErrorMessage { get; set; }
     }
 
-    public struct ConnectResult : INetworkMessagingResponse
+    struct ConnectResult : INetworkMessagingResponse
     {
         public bool IsOk { get; set; }
         public string ErrorMessage { get; set; }
+
+        public IGameNetworkClientHandler ClientHandler { get; set; }
     }
 
-    public struct JoinGameRequestResult : INetworkMessagingResponse
+    struct JoinGameRequestResult : INetworkMessagingResponse
     {
         public bool IsOk { get; set; }
         public string ErrorMessage { get; set; }
@@ -67,13 +78,13 @@ namespace MultiplayerExample.Network
         public SerializableGuid LoadSceneAssetId;
     }
 
-    public struct ClockSyncResult : INetworkMessagingResponse
+    struct ClockSyncResult : INetworkMessagingResponse
     {
         public bool IsOk { get; set; }
         public string ErrorMessage { get; set; }
     }
 
-    public struct ClientInGameReadyResult : INetworkMessagingResponse
+    struct ClientInGameReadyResult : INetworkMessagingResponse
     {
         public bool IsOk { get; set; }
         public string ErrorMessage { get; set; }
