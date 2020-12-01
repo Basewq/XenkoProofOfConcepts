@@ -2,6 +2,7 @@
 using LiteNetLib.Utils;
 using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
+using MultiplayerExample.Network.NetworkMessages.Server;
 using Stride.Core.Collections;
 using System;
 using System.Diagnostics;
@@ -12,6 +13,11 @@ namespace MultiplayerExample.Network
 {
     partial class NetworkSystem : IGameNetworkServerHandler
     {
+        void IGameNetworkServerHandler.CreateLocalPlayer(string playerName)
+        {
+            _serverNetworkHandler.CreateLocalPlayer(playerName);
+        }
+
         void IGameNetworkServerHandler.SendMessageToAllPlayers(NetworkMessageWriter message, SendNetworkMessageType sendType)
         {
             _serverNetworkHandler.SendToAll(message, sendType);
@@ -38,7 +44,7 @@ namespace MultiplayerExample.Network
                 _networkMessageWriter = new NetworkMessageWriter(new NetDataWriter());
             }
 
-            internal void Start()
+            internal void Start(ushort serverPortNumber)
             {
 #if DEBUG
                 //_netManager.SimulatePacketLoss = true;
@@ -48,7 +54,7 @@ namespace MultiplayerExample.Network
                 //_netManager.SimulationMaxLatency = 150;
 #endif
 
-                _netManager.Start(ServerPortNumber);
+                _netManager.Start(serverPortNumber);
                 _networkSystem.DebugWriteLine($"{nameof(NetworkSystem)} begin listening on port {_netManager.LocalPort}...");
 
             }
@@ -58,9 +64,22 @@ namespace MultiplayerExample.Network
                 _netManager.PollEvents();
             }
 
+            internal void CreateLocalPlayer(string playerName)
+            {
+                var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                var serverPlayerManager = networkEntityProcessor.GetServerPlayerManager();
+                var playerId = GenerateNewPlayerId();
+                serverPlayerManager.AddLocalPlayer(playerId, playerName, _networkMessageWriter);
+            }
+
             internal void SendToAll(NetworkMessageWriter message, SendNetworkMessageType sendType)
             {
                 _netManager.SendToAll(message, sendType.ToDeliveryMethod());
+            }
+
+            private static SerializableGuid GenerateNewPlayerId()
+            {
+                return Guid.NewGuid();      // TODO: should keep track of used guids on the off-chance we gete id collisions
             }
 
             void INetEventListener.OnConnectionRequest(ConnectionRequest request)
@@ -88,23 +107,44 @@ namespace MultiplayerExample.Network
 
                 var networkEntityProcessor = _networkSystem._networkEntityProcessor;
                 bool wasRemoved = false;
-                for (int i = 0; i < _activeClients.Count; i++)
+
+                int clientIndex = FindClientDetailsIndex(peer);
+                if (clientIndex >= 0)
                 {
-                    var clientDetails = _activeClients[i];
-                    if (clientDetails.Connection.ConnectionId != peer.Id)
+                    var clientDetails = _activeClients.Items[clientIndex];
+                    _activeClients.RemoveAt(clientIndex);
+
+                    var playerId = clientDetails.PlayerId;
+                    var serverPlayerManager = networkEntityProcessor.GetServerPlayerManager();
+                    bool wasActivePlayer = serverPlayerManager.RemoveRemotePlayer(playerId);
+                    if (wasActivePlayer)
                     {
-                        continue;
+                        // Need to notify all active players of this player's removal
+                        var gameClockManager = _networkSystem._gameClockManager;
+                        var despawnPlayer = new DespawnRemotePlayerMessage
+                        {
+                            PlayerId = playerId,
+                            SimulationTickNumber = gameClockManager.SimulationClock.SimulationTickNumber
+                        };
+                        _networkMessageWriter.Reset();
+                        despawnPlayer.WriteTo(_networkMessageWriter);
+                        for (int playerIdx = 0; playerIdx < _activeClients.Count; playerIdx++)
+                        {
+                            ref var otherClientDetails = ref _activeClients.Items[playerIdx];
+                            if (!otherClientDetails.IsInGame)
+                            {
+                                continue;
+                            }
+                            otherClientDetails.Connection.Send(_networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
+                        }
                     }
-                    _activeClients.RemoveAt(i);
-                    networkEntityProcessor.Server_RemovePlayer(clientDetails.PlayerId);
                     _networkSystem.DebugWriteLine($"Svr Player disconnected: { clientDetails.PlayerName}");
                     wasRemoved = true;
-                    break;
                 }
 
                 if (!wasRemoved)
                 {
-                    _networkSystem.DebugWriteLine($"Svr Player disconnected, but not found in active list.");
+                    _networkSystem.DebugWriteLine($"Svr Player disconnected, but not found in active client list.");
                 }
             }
 
@@ -122,6 +162,8 @@ namespace MultiplayerExample.Network
                     return;
                 }
                 var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                Debug.Assert(networkEntityProcessor != null, "NetworkEntityProcessor has not been registered.");
+                var serverPlayerManager = networkEntityProcessor.GetServerPlayerManager();
                 switch (messageType)
                 {
                     case ClientMessageType.ClientJoinGame:
@@ -133,14 +175,13 @@ namespace MultiplayerExample.Network
                                 _networkSystem.DebugWriteLine($"Svr Player connected: {joinGameMsg.PlayerName}");
                                 var clientDetails = new ClientConnectionDetails
                                 {
-                                    PlayerId = Guid.NewGuid(),      // TODO: should keep track of used guids on the off-chance we gete id collisions
+                                    PlayerId = GenerateNewPlayerId(),
                                     PlayerName = joinGameMsg.PlayerName,
                                     Connection = peer,
                                 };
                                 _activeClients.Add(clientDetails);
 
-                                Debug.Assert(networkEntityProcessor != null, "NetworkEntityProcessor has not been registered.");
-                                networkEntityProcessor.Server_AddPlayer(clientDetails.PlayerId, clientDetails.PlayerName, clientDetails.Connection);
+                                serverPlayerManager.AddPendingRemotePlayer(clientDetails.PlayerId, clientDetails.PlayerName, clientDetails.Connection);
                             }
                         }
                         break;
@@ -154,8 +195,17 @@ namespace MultiplayerExample.Network
                                 int clientIndex = FindClientDetailsIndex(peer);
                                 if (clientIndex >= 0)
                                 {
+                                    var gameClockManager = _networkSystem._gameClockManager;
                                     ref var clientDetails = ref _activeClients.Items[clientIndex];
-                                    networkEntityProcessor.Server_SendSynchronizeClockResponse(clientDetails.PlayerId, syncClockRequestMsg);
+                                    _networkMessageWriter.Reset();
+                                    var syncClockResponse = new SynchronizeClockResponseMessage
+                                    {
+                                        ClientOSTimeStamp = syncClockRequestMsg.ClientOSTimestamp,
+                                        ServerWorldTimeInTicks = gameClockManager.SimulationClock.TotalTime.Ticks,
+                                    };
+                                    syncClockResponse.WriteTo(_networkMessageWriter);
+                                    var connection = clientDetails.Connection;
+                                    connection.Send(_networkMessageWriter, SendNetworkMessageType.Unreliable);
                                 }
                             }
                         }
@@ -174,7 +224,7 @@ namespace MultiplayerExample.Network
                                     if (!clientDetails.IsInGame)
                                     {
                                         clientDetails.IsInGame = true;
-                                        networkEntityProcessor.Server_SetPlayerReady(clientDetails.PlayerId);
+                                        serverPlayerManager.SetPlayerReady(clientDetails.PlayerId);
                                     }
                                 }
                             }
@@ -206,7 +256,7 @@ namespace MultiplayerExample.Network
                                                 }
                                             }
 
-                                            networkEntityProcessor.Server_CollectPendingInputs(clientDetails.PlayerId, playerUpdateMsg, _pendingPlayerUpdateInputMessages);
+                                            serverPlayerManager.CollectPendingInputs(clientDetails.PlayerId, playerUpdateMsg, _pendingPlayerUpdateInputMessages);
                                         }
                                     }
                                 }

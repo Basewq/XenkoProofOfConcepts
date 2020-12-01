@@ -14,10 +14,9 @@ namespace MultiplayerExample.Network
         private const int ConnectionTimeoutInMilliseconds = 30 * 1000;
 
         public const string ServerConnectionAppName = "MultiplayerExample";
-        public const ushort ServerPortNumber = 60000;   // TODO: should probably be a config setting
 
-        private ServerNetworkHandler _serverNetworkHandler;
         private ClientNetworkHandler _clientNetworkHandler;
+        private ServerNetworkHandler _serverNetworkHandler;
 
         private SceneSystem _sceneSystem;
         private SceneInstance _currentSceneInstance;
@@ -26,14 +25,14 @@ namespace MultiplayerExample.Network
 
         public NetworkGameMode NetworkGameMode { get; private set; }
 
-        public bool IsGameHost => NetworkGameMode == NetworkGameMode.ListenServer || NetworkGameMode == NetworkGameMode.DedicatedServer;
+        public bool IsGameHost => NetworkGameMode == NetworkGameMode.Local || NetworkGameMode == NetworkGameMode.ListenServer || NetworkGameMode == NetworkGameMode.DedicatedServer;
 
         public NetworkSystem([NotNull] IServiceRegistry registry) : base(registry)
         {
             Enabled = true;
             Services.AddService<IGameNetworkService>(this);
-            _serverNetworkHandler = new ServerNetworkHandler(this);
             _clientNetworkHandler = new ClientNetworkHandler(this);
+            _serverNetworkHandler = new ServerNetworkHandler(this);
         }
 
         public override void Initialize()
@@ -45,12 +44,11 @@ namespace MultiplayerExample.Network
         /// <summary>
         /// Start this game with only a local client.
         /// </summary>
-        void IGameNetworkService.StartLocalGame()
+        IGameNetworkServerHandler IGameNetworkService.StartLocalGame()
         {
             Debug.Assert(NetworkGameMode == NetworkGameMode.NotSet);
             NetworkGameMode = NetworkGameMode.Local;
-            // TODO: Need to implement this for local only game.
-            throw new Exception("Not implemented");
+            return this;
         }
 
         /// <summary>
@@ -66,22 +64,22 @@ namespace MultiplayerExample.Network
         /// <summary>
         /// Start this game with a local client and accepts remote clients.
         /// </summary>
-        IGameNetworkServerHandler IGameNetworkService.StartHost()
+        IGameNetworkServerHandler IGameNetworkService.StartHost(ushort serverPortNumber)
         {
             Debug.Assert(NetworkGameMode == NetworkGameMode.NotSet);
             NetworkGameMode = NetworkGameMode.ListenServer;
-            _serverNetworkHandler.Start();
+            _serverNetworkHandler.Start(serverPortNumber);
             return this;
         }
 
         /// <summary>
         /// Start this game as a dedicated server.
         /// </summary>
-        IGameNetworkServerHandler IGameNetworkService.StartDedicatedServer()
+        IGameNetworkServerHandler IGameNetworkService.StartDedicatedServer(ushort serverPortNumber)
         {
             Debug.Assert(NetworkGameMode == NetworkGameMode.NotSet);
             NetworkGameMode = NetworkGameMode.DedicatedServer;
-            _serverNetworkHandler.Start();
+            _serverNetworkHandler.Start(serverPortNumber);
             return this;
         }
 

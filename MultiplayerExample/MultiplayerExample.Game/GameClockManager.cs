@@ -14,6 +14,9 @@ namespace MultiplayerExample
         /// The clock based on last received server packets.
         /// Only applicable for game clients.
         /// </summary>
+        /// <remarks>
+        /// The (estimated) current time of the server is <see cref="NetworkServerSimulationClock"/> + network latency.
+        /// </remarks>
         public NetworkServerSimulationClock NetworkServerSimulationClock;
 
         public TimeSpan RemoteEntityRenderTimeDelay = TimeSpan.FromMilliseconds(100);

@@ -127,7 +127,7 @@ Hierarchy:
                 Id: 5c503cbb-3c0f-4423-9bf0-5388e9e4da4b
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                Width: 300.0
+                Width: 360.0
                 VerticalAlignment: Center
                 Margin: {}
                 MaximumWidth: 3.40282347E+38
@@ -137,7 +137,7 @@ Hierarchy:
                     20541b9eeba1a70ee3c508c075a1b34f: !Grid ref!! 2a91c3c1-b098-42bc-9252-26739dae31b0
                     0b11d244a0d1ce671a0f035a0832a848: !Button ref!! f02e4df1-7e8d-430c-8cd5-d88a2f1310f3
                     9e7495824ba41725971ce3257c0056d9: !Grid ref!! 1b377347-6996-40e1-b429-cb5d35c7e624
-                    6caf58f9e54ffaa547fb3d47d5371d1c: !Button ref!! f980d6d6-129a-46c4-83e9-c99fd9523e1b
+                    fbfbdcc4b70891d1c9d99c7c83eb77f3: !Grid ref!! ed078940-601f-4786-8c91-03549d8d7144
                     c15854c3236a67e4c4772c05752524bd: !Button ref!! f9dffded-b406-4a05-af4d-59f3d3533946
         -   UIElement: !TextBlock
                 Id: 6f03b0ec-d2d1-47cb-92e9-ca83a1b1cfb0
@@ -154,6 +154,20 @@ Hierarchy:
                 TextSize: 20.0
                 TextColor: {R: 240, G: 240, B: 240, A: 255}
         -   UIElement: !TextBlock
+                Id: 72233c28-d277-4acf-8f04-d66d2aa38db0
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Text: Join Game
+                Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
+                TextSize: 20.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
                 Id: 77fb8352-ac8d-464e-bce6-a8a5539c92a2
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
@@ -163,7 +177,7 @@ Hierarchy:
                 MaximumWidth: 3.40282347E+38
                 MaximumHeight: 3.40282347E+38
                 MaximumDepth: 3.40282347E+38
-                Text: Join Multiplayer
+                Text: Host Game
                 Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
                 TextSize: 20.0
                 TextColor: {R: 240, G: 240, B: 240, A: 255}
@@ -288,6 +302,22 @@ Hierarchy:
                 Font: c90f3988-0544-4cbe-993f-13af7d9c23c6:StrideDefaultFont
                 TextSize: 20.0
                 TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Grid
+                Id: ed078940-601f-4786-8c91-03549d8d7144
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Children:
+                    09141b10aebbecea87e6a8c6b1485e55: !Button ref!! f980d6d6-129a-46c4-83e9-c99fd9523e1b
+                    2674e0a3749de4faae8d32e862136fd7: !Button ref!! fec0a0d3-c102-41b6-bf53-dbdb0a8d6509
+                RowDefinitions: {}
+                ColumnDefinitions:
+                    63080b80f76254446c968f7b8fe6c51a: {}
+                    b11815df9bd6e6c2a480af601ccdbaf1: {}
+                LayerDefinitions: {}
         -   UIElement: !TextBlock
                 Id: eda4b338-71ba-4fda-814b-4662cea2a888
                 DependencyProperties: {}
@@ -307,7 +337,6 @@ Hierarchy:
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
-                IsEnabled: false
                 Margin: {Top: 5.0, Bottom: 5.0}
                 MaximumWidth: 3.40282347E+38
                 MaximumHeight: 3.40282347E+38
@@ -331,7 +360,7 @@ Hierarchy:
                 MaximumWidth: 3.40282347E+38
                 MaximumHeight: 3.40282347E+38
                 MaximumDepth: 3.40282347E+38
-                Name: MultiplayerGameButton
+                Name: MultiplayerHostGameButton
                 Content: !TextBlock ref!! 77fb8352-ac8d-464e-bce6-a8a5539c92a2
                 PressedImage: !SpriteFromSheet
                     Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
@@ -352,6 +381,26 @@ Hierarchy:
                 MaximumDepth: 3.40282347E+38
                 Name: QuitButton
                 Content: !TextBlock ref!! eda4b338-71ba-4fda-814b-4662cea2a888
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !Button
+                Id: fec0a0d3-c102-41b6-bf53-dbdb0a8d6509
+                DependencyProperties:
+                    4fc20d1e861afb08a76cb45a802912d9~GridBase.ColumnPropertyKey: 1
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {Top: 5.0, Bottom: 5.0}
+                MaximumWidth: 3.40282347E+38
+                MaximumHeight: 3.40282347E+38
+                MaximumDepth: 3.40282347E+38
+                Name: MultiplayerJoinGameButton
+                Content: !TextBlock ref!! 72233c28-d277-4acf-8f04-d66d2aa38db0
                 PressedImage: !SpriteFromSheet
                     Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
                     CurrentFrame: 2

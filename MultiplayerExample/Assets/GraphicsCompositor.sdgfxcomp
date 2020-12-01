@@ -203,7 +203,11 @@ Game*: !Stride.Rendering.Compositing.SceneRendererCollection,Stride.Rendering
         d1fa4bc474a34431165be9c69eeab8b1: !Stride.Rendering.Compositing.SceneCameraRenderer,Stride.Engine
             Id: 0d817d2e-550a-41ec-873e-9cf3d02e5438
             Camera: ref!! 9aeac611-d1f6-46da-a235-e20cc154e170
-            Child: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine ref!! 4d409a59-d3c6-4b55-a5c7-4bd9b8886ea5
+            Child: !Stride.Rendering.Compositing.SceneRendererCollection,Stride.Rendering
+                Id: 6b751dc0-4738-4335-97b0-3443af6ff46f
+                Children:
+                    a9cbfb8b3d5c892b33969e510add3e0b: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine ref!! 4d409a59-d3c6-4b55-a5c7-4bd9b8886ea5
+                    dde159ba916a8cf8057d22adc77b4441: !Stride.Rendering.Compositing.DebugRenderer,Stride.Rendering ref!! 2f51782e-e23a-46fc-b1a4-6385a207d263
             RenderMask: Group0, Group1, Group2, Group3, Group4, Group5, Group6, Group7, Group8, Group9, Group10, Group11, Group12, Group13, Group14, Group15, Group16, Group17, Group18, Group19, Group20, Group21, Group22, Group23, Group24, Group25, Group26, Group27, Group28, Group29, Group30
         faf78e791c6a87a46f7ef3af4d3c8948: !Stride.Rendering.Compositing.SceneCameraRenderer,Stride.Engine
             Id: 1a65f783-6471-428e-9f97-ea6f8c721c78
@@ -212,7 +216,6 @@ Game*: !Stride.Rendering.Compositing.SceneRendererCollection,Stride.Rendering
                 Id: 7df2d955-8c34-4673-ac06-c8a80660565b
                 RenderStage: ref!! 0fa30591-02ee-486d-9347-2b6aee83d035
             RenderMask: Group31
-        5417adb52e51b15e97f586a87a21b634: !Stride.Rendering.Compositing.DebugRenderer,Stride.Rendering ref!! 2f51782e-e23a-46fc-b1a4-6385a207d263
 SingleView: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine ref!! 04d863bd-4bbd-4dca-9a49-29e21171975a
 Editor: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine ref!! 4d409a59-d3c6-4b55-a5c7-4bd9b8886ea5
 BlockPositions: {}

@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 namespace MultiplayerExample.GameServices
 {
     /// <summary>
-    /// The main controller of the game screens. This manager's entity is located at the root
-    /// of the scene tree and always exists while the game is running.
+    /// The main controller of the game screens. This manager's entity is located on the <b>root</b> scene,
+    /// and persists for the entire lifetime of the game.
     /// </summary>
     [DataContract]
     [DefaultEntityComponentProcessor(typeof(SceneManagerProcessor), ExecutionMode = ExecutionMode.Runtime)]
@@ -56,6 +56,8 @@ namespace MultiplayerExample.GameServices
         [DataMemberIgnore]
         public ISceneHandler ActiveMainSceneHandler => _activeMainSceneController?.SceneHandler;
 
+        public event Action<Scene> MainSceneChanged;
+
         internal void Initialize(GameManager gameManager, IServiceRegistry services)
         {
             _gameManager = gameManager;
@@ -66,7 +68,7 @@ namespace MultiplayerExample.GameServices
 
         public void Start()
         {
-            if (!_gameManager.GameEngineContext.IsServer)
+            if (_gameManager.GameEngineContext.IsClient)
             {
                 LoadUiSystem();
                 var initialScene = _content.Load(InitialScreenSceneUrl);    // Not async, we want to load this immediately
@@ -75,8 +77,6 @@ namespace MultiplayerExample.GameServices
             else
             {
                 var inGameScene = _content.Load(InGameSceneUrl);            // Not async, we want to load this immediately
-                var serverOnlyDataScene = _content.Load(InGameServerOnlyDataSceneUrl);
-                serverOnlyDataScene.MergeSceneTo(inGameScene);
                 ActivateMainScene(inGameScene, unloadCurrentMainScene: true);
             }
         }
@@ -176,6 +176,8 @@ namespace MultiplayerExample.GameServices
 
             _activeMainScene = scene;
             _activeMainSceneController = gameScreenCtrl;
+
+            MainSceneChanged?.Invoke(_activeMainScene);
         }
     }
 }

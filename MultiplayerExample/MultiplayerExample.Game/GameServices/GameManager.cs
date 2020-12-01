@@ -1,4 +1,5 @@
 ﻿using MultiplayerExample.Engine;
+using MultiplayerExample.Network;
 using Stride.Core;
 using Stride.Engine;
 using Stride.Engine.Design;
@@ -25,12 +26,21 @@ namespace MultiplayerExample.GameServices
         [DataMemberIgnore]
         internal GameEngineContext GameEngineContext { get; private set; }
 
+        [DataMemberIgnore]
+        internal IGameNetworkService NetworkService { get; private set; }
+
+        [DataMemberIgnore]
+        internal GameClockManager GameClockManager { get; private set; }
+
         internal void Initialize(IServiceRegistry services)
         {
             Services = services;
-            GameEngineContext = Services.GetSafeServiceAs<GameEngineContext>();
 
             _exitGameService = Services.GetSafeServiceAs<IExitGameService>();
+
+            GameEngineContext = Services.GetSafeServiceAs<GameEngineContext>();
+            NetworkService = Services.GetSafeServiceAs<IGameNetworkService>();
+            GameClockManager = Services.GetSafeServiceAs<GameClockManager>();
         }
 
         public void ExitGame() => _exitGameService.Exit();

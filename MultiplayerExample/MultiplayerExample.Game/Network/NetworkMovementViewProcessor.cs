@@ -14,8 +14,7 @@ namespace MultiplayerExample.Network
     class NetworkMovementViewProcessor : EntityProcessor<NetworkEntityViewComponent, NetworkMovementViewProcessor.AssociatedData>
     {
         private GameClockManager _gameClockManager;
-
-        private SceneSystem _sceneSystem;
+        private IGameNetworkService _networkService;
 
         public NetworkMovementViewProcessor()
         {
@@ -28,7 +27,7 @@ namespace MultiplayerExample.Network
             Enabled = gameEngineContext.IsClient;
 
             _gameClockManager = Services.GetService<GameClockManager>();
-            _sceneSystem = Services.GetSafeServiceAs<SceneSystem>();
+            _networkService = Services.GetService<IGameNetworkService>();
         }
 
         protected override void OnSystemRemove()
@@ -96,7 +95,8 @@ namespace MultiplayerExample.Network
                 var data = kv.Value;
                 var movementSnapshotsComp = data.MovementSnapshotsComponent;
                 var clientPredictionSnapshotsComp = data.ClientPredictionSnapshotsComponent;
-                if (clientPredictionSnapshotsComp != null)
+                var networkEntityComp = data.NetworkEntityComponent;
+                if (networkEntityComp.IsLocalEntity && clientPredictionSnapshotsComp != null && !_networkService.IsGameHost)
                 {
                     var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
 #if DEBUG
@@ -130,11 +130,10 @@ namespace MultiplayerExample.Network
                         // Not enough snapshots
                         continue;
                     }
-                    var networkComp = data.NetworkEntityComponent;
 
-                    var fromSimTickNo = GetRenderFromSimulationTickNumber(networkComp.IsLocalEntity);
-                    var toSimTickNo = GetRenderToSimulationTickNumber(networkComp.IsLocalEntity);
-                    var simTickElapsedRatio = GetRenderSimulationTickElapsedRatio(networkComp.IsLocalEntity);
+                    var fromSimTickNo = GetRenderFromSimulationTickNumber(networkEntityComp.IsLocalEntity);
+                    var toSimTickNo = GetRenderToSimulationTickNumber(networkEntityComp.IsLocalEntity);
+                    var simTickElapsedRatio = GetRenderSimulationTickElapsedRatio(networkEntityComp.IsLocalEntity);
 
                     var fromFindResult = snapshotStore.TryFindSnapshotClosestEqualOrLessThan(fromSimTickNo);
                     if (!fromFindResult.IsFound)

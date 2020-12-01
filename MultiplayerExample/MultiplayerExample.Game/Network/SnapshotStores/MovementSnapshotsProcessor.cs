@@ -27,7 +27,7 @@ namespace MultiplayerExample.Network.SnapshotStores
         public const int SnapshotBufferSize = (int)(GameConfig.PhysicsSimulationRate * SnapshotDurationInSeconds + 0.5f);   // Always round up
 
         private GameClockManager _gameClockManager;
-        private GameEngineContext _gameEngineContext;
+        private IGameNetworkService _networkService;
 
         public bool IsEnabled { get; set; }
 
@@ -41,7 +41,7 @@ namespace MultiplayerExample.Network.SnapshotStores
         protected override void OnSystemAdd()
         {
             _gameClockManager = Services.GetService<GameClockManager>();
-            _gameEngineContext = Services.GetService<GameEngineContext>();
+            _networkService = Services.GetService<IGameNetworkService>();
         }
 
         protected override AssociatedData GenerateComponentData([NotNull] Entity entity, [NotNull] MovementSnapshotsComponent component)
@@ -83,8 +83,9 @@ namespace MultiplayerExample.Network.SnapshotStores
                 // Only update during a simulation update
                 return;
             }
-            // Only server needs to create the snapshot data, client will generate snapshots based when server sends the data.
-            if (_gameEngineContext.IsServer)
+            // Only host needs to create the snapshot data since it is the authoritative data,
+            // the client will generate snapshots only when the host sends the data.
+            if (_networkService.IsGameHost)
             {
                 // Only generate new snapshot during a new simulation update
                 var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber;
@@ -109,7 +110,7 @@ namespace MultiplayerExample.Network.SnapshotStores
                 return;
             }
 
-            if (_gameEngineContext.IsClient)
+            if (!_networkService.IsGameHost)
             {
                 foreach (var kv in ComponentDatas)
                 {

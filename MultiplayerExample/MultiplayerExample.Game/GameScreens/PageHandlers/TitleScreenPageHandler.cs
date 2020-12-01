@@ -1,4 +1,4 @@
-﻿using MultiplayerExample.Network;
+﻿using MultiplayerExample.GameServices.SceneHandlers;
 using MultiplayerExample.UI;
 using Stride.Engine;
 using Stride.UI.Controls;
@@ -10,14 +10,15 @@ namespace MultiplayerExample.GameScreens.PageHandlers
     public class TitleScreenPageHandler : PageHandlerBase
     {
         internal static readonly UIElementKey<Button> SinglePlayerGameButton = new UIElementKey<Button>("SinglePlayerGameButton");
-        internal static readonly UIElementKey<Button> MultiplayerGameButton = new UIElementKey<Button>("MultiplayerGameButton");
+        internal static readonly UIElementKey<Button> MultiplayerHostGameButton = new UIElementKey<Button>("MultiplayerHostGameButton");
+        internal static readonly UIElementKey<Button> MultiplayerJoinGameButton = new UIElementKey<Button>("MultiplayerJoinGameButton");
         internal static readonly UIElementKey<EditText> PlayerNameEditText = new UIElementKey<EditText>("PlayerNameEditText");
         internal static readonly UIElementKey<EditText> ServerIpEditText = new UIElementKey<EditText>("ServerIpEditText");
         internal static readonly UIElementKey<EditText> ServerPortNumberEditText = new UIElementKey<EditText>("ServerPortNumberEditText");
         internal static readonly UIElementKey<Button> QuitButton = new UIElementKey<Button>("QuitButton");
 
         private bool _ignoreInputEvents;
-        private int _titleMenuActiveButtonIndex = 0;
+        //private int _titleMenuActiveButtonIndex = 0;  // TODO: should be used for controller support, ignored for this proof of concept
 
         private EditText _playerNameText;
         private EditText _serverIpText;
@@ -28,17 +29,18 @@ namespace MultiplayerExample.GameScreens.PageHandlers
             _playerNameText = UIComponent.GetUI(PlayerNameEditText);
             _serverIpText = UIComponent.GetUI(ServerIpEditText);
             _serverPortNumberText = UIComponent.GetUI(ServerPortNumberEditText);
-            _serverPortNumberText.Text = NetworkSystem.ServerPortNumber.ToString();
+            _serverPortNumberText.Text = Engine.GameEngineServer.DefaultServerPortNumber.ToString();
 
-            UIComponent.GetUI(SinglePlayerGameButton).Click += CreateTitleMenuScreenTransitionClickHandler(isLocalConnection: true);
-            UIComponent.GetUI(MultiplayerGameButton).Click += CreateTitleMenuScreenTransitionClickHandler(isLocalConnection: false);
+            UIComponent.GetUI(SinglePlayerGameButton).Click += CreateTitleMenuScreenTransitionClickHandler(TitleScreenStartGameMode.SinglePlayerGame);
+            UIComponent.GetUI(MultiplayerHostGameButton).Click += CreateTitleMenuScreenTransitionClickHandler(TitleScreenStartGameMode.HostMultiplayerGame);
+            UIComponent.GetUI(MultiplayerJoinGameButton).Click += CreateTitleMenuScreenTransitionClickHandler(TitleScreenStartGameMode.JoinMultiplayerGame);
             UIComponent.GetUI(QuitButton).Click += (sender, e) =>
             {
                 GameManager.ExitGame();
             };
         }
 
-        private EventHandler<RoutedEventArgs> CreateTitleMenuScreenTransitionClickHandler(bool? isLocalConnection)
+        private EventHandler<RoutedEventArgs> CreateTitleMenuScreenTransitionClickHandler(TitleScreenStartGameMode startGameMode)
         {
             return (sender, e) =>
             {
@@ -46,11 +48,11 @@ namespace MultiplayerExample.GameScreens.PageHandlers
                 {
                     return;
                 }
-                NavigateScreenForward(isLocalConnection);
+                NavigateScreenForward(startGameMode);
             };
         }
 
-        private async void NavigateScreenForward(bool? isLocalConnection)
+        private async void NavigateScreenForward(TitleScreenStartGameMode startGameMode)
         {
             _ignoreInputEvents = true;
 
@@ -59,9 +61,9 @@ namespace MultiplayerExample.GameScreens.PageHandlers
 
             var uiPageEntity = await UIManager.LoadUIEntityAsync(UIManager.ServerConnectionScreenUIUrl);
             var pageHandler = uiPageEntity.GetPageHandlerFromUIPageEntity<ServerConnectionScreenPageHandler>();
+            pageHandler.StartGameMode = startGameMode;
             pageHandler.PlayerName = _playerNameText.Text;
-            bool connectToServer = !(isLocalConnection ?? (_titleMenuActiveButtonIndex == 0));
-            if (connectToServer)
+            if (startGameMode == TitleScreenStartGameMode.HostMultiplayerGame || startGameMode == TitleScreenStartGameMode.JoinMultiplayerGame)
             {
                 // TODO: should really do proper validation
                 pageHandler.ServerIp = _serverIpText.Text;

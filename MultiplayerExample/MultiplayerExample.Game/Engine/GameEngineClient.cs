@@ -52,7 +52,7 @@ namespace MultiplayerExample.Engine
             _globalServices = globalServices;
 
             Services.AddService(globalServices.GetSafeServiceAs<IGame>());      // Set first because Stride specific systems depends on IGame's existence. Must be careful SERVER side systems cannot use this!
-            Services.AddService(new GameEngineContext(isServer: false));
+            Services.AddService(new GameEngineContext(isClient: true));
 
             _networkSystem = CreateKeyValue(new NetworkSystem(Services));
 

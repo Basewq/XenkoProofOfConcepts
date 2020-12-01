@@ -13,6 +13,8 @@ namespace MultiplayerExample.Engine
     /// </summary>
     class GameEngineServer : GameEngineBase
     {
+        public const ushort DefaultServerPortNumber = 60000;   // TODO: should probably be a config setting
+
         public static IGraphicsDeviceService DefaultGraphicsDeviceService { get; } = new HeadlessGraphicsDeviceService();
 
         private readonly GameSystemKeyValue<NetworkSystem> _networkSystem;
@@ -30,7 +32,7 @@ namespace MultiplayerExample.Engine
         {
             // TODO: load content manager stuff accounting for ContentManagerLoaderSettings
 
-            Services.AddService(new GameEngineContext(isServer: true));
+            Services.AddService(new GameEngineContext(isClient: false));
 
             _networkSystem = CreateKeyValue(new NetworkSystem(Services));
             //_scriptSystem = CreateKeyValue(new ScriptSystem(Services));
@@ -97,7 +99,7 @@ namespace MultiplayerExample.Engine
 
         public override void InitialUpdate()
         {
-            _networkService.StartDedicatedServer();
+            _networkService.StartDedicatedServer(DefaultServerPortNumber);
             UpdateGameSystems(UpdateTime, updatePhysicsSimulation: true, PhysicsGameTime);
         }
 

@@ -27,6 +27,8 @@ namespace MultiplayerExample.GameScreens.PageHandlers
         private TitleScreenSceneHandler _sceneHandler;
 
         [DataMemberIgnore]
+        internal TitleScreenStartGameMode StartGameMode;
+        [DataMemberIgnore]
         internal string PlayerName;
         [DataMemberIgnore]
         internal string ServerIp;
@@ -97,7 +99,7 @@ namespace MultiplayerExample.GameScreens.PageHandlers
             _connectionStatusText.Text = "";
             _backButton.Visibility = Visibility.Collapsed;
 
-            await _sceneHandler.BeginGameConnection(PlayerName, ServerIp, ServerPortNumber);
+            await _sceneHandler.BeginGameConnection(StartGameMode, PlayerName, ServerIp, ServerPortNumber);
         }
 
         //public override void OnDeactivate()

@@ -38,7 +38,6 @@ For development, it is best to set the VS solution to run multiple projects (ie.
 ### This proof of concept is still a work in progress, with the following issues:
 - Client side prediction somewhat implemented. There are still bugs, eg. jumping near stairs/cliffs has animation issues.
 - Minor jittering seems to still occur on local and remote players, despite rendering interpolation, so further investigation is required.
-- Client application running as local or listen server. Some initial groundwork is in place to handle this, however additional code implementation & testing is still required to actually get it working.
 - Over-engineered code, and lots of debug code lying around. Requires some general cleanup.
 
 

@@ -1,10 +1,12 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
 using MultiplayerExample.Core;
+using MultiplayerExample.Network.EntityMessages;
 using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
 using MultiplayerExample.Network.NetworkMessages.Server;
 using MultiplayerExample.Utilities;
+using Stride.Core.Collections;
 using Stride.Games;
 using System;
 using System.Diagnostics;
@@ -58,7 +60,6 @@ namespace MultiplayerExample.Network
 
         private class ClientNetworkHandler : INetEventListener
         {
-            private bool _isConnected = false;
             private NetworkConnection _connectionToServer;
             private TaskCompletionSource<ConnectResult> _pendingConnectionTaskCompletionSource;
 
@@ -78,9 +79,15 @@ namespace MultiplayerExample.Network
 
             private GameTime _currentGameTime;  // Only valid during an Update
 
+            private readonly FastList<EntityUpdateTransform> _updateEntityTransforms = new FastList<EntityUpdateTransform>();
+            private readonly FastList<EntityUpdateInputAction> _updateEntityInputs = new FastList<EntityUpdateInputAction>();
+
+            /// <summary>
+            /// Average time a packet will take from client to server, ~1/2 round-trip time.
+            /// </summary>
             public TimeSpan AverageNetworkLatency { get; private set; }
 
-            public bool IsConnected => _isConnected;
+            public bool IsConnected { get; private set; } = false;
 
             public ClientNetworkHandler(NetworkSystem networkSystem)
             {
@@ -226,7 +233,7 @@ namespace MultiplayerExample.Network
                 _networkSystem.DebugWriteLine($"Cln Player connected: {peer.EndPoint}");
 
                 _connectionToServer = new NetworkConnection(peer);
-                _isConnected = true;
+                IsConnected = true;
 
                 Debug.Assert(_pendingConnectionTaskCompletionSource != null);
                 var connResult = new ConnectResult
@@ -248,10 +255,16 @@ namespace MultiplayerExample.Network
                 SetTaskFailureIfExists(ref _joinGameTaskCompletionSource, errMsg);
                 SetTaskFailureIfExists(ref _inGameReadyTaskCompletionSource, errMsg);
 
-                _isConnected = false;
+                var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                var clientPlayerManager = networkEntityProcessor.GetClientPlayerManager();
+                clientPlayerManager.DespawnAllLocalPlayers();
+
+                IsConnected = false;
                 _connectionToServer = default;
                 _networkSystem.OnClientDisconnected();
 
+                var gameClockManager = _networkSystem._gameClockManager;
+                gameClockManager.SimulationClock.IsEnabled = false;
                 // TODO: need to stop and return to main screen...
             }
 
@@ -298,7 +311,7 @@ namespace MultiplayerExample.Network
                     case ServerMessageType.SnaphotUpdates:
                         //Debug.WriteLine($"Cln ProcessData message type: {messageType}");
                         Debug.Assert(_currentGameTime != null);
-                        ProcessMessageSnapshotUpdates(message, _currentGameTime);
+                        ProcessMessageSnapshotUpdates(message);
                         break;
 
                     default:
@@ -384,26 +397,84 @@ namespace MultiplayerExample.Network
 
             private void ProcessMessageSpawnLocalPlayer(NetworkMessageReader message, NetworkConnection connectionToServer)
             {
-                var networkEntityProcessor = _networkSystem._networkEntityProcessor;
-                networkEntityProcessor.Client_SpawnLocalPlayer(message, connectionToServer);
+                SpawnLocalPlayerMessage msg = default;
+                if (msg.TryRead(message))
+                {
+                    var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                    var clientPlayerManager = networkEntityProcessor.GetClientPlayerManager();
+                    clientPlayerManager.SpawnLocalPlayer(msg, connectionToServer);
+                }
             }
 
             private void ProcessMessageSpawnRemotePlayer(NetworkMessageReader message)
             {
-                var networkEntityProcessor = _networkSystem._networkEntityProcessor;
-                networkEntityProcessor.Client_SpawnRemotePlayer(message);
+                SpawnRemotePlayerMessage msg = default;
+                if (msg.TryRead(message))
+                {
+                    var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                    var clientPlayerManager = networkEntityProcessor.GetClientPlayerManager();
+                    clientPlayerManager.SpawnRemotePlayer(msg);
+                }
             }
 
             private void ProcessMessageDespawnPlayer(NetworkMessageReader message)
             {
-                var networkEntityProcessor = _networkSystem._networkEntityProcessor;
-                networkEntityProcessor.Client_DespawnRemotePlayer(message);
+                DespawnRemotePlayerMessage msg = default;
+                if (msg.TryRead(message))
+                {
+                    var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                    var clientPlayerManager = networkEntityProcessor.GetClientPlayerManager();
+                    clientPlayerManager.DespawnRemotePlayer(msg);
+                }
             }
 
-            private void ProcessMessageSnapshotUpdates(NetworkMessageReader message, GameTime gameTime)
+            private void ProcessMessageSnapshotUpdates(NetworkMessageReader message)
             {
-                var networkEntityProcessor = _networkSystem._networkEntityProcessor;
-                networkEntityProcessor.Client_UpdateStates(message);
+                EntitySnaphotUpdatesMessage msg = default;
+                if (msg.TryRead(message))
+                {
+                    var networkEntityProcessor = _networkSystem._networkEntityProcessor;
+                    var clientPlayerManager = networkEntityProcessor.GetClientPlayerManager();
+                    var gameClockManager = _networkSystem._gameClockManager;
+
+                    var hasServerAppliedNewPlayerInput = clientPlayerManager.AcknowledgeReceivedPlayerInputs(msg.AcknowledgedLastReceivedPlayerInputSequenceNumber, msg.LastAppliedServerPlayerInputSequenceNumber);
+                    gameClockManager.NetworkServerSimulationClock.SetClockFromTickNumber(msg.ServerSimulationTickNumber);
+
+                    _updateEntityTransforms.Clear();
+                    _updateEntityInputs.Clear();
+                    PopulateMessages(message, _updateEntityTransforms);
+                    PopulateMessages(message, _updateEntityInputs);
+
+                    if (_updateEntityTransforms.Count > 0 || _updateEntityInputs.Count > 0)
+                    {
+                        //var simTickNumber = msg.ServerSimulationTickNumber;     // TODO: Should be gameclock sim tick???
+                        var simTickNumber = gameClockManager.SimulationClock.SimulationTickNumber;
+                        clientPlayerManager.UpdateEntityStates(
+                            simTickNumber, hasServerAppliedNewPlayerInput, _updateEntityTransforms, _updateEntityInputs, msg.LastAppliedServerPlayerInputSequenceNumber);
+                    }
+
+                    //Debug.WriteLine($"Cln ProcessData.ProcessMessageSnapshotUpdates: {_workingUpdateEntityTransforms.Count}");
+                }
+
+                static bool PopulateMessages<TMsg>(NetworkMessageReader netMessage, FastList<TMsg> messageList)
+                    where TMsg : struct, INetworkMessageArray
+                {
+                    messageList.Clear();
+                    TMsg msg = default;
+                    if (!msg.TryReadHeader(netMessage, out var msgCount))
+                    {
+                        return false;
+                    }
+                    for (int i = 0; i < msgCount; i++)
+                    {
+                        if (!msg.TryReadNextArrayItem(netMessage))
+                        {
+                            continue;
+                        }
+                        messageList.Add(msg);
+                    }
+                    return true;
+                }
             }
 
             private void SetTaskFailureIfExists<T>(ref TaskCompletionSource<T> taskCompletionSource, string errorMessage)

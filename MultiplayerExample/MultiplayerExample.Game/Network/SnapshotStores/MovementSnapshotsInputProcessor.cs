@@ -19,6 +19,7 @@ namespace MultiplayerExample.Network.SnapshotStores
         private Simulation _simulation;
         private GameClockManager _gameClockManager;
         private GameEngineContext _gameEngineContext;
+        private IGameNetworkService _networkService;
         private PhysicsProcessor _physicsProcessor;
 
         public bool IsEnabled { get; set; }
@@ -36,6 +37,7 @@ namespace MultiplayerExample.Network.SnapshotStores
 
             _gameClockManager = Services.GetSafeServiceAs<GameClockManager>();
             _gameEngineContext = Services.GetService<GameEngineContext>();
+            _networkService = Services.GetService<IGameNetworkService>();
         }
 
         protected override AssociatedData GenerateComponentData([NotNull] Entity entity, [NotNull] MovementSnapshotsComponent component)
@@ -75,7 +77,7 @@ namespace MultiplayerExample.Network.SnapshotStores
 
             var simDeltaTime = _simulation.FixedTimeStep;
             var simTickNumber = _gameClockManager.SimulationClock.SimulationTickNumber;
-            if (_gameEngineContext.IsClient)
+            if (!_networkService.IsGameHost)
             {
                 // Client sets predicted movement list from input data (movement data will be set when it receives it from the server).
                 foreach (var kv in ComponentDatas)
@@ -145,7 +147,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             _simulation ??= _physicsProcessor?.Simulation;
             Debug.Assert(_physicsProcessor != null, "Physics Processor needs to be created.");
             Debug.Assert(_simulation != null, "Physics Simulation needs to be created.");
-            Debug.Assert(_gameEngineContext.IsClient, "Server should not be resimulating.");
+            Debug.Assert(_gameEngineContext.IsClient, "Server engine should not be resimulating entities.");
 
             int maxResimInputCount = 0;
             // Reset the initial positions to the start of the simulation time

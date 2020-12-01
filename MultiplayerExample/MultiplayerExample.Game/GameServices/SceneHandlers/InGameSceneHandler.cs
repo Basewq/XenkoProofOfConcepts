@@ -1,5 +1,7 @@
 using MultiplayerExample.Camera;
+using MultiplayerExample.Core;
 using MultiplayerExample.Engine;
+using MultiplayerExample.Network;
 using Stride.Engine;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +10,8 @@ namespace MultiplayerExample.GameServices.SceneHandlers
 {
     public class InGameSceneHandler : SceneHandlerBase
     {
+        internal InitialSceneSettings InitialSettings = default;
+
         protected override void OnInitialize()
         {
             Debug.WriteLine($"{nameof(InGameSceneHandler)} Initialize");
@@ -23,9 +27,13 @@ namespace MultiplayerExample.GameServices.SceneHandlers
 
         public override async void OnActivate()
         {
-            if (GameManager.GameEngineContext.IsServer)
+            var networkService = GameManager.NetworkService;
+            if (networkService.IsGameHost)
             {
-                var gameClockManager = GameManager.Services.GetService<GameClockManager>();
+                var serverOnlyDataScene = SceneManager.LoadSceneSync(SceneManager.InGameServerOnlyDataSceneUrl);    // Load this immediately
+                serverOnlyDataScene.MergeSceneTo(Scene);
+
+                var gameClockManager = GameManager.GameClockManager;
                 gameClockManager.SimulationClock.Reset();
                 gameClockManager.SimulationClock.IsEnabled = true;
             }
@@ -42,13 +50,40 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                     inGameProc.IsEnabled = true;
                 }
             }
+
+            switch (networkService.NetworkGameMode)
+            {
+                case NetworkGameMode.Local:
+                case NetworkGameMode.ListenServer:
+                    if (InitialSettings.AddLocalPlayer)
+                    {
+                        var networkServerHandler = networkService.GetServerHandler();
+                        Debug.Assert(!string.IsNullOrEmpty(InitialSettings.LocalPlayerName));
+                        networkServerHandler.CreateLocalPlayer(InitialSettings.LocalPlayerName);
+                    }
+                    break;
+                case NetworkGameMode.RemoteClient:
+                    {
+                        var networkClientHandler = networkService.GetClientHandler();
+                        var readyTask = networkClientHandler.SendClientInGameReady();
+                        var readyResult = await readyTask;
+                        if (!readyResult.IsOk)
+                        {
+                            var scene = await SceneManager.LoadSceneAsync(SceneManager.TitleScreenSceneUrl);
+                            // TODO: should ShowErrorMessage(readyResult.ErrorMessage);
+                            SceneManager.SetAsActiveMainScene(scene);
+                            return;
+                        }
+                        break;
+                    }
+            }
         }
 
         public override void OnDeactivate()
         {
-            if (GameManager.GameEngineContext.IsServer)
+            if (GameManager.NetworkService.IsGameHost)
             {
-                var gameClockManager = GameManager.Services.GetService<GameClockManager>();
+                var gameClockManager = GameManager.GameClockManager;
                 gameClockManager.SimulationClock.IsEnabled = false;
             }
             if (GameManager.GameEngineContext.IsClient)
@@ -66,6 +101,12 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                     inGameProc.IsEnabled = false;
                 }
             }
+        }
+
+        internal struct InitialSceneSettings
+        {
+            public bool AddLocalPlayer;
+            public string LocalPlayerName;
         }
     }
 }

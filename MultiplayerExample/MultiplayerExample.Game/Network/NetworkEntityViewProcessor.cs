@@ -18,7 +18,6 @@ namespace MultiplayerExample.Network
 
         private LazyLoadedSceneData _lazyLoadedScene;
         private GameManager _gameManager;
-        private Scene _gameplayScene;
 
         public NetworkEntityViewProcessor()
         {
@@ -47,6 +46,9 @@ namespace MultiplayerExample.Network
             //_gameManager.PlayerAdded -= OnPlayerAdded;
             _gameManager.PlayerRemoved -= OnPlayerRemoved;
             _gameManager = null;
+
+            _lazyLoadedScene.Dispose();
+            _lazyLoadedScene = null;
         }
 
         //private void OnPlayerAdded(Entity playerEntity)
@@ -63,10 +65,10 @@ namespace MultiplayerExample.Network
                     _workingRemovePlayerViewEntities.Add(networkEntityViewComp.Entity);
                 }
             }
-            _gameplayScene ??= _lazyLoadedScene.GetGameplayScene();
+            var gameplayScene = _lazyLoadedScene.GetGameplayScene();
             foreach (var viewEnt in _workingRemovePlayerViewEntities)
             {
-                bool wasRemoved = _gameplayScene.Entities.Remove(viewEnt);
+                bool wasRemoved = gameplayScene.Entities.Remove(viewEnt);
                 Debug.Assert(wasRemoved);
             }
 

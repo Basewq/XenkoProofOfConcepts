@@ -2,11 +2,12 @@
 using MultiplayerExample.Network;
 using MultiplayerExample.Network.SnapshotStores;
 using Stride.Engine;
+using System;
 using System.Diagnostics;
 
 namespace MultiplayerExample.GameServices
 {
-    class LazyLoadedSceneData
+    class LazyLoadedSceneData : IDisposable
     {
         private readonly SceneSystem _sceneSystem;
 
@@ -24,6 +25,8 @@ namespace MultiplayerExample.GameServices
 
         /// <summary>
         /// The scene where we actually add/remove gameplay related entities.
+        /// <br />
+        /// <b>Warning:</b> Do not hold a direct reference to the returned gameplay scene because it can potentially change.
         /// </summary>
         public Scene GetGameplayScene()
         {
@@ -37,7 +40,15 @@ namespace MultiplayerExample.GameServices
             Debug.Assert(sceneManager != null, $"SceneManager entity must contain {nameof(SceneManager)} component.");
             Debug.Assert(sceneManager.ActiveMainSceneHandler is InGameSceneHandler, "Must be in-game.");
             _gameplayScene = sceneManager.ActiveMainSceneHandler.Scene;
+
+            sceneManager.MainSceneChanged += OnMainSceneChanged;
+
             return _gameplayScene;
+        }
+
+        private void OnMainSceneChanged(Scene newScene)
+        {
+            _gameplayScene = null;
         }
 
         public MovementSnapshotsInputProcessor GetMovementSnapshotsInputProcessor()
@@ -59,6 +70,12 @@ namespace MultiplayerExample.GameServices
             _assetDefinitions ??= gameManager.Entity.Get<NetworkAssetDefinitions>();
             Debug.Assert(_assetDefinitions != null, $"GameManager entity must contain {nameof(NetworkAssetDefinitions)} component.");
             return _assetDefinitions;
+        }
+
+        public void Dispose()
+        {
+            var sceneManager = _sceneSystem.GetSceneManagerFromRootScene();
+            sceneManager.MainSceneChanged -= OnMainSceneChanged;
         }
     }
 }

@@ -86,7 +86,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             foreach (var kv in ComponentDatas)
             {
                 var inputSnapshotsComp = kv.Key;
-                var nextPlayerInputSequenceNumber = _gameEngineContext.IsServer ? default : inputSnapshotsComp.GetNextPlayerInputSequenceNumber();
+                var nextPlayerInputSequenceNumber = _gameEngineContext.IsClient ? inputSnapshotsComp.GetNextPlayerInputSequenceNumber() : default;
                 CreateNewSnapshotData(inputSnapshotsComp.SnapshotStore, simTickNumber, nextPlayerInputSequenceNumber);
             }
         }

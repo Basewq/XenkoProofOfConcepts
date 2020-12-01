@@ -1,4 +1,5 @@
 ﻿using MultiplayerExample.Core;
+using MultiplayerExample.GameServices;
 using MultiplayerExample.Network.EntityMessages;
 using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
@@ -6,8 +7,10 @@ using MultiplayerExample.Network.NetworkMessages.Server;
 using MultiplayerExample.Network.SnapshotStores;
 using MultiplayerExample.Utilities;
 using Stride.Core.Collections;
+using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,83 +19,26 @@ namespace MultiplayerExample.Network
 {
     partial class NetworkEntityProcessor
     {
-        internal void Server_AddPlayer(SerializableGuid playerId, string playerName, NetworkConnection connection)
-        {
-            var player = new ServerPendingPlayer(playerId, playerName, connection);
-            _serverPlayerManager.AddPendingPlayer(player);
-        }
-
-        internal void Server_RemovePlayer(SerializableGuid playerId)
-        {
-            _serverPlayerManager.RemovePlayer(playerId, _networkMessageWriter);
-        }
-
-        internal void Server_SetPlayerReady(SerializableGuid playerId)
-        {
-            _serverPlayerManager.SetPlayerReady(playerId);
-        }
-
-        internal void Server_CollectPendingInputs(
-            SerializableGuid playerId,
-            PlayerUpdateMessage pendingPlayerUpdateMessage,
-            FastList<PlayerUpdateInputMessage> pendingPlayerUpdateInputsMessages)
-        {
-            _serverPlayerManager.CollectPendingInputs(playerId, pendingPlayerUpdateMessage, pendingPlayerUpdateInputsMessages);
-        }
-
-        internal void Server_SendSynchronizeClockResponse(SerializableGuid playerId, SynchronizeClockRequestMessage syncClockRequestMsg)
-        {
-            _networkMessageWriter.Reset();
-
-            var syncClockResponse = new SynchronizeClockResponseMessage
-            {
-                ClientOSTimeStamp = syncClockRequestMsg.ClientOSTimestamp,
-                ServerWorldTimeInTicks = _gameClockManager.SimulationClock.TotalTime.Ticks,
-            };
-
-            NetworkConnection? conn = null;
-            //lock (_serverPlayerManager.PendingPlayers)
-            {
-                int clientIndex = _serverPlayerManager.PendingPlayers.FindIndex(x => x.PlayerId == playerId);
-                if (clientIndex >= 0)
-                {
-                    ref var player = ref _serverPlayerManager.PendingPlayers.Items[clientIndex];
-                    conn = player.Connection;
-                }
-            }
-            if (!conn.HasValue)
-            {
-                int clientIndex = _serverPlayerManager.ActivePlayers.FindIndex(x => x.PlayerId == playerId);
-                if (clientIndex >= 0)
-                {
-                    ref var player = ref _serverPlayerManager.ActivePlayers.Items[clientIndex];
-                    conn = player.Connection;
-                }
-            }
-            Debug.Assert(conn.HasValue);
-
-            syncClockResponse.WriteTo(_networkMessageWriter);
-            conn.Value.Send(_networkMessageWriter, SendNetworkMessageType.Unreliable);
-        }
-
         /// <summary>
         /// Manager for all players when this game is being hosted or is a dedicated server.
         /// This is just a lightweight container to contain all server related functions.
         /// </summary>
-        private struct ServerPlayerManager
+        internal class ServerPlayerManager
         {
             private readonly NetworkEntityProcessor _networkEntityProcessor;
 
             private readonly List<EntityExistenceDetails> _workingUpdateEntities;
             private readonly List<EntityUpdateInputAction> _workingUpdateEntityInputs;
 
-            public readonly FastList<ServerPendingPlayer> PendingPlayers;
-            public readonly FastList<ServerActivePlayer> ActivePlayers;
+            public readonly FastList<ServerPendingRemotePlayer> PendingRemotePlayers;
+            public readonly FastList<ServerActiveRemotePlayer> ActiveRemotePlayers;
+            public readonly FastList<ServerActiveLocalPlayer> ActiveLocalPlayers;
 
             public ServerPlayerManager(int initialCapacity, NetworkEntityProcessor networkEntityProcessor)
             {
-                PendingPlayers = new FastList<ServerPendingPlayer>(initialCapacity);
-                ActivePlayers = new FastList<ServerActivePlayer>(initialCapacity);
+                PendingRemotePlayers = new FastList<ServerPendingRemotePlayer>(initialCapacity);
+                ActiveRemotePlayers = new FastList<ServerActiveRemotePlayer>(initialCapacity);
+                ActiveLocalPlayers = new FastList<ServerActiveLocalPlayer>(initialCapacity);
 
                 _networkEntityProcessor = networkEntityProcessor;
 
@@ -103,12 +49,12 @@ namespace MultiplayerExample.Network
             internal void UpdatePendingPlayerStates(NetworkMessageWriter networkMessageWriter)
             {
                 var networkAssetDatabase = _networkEntityProcessor._networkAssetDatabase;
-                var assetDefinitions = _networkEntityProcessor._lazyLoadedScene.GetNetworkAssetDefinitions();
+                var assetDefinitions = GetNetworkAssetDefinitions();
 
                 //lock (PendingPlayers)
-                for (int i = 0; i < PendingPlayers.Count; i++)
+                for (int i = 0; i < PendingRemotePlayers.Count; i++)
                 {
-                    ref var pendingPlayer = ref PendingPlayers.Items[i];
+                    ref var pendingPlayer = ref PendingRemotePlayers.Items[i];
                     switch (pendingPlayer.PendingPlayerState)
                     {
                         case PendingPlayerState.JustConnected:
@@ -130,56 +76,73 @@ namespace MultiplayerExample.Network
                             // TODO: maybe do a timeout and/or ping check?
                             break;
                         case PendingPlayerState.Ready:
-                            OnNewPlayerReady(pendingPlayer, networkMessageWriter);
+                            OnNewRemotePlayerReady(pendingPlayer.PlayerId, pendingPlayer.PlayerName, pendingPlayer.Connection, networkMessageWriter);
                             break;
                         default:
                             break;
                     }
                 }
-                PendingPlayers.RemoveAll(x => x.PendingPlayerState == PendingPlayerState.Ready);
+                PendingRemotePlayers.RemoveAll(x => x.PendingPlayerState == PendingPlayerState.Ready);
             }
 
-            private void OnNewPlayerReady(ServerPendingPlayer pendingPlayer, NetworkMessageWriter networkMessageWriter)
+            private void OnNewRemotePlayerReady(
+                SerializableGuid playerId, string playerName, NetworkConnection playerConnection,
+                NetworkMessageWriter networkMessageWriter)
             {
-                var networkAssetDatabase = _networkEntityProcessor._networkAssetDatabase;
-                var assetDefinitions = _networkEntityProcessor._lazyLoadedScene.GetNetworkAssetDefinitions();
+                var assetDefinitions = GetNetworkAssetDefinitions();
                 var assetDatabase = _networkEntityProcessor._networkAssetDatabase;
+                var networkService = _networkEntityProcessor._networkService;
                 var content = _networkEntityProcessor._content;
                 var gameClockManager = _networkEntityProcessor._gameClockManager;
 
                 var entityExistenceStates = _networkEntityProcessor._entityExistenceStates;
 
-                var gameplayScene = _networkEntityProcessor._lazyLoadedScene.GetGameplayScene();
+                var gameplayScene = GetGameplayScene();
 
                 var simTickNumber = gameClockManager.SimulationClock.SimulationTickNumber;
                 // Can add to the scene now
-                var prefabUrl = assetDefinitions.PlayerAssets.ServerRemotePlayer;
-                var playerPrefab = content.Load(prefabUrl);
-                var playerEntity = playerPrefab.InstantiateSingle();
-                var networkEntityComp = playerEntity.Get<NetworkEntityComponent>();
-                networkEntityComp.NetworkEntityId = pendingPlayer.PlayerId;       // Can just use the same ID
-                //networkEntityComp.OwnerType = NetworkOwnerType.Player;
-                networkEntityComp.OwnerClientId = pendingPlayer.PlayerId;
-                networkEntityComp.AssetId = assetDatabase.GetAssetIdFromUrlReference(prefabUrl);
-                //networkEntityComp.IsLocalEntity = false;
+                Entity playerEntity;
+                if (networkService.NetworkGameMode == NetworkGameMode.DedicatedServer)
+                {
+                    var playerPrefabUrl = assetDefinitions.PlayerAssets.ServerRemotePlayer;
+                    var playerPrefab = content.Load(playerPrefabUrl);
+                    playerEntity = playerPrefab.InstantiateSingle();
 
-                var networkPlayerComp = playerEntity.Get<NetworkPlayerComponent>();
-                networkPlayerComp.PlayerName = pendingPlayer.PlayerName;
+                    var networkEntityComp = playerEntity.Get<NetworkEntityComponent>();
+                    networkEntityComp.NetworkEntityId = playerId;       // Can just use the same ID
+                    networkEntityComp.OwnerClientId = playerId;
+                    networkEntityComp.AssetId = assetDatabase.GetAssetIdFromUrlReference(playerPrefabUrl);
 
-                var spawnPointEntity = gameplayScene.Entities.First(x => x.Name == "SpawnPoint");       // TODO: probably shouldn't hardcode it like this...
-                playerEntity.Transform.Position = spawnPointEntity.Transform.Position;
-                _networkEntityProcessor.AddAndRegisterEntity(playerEntity, gameplayScene, simTickNumber);
+                    var networkPlayerComp = playerEntity.Get<NetworkPlayerComponent>();
+                    networkPlayerComp.PlayerName = playerName;
+
+                    GetPlayerSpawnLocation(gameplayScene, out var spawnPosition, out var spawnRotation);
+                    playerEntity.Transform.Position = spawnPosition;
+                    playerEntity.Transform.Rotation = spawnRotation;
+                    _networkEntityProcessor.AddAndRegisterEntity(playerEntity, gameplayScene, simTickNumber);
+                }
+                else
+                {
+                    // Client game, so has the prefab also player view entity
+                    GetPlayerSpawnLocation(gameplayScene, out var spawnPosition, out var spawnRotation);
+                    playerEntity = _networkEntityProcessor.CreateAndAddClientPlayerEntity(simTickNumber, playerId, playerName, ref spawnPosition, ref spawnRotation, isLocalEntity: false);
+                }
+
                 // Note this must be set AFTER being added to the scene due to snapshot buffer needing to be instantiated by the processor
                 var movementSnapshotComp = playerEntity.Get<MovementSnapshotsComponent>();
                 MovementSnapshotsProcessor.CreateNewSnapshotData(simTickNumber, movementSnapshotComp, playerEntity.Transform);
 
-                var newPlayer = new ServerActivePlayer(pendingPlayer.PlayerId, pendingPlayer.PlayerName, playerEntity, pendingPlayer.Connection);
-                ActivePlayers.Add(newPlayer);
+                var newPlayer = new ServerActiveRemotePlayer(playerId, playerName, playerEntity, playerConnection);
+                ActiveRemotePlayers.Add(newPlayer);
+
+                var gameManager = GetGameManager();
+                gameManager.RaisePlayerAddedEvent(playerEntity);
+
                 // Notify the new player of all existing players
-                for (int i = 0; i < ActivePlayers.Count - 1; i++)       // Exclude the last because that's the new player
+                for (int i = 0; i < ActiveRemotePlayers.Count - 1; i++)       // Exclude the last because that's the new player
                 {
-                    ref var existingPlayer = ref ActivePlayers.Items[i];
-                    Debug.Assert(existingPlayer.PlayerId != newPlayer.PlayerId);
+                    ref var existingPlayer = ref ActiveRemotePlayers.Items[i];
+                    Debug.Assert(existingPlayer.PlayerId != playerId);
 
                     var existingPlayerDetails = entityExistenceStates[existingPlayer.PlayerEntity];
                     var spawnPlayer = new SpawnRemotePlayerMessage
@@ -192,49 +155,49 @@ namespace MultiplayerExample.Network
                     };
                     networkMessageWriter.Reset();
                     spawnPlayer.WriteTo(networkMessageWriter);
-                    var conn = newPlayer.Connection;
-                    conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
+                    playerConnection.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
+                }
+                for (int i = 0; i < ActiveLocalPlayers.Count; i++)
+                {
+                    ref var existingPlayer = ref ActiveLocalPlayers.Items[i];
+                    Debug.Assert(existingPlayer.PlayerId != playerId);
+
+                    var existingPlayerDetails = entityExistenceStates[existingPlayer.PlayerEntity];
+                    var spawnPlayer = new SpawnRemotePlayerMessage
+                    {
+                        PlayerId = existingPlayer.PlayerId,
+                        SimulationTickNumber = existingPlayerDetails.SimulationTickNumberCreated,
+                        PlayerName = existingPlayer.PlayerName,
+                        Position = existingPlayer.PlayerEntity.Transform.Position,
+                        Rotation = existingPlayer.PlayerEntity.Transform.Rotation
+                    };
+                    networkMessageWriter.Reset();
+                    spawnPlayer.WriteTo(networkMessageWriter);
+                    playerConnection.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
                 }
                 // Notify the new player of itself
                 {
                     var spawnPlayer = new SpawnLocalPlayerMessage
                     {
-                        PlayerId = newPlayer.PlayerId,
+                        PlayerId = playerId,
                         SimulationTickNumber = simTickNumber,
-                        PlayerName = newPlayer.PlayerName,
-                        Position = newPlayer.PlayerEntity.Transform.Position,
-                        Rotation = newPlayer.PlayerEntity.Transform.Rotation
+                        PlayerName = playerName,
+                        Position = playerEntity.Transform.Position,
+                        Rotation = playerEntity.Transform.Rotation
                     };
                     networkMessageWriter.Reset();
                     spawnPlayer.WriteTo(networkMessageWriter);
-                    var conn = newPlayer.Connection;
-                    conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
+                    playerConnection.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
                 }
 
-                {   // Notify all existing players of this new player
-                    var spawnPlayer = new SpawnRemotePlayerMessage
-                    {
-                        PlayerId = newPlayer.PlayerId,
-                        SimulationTickNumber = simTickNumber,
-                        PlayerName = newPlayer.PlayerName,
-                        Position = newPlayer.PlayerEntity.Transform.Position,
-                        Rotation = newPlayer.PlayerEntity.Transform.Rotation
-                    };
-                    networkMessageWriter.Reset();
-                    spawnPlayer.WriteTo(networkMessageWriter);
-                    for (int i = 0; i < ActivePlayers.Count - 1; i++)       // Exclude the last because that's the new player
-                    {
-                        var conn = ActivePlayers.Items[i].Connection;
-                        conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
-                    }
-                }
+                SendSpawnNewPlayerToRemotePlayers(playerId, playerName, playerEntity, simTickNumber, networkMessageWriter);
             }
 
             internal void UpdatePlayerInputs(SimulationTickNumber inputSimTickNumber)
             {
-                for (int i = 0; i < ActivePlayers.Count; i++)
+                for (int i = 0; i < ActiveRemotePlayers.Count; i++)
                 {
-                    ref var player = ref ActivePlayers.Items[i];
+                    ref var player = ref ActiveRemotePlayers.Items[i];
                     bool wasInputApplied = false;
                     const int MaxPendingInputs = 5;
                     while (player.PendingInputs.Count > MaxPendingInputs)
@@ -272,9 +235,9 @@ namespace MultiplayerExample.Network
 
             internal void SendEntityChangesToClients(SimulationTickNumber simTickNumber, NetworkMessageWriter networkMessageWriter)
             {
-                for (int playerIdx = 0; playerIdx < ActivePlayers.Count; playerIdx++)
+                for (int playerIdx = 0; playerIdx < ActiveRemotePlayers.Count; playerIdx++)
                 {
-                    ref var player = ref ActivePlayers.Items[playerIdx];
+                    ref var player = ref ActiveRemotePlayers.Items[playerIdx];
                     var conn = player.Connection;
 
                     networkMessageWriter.Reset();
@@ -350,48 +313,87 @@ namespace MultiplayerExample.Network
                 }
             }
 
-            internal void AddPendingPlayer(ServerPendingPlayer player)
+            internal void AddPendingRemotePlayer(SerializableGuid playerId, string playerName, NetworkConnection connection)
             {
+                var player = new ServerPendingRemotePlayer(playerId, playerName, connection);
                 //lock (_serverPlayerManager.PendingPlayers)
-                PendingPlayers.Add(player);
+                PendingRemotePlayers.Add(player);
             }
 
-            internal void RemovePlayer(SerializableGuid playerId, NetworkMessageWriter networkMessageWriter)
+            /// <returns>True if the removed player was an active player (ie. was in-game)</returns>
+            internal bool RemoveRemotePlayer(SerializableGuid playerId)
             {
-                int clientIndex = ActivePlayers.FindIndex(x => x.PlayerId == playerId);
+                int clientIndex = ActiveRemotePlayers.FindIndex(x => x.PlayerId == playerId);
                 if (clientIndex < 0)
                 {
                     // Player wasn't fully added yet, can be removed without notifying any other players
-                    clientIndex = PendingPlayers.FindIndex(x => x.PlayerId == playerId);
+                    clientIndex = PendingRemotePlayers.FindIndex(x => x.PlayerId == playerId);
                     Debug.Assert(clientIndex >= 0);
-                    PendingPlayers.RemoveAt(clientIndex);
-                    return;
+                    PendingRemotePlayers.RemoveAt(clientIndex);
+                    return false;
                 }
                 Debug.Assert(clientIndex >= 0);
-                var player = ActivePlayers[clientIndex];
-                ActivePlayers.RemoveAt(clientIndex);
+                var playerEntity = ActiveRemotePlayers.Items[clientIndex].PlayerEntity;
+                ActiveRemotePlayers.RemoveAt(clientIndex);
 
-                var gameplayScene = _networkEntityProcessor._lazyLoadedScene.GetGameplayScene();
-                _networkEntityProcessor.RemoveAndUnregisterEntity(playerId, player.PlayerEntity, gameplayScene);
+                var gameplayScene = GetGameplayScene();
+                _networkEntityProcessor.RemoveAndUnregisterEntity(playerId, playerEntity, gameplayScene);
+                return true;
+            }
 
-                // Notify all players of this player's removal
-                var entityExistenceStates = _networkEntityProcessor._entityExistenceStates;
+            internal void AddLocalPlayer(SerializableGuid playerId, string playerName, NetworkMessageWriter networkMessageWriter)
+            {
+                Debug.Assert(_networkEntityProcessor._networkService.NetworkGameMode == NetworkGameMode.Local || _networkEntityProcessor._networkService.NetworkGameMode == NetworkGameMode.ListenServer, "Can only add local player when running a local game or hosting a game.");
+                var gameplayScene = GetGameplayScene();
                 var gameClockManager = _networkEntityProcessor._gameClockManager;
+                var simTickNumber = gameClockManager.SimulationClock.SimulationTickNumber;
 
-                var despawnPlayer = new DespawnRemotePlayerMessage
+                GetPlayerSpawnLocation(gameplayScene, out var spawnPosition, out var spawnRotation);
+                var playerEntity = _networkEntityProcessor.CreateAndAddClientPlayerEntity(simTickNumber, playerId, playerName, ref spawnPosition, ref spawnRotation, isLocalEntity: true);
+
+                var newPlayer = new ServerActiveLocalPlayer(playerId, playerName, playerEntity);
+                ActiveLocalPlayers.Add(newPlayer);
+
+                var gameManager = GetGameManager();
+                gameManager.RaisePlayerAddedEvent(playerEntity);
+
+                SendSpawnNewPlayerToRemotePlayers(playerId, playerName, playerEntity, simTickNumber, networkMessageWriter);
+            }
+
+            private void SendSpawnNewPlayerToRemotePlayers(
+                SerializableGuid playerId, string playerName, Entity playerEntity, SimulationTickNumber simTickNumber,
+                NetworkMessageWriter networkMessageWriter)
+            {
+                if (ActiveRemotePlayers.Count > 0)
                 {
-                    PlayerId = playerId,
-                    SimulationTickNumber = gameClockManager.SimulationClock.SimulationTickNumber
-                };
-                networkMessageWriter.Reset();
-                despawnPlayer.WriteTo(networkMessageWriter);
-                for (int i = 0; i < ActivePlayers.Count; i++)
-                {
-                    ref var existingPlayer = ref ActivePlayers.Items[i];
-                    var existingPlayerDetails = entityExistenceStates[existingPlayer.PlayerEntity];
-                    var conn = ActivePlayers.Items[i].Connection;
-                    conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
+                    // Notify all existing remote players of this new player
+                    var spawnPlayer = new SpawnRemotePlayerMessage
+                    {
+                        PlayerId = playerId,
+                        SimulationTickNumber = simTickNumber,
+                        PlayerName = playerName,
+                        Position = playerEntity.Transform.Position,
+                        Rotation = playerEntity.Transform.Rotation
+                    };
+                    networkMessageWriter.Reset();
+                    spawnPlayer.WriteTo(networkMessageWriter);
+                    for (int i = 0; i < ActiveRemotePlayers.Count - 1; i++)       // Exclude the last because that's the new player
+                    {
+                        var conn = ActiveRemotePlayers.Items[i].Connection;
+                        conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
+                    }
                 }
+            }
+
+            internal void RemoveLocalPlayer(SerializableGuid playerId)
+            {
+                int clientIndex = ActiveLocalPlayers.FindIndex(x => x.PlayerId == playerId);
+                Debug.Assert(clientIndex >= 0);
+                var playerEntity = ActiveLocalPlayers.Items[clientIndex].PlayerEntity;
+                ActiveLocalPlayers.RemoveAt(clientIndex);
+
+                var gameplayScene = GetGameplayScene();
+                _networkEntityProcessor.RemoveAndUnregisterEntity(playerId, playerEntity, gameplayScene);
             }
 
             internal void CollectPendingInputs(
@@ -399,9 +401,9 @@ namespace MultiplayerExample.Network
                 PlayerUpdateMessage pendingPlayerUpdateMessage,
                 FastList<PlayerUpdateInputMessage> pendingPlayerUpdateInputsMessages)
             {
-                int clientIndex = ActivePlayers.FindIndex(x => x.PlayerId == playerId);
+                int clientIndex = ActiveRemotePlayers.FindIndex(x => x.PlayerId == playerId);
                 Debug.Assert(clientIndex >= 0);
-                ref var player = ref ActivePlayers.Items[clientIndex];
+                ref var player = ref ActiveRemotePlayers.Items[clientIndex];
                 var playerNetworkEntityComp = player.NetworkEntityComponent;
                 if (playerNetworkEntityComp.LastAcknowledgedServerSimulationTickNumber < pendingPlayerUpdateMessage.AcknowledgedServerSimulationTickNumber)
                 {
@@ -445,21 +447,32 @@ namespace MultiplayerExample.Network
             internal void SetPlayerReady(SerializableGuid playerId)
             {
                 //lock (_serverPlayerManager.PendingPlayers)
-                int clientIndex = PendingPlayers.FindIndex(x => x.PlayerId == playerId);
+                int clientIndex = PendingRemotePlayers.FindIndex(x => x.PlayerId == playerId);
                 Debug.Assert(clientIndex >= 0);
-                ref var player = ref PendingPlayers.Items[clientIndex];
+                ref var player = ref PendingRemotePlayers.Items[clientIndex];
                 player.PendingPlayerState = PendingPlayerState.Ready;
             }
+
+            private void GetPlayerSpawnLocation(Scene gameplayScene, out Vector3 position, out Quaternion rotation)
+            {
+                var spawnPointEntity = gameplayScene.Entities.First(x => x.Name == "SpawnPoint");       // TODO: probably shouldn't hardcode it like this...
+                position = spawnPointEntity.Transform.Position;
+                rotation = spawnPointEntity.Transform.Rotation;
+            }
+
+            private GameManager GetGameManager() => _networkEntityProcessor._lazyLoadedScene.GetGameManager();
+            private Scene GetGameplayScene() => _networkEntityProcessor._lazyLoadedScene.GetGameplayScene();
+            private NetworkAssetDefinitions GetNetworkAssetDefinitions() => _networkEntityProcessor._lazyLoadedScene.GetNetworkAssetDefinitions();
         }
 
-        private struct ServerPendingPlayer
+        internal struct ServerPendingRemotePlayer
         {
             public readonly SerializableGuid PlayerId;
             public readonly string PlayerName;
             public readonly NetworkConnection Connection;
             public PendingPlayerState PendingPlayerState;
 
-            public ServerPendingPlayer(SerializableGuid playerId, string playerName, NetworkConnection connection)
+            public ServerPendingRemotePlayer(SerializableGuid playerId, string playerName, NetworkConnection connection)
             {
                 PlayerId = playerId;
                 PlayerName = playerName;
@@ -468,7 +481,14 @@ namespace MultiplayerExample.Network
             }
         }
 
-        private readonly struct ServerActivePlayer
+        internal enum PendingPlayerState
+        {
+            JustConnected,
+            LoadingScene,
+            Ready
+        }
+
+        internal readonly struct ServerActiveRemotePlayer
         {
             /// <summary>
             /// This is the same as the NetworkEntityId.
@@ -482,7 +502,7 @@ namespace MultiplayerExample.Network
             public readonly Stride.Core.Collections.SortedList<PlayerInputSequenceNumber, InputSnapshotsComponent.InputCommandSet> PendingInputs;
             public readonly NetworkConnection Connection;
 
-            public ServerActivePlayer(SerializableGuid playerId, string playerName, Entity playerEntity, NetworkConnection connection)
+            public ServerActiveRemotePlayer(SerializableGuid playerId, string playerName, Entity playerEntity, NetworkConnection connection)
             {
                 PlayerId = playerId;
                 PlayerName = playerName;
@@ -493,6 +513,30 @@ namespace MultiplayerExample.Network
                 MovementSnapshotsComponent = playerEntity.Get<MovementSnapshotsComponent>();
                 PendingInputs = new Stride.Core.Collections.SortedList<PlayerInputSequenceNumber, InputSnapshotsComponent.InputCommandSet>();
                 Connection = connection;
+            }
+        }
+
+        internal readonly struct ServerActiveLocalPlayer
+        {
+            /// <summary>
+            /// This is the same as the NetworkEntityId.
+            /// </summary>
+            public readonly SerializableGuid PlayerId;
+            public readonly string PlayerName;
+            public readonly Entity PlayerEntity;
+            public readonly NetworkEntityComponent NetworkEntityComponent;
+            public readonly InputSnapshotsComponent InputSnapshotsComponent;
+            public readonly MovementSnapshotsComponent MovementSnapshotsComponent;
+
+            public ServerActiveLocalPlayer(SerializableGuid playerId, string playerName, Entity playerEntity)
+            {
+                PlayerId = playerId;
+                PlayerName = playerName;
+                PlayerEntity = playerEntity;
+                NetworkEntityComponent = playerEntity.Get<NetworkEntityComponent>();
+                InputSnapshotsComponent = playerEntity.Get<InputSnapshotsComponent>();
+                Debug.Assert(InputSnapshotsComponent != null, $"{InputSnapshotsComponent} must exist.");
+                MovementSnapshotsComponent = playerEntity.Get<MovementSnapshotsComponent>();
             }
         }
     }

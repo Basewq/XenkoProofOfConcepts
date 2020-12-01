@@ -65,6 +65,7 @@ namespace MultiplayerExample.Player
         private float runSpeed;
 
         private GameClockManager _gameClockManager;
+        private IGameNetworkService _networkService;
 
         // Components from the networked entity
         private NetworkEntityComponent _networkEntityComponent;
@@ -87,6 +88,7 @@ namespace MultiplayerExample.Player
             _clientPredictionSnapshotsComponent = networkedEntity.Get<ClientPredictionSnapshotsComponent>();
 
             _gameClockManager = Services.GetSafeServiceAs<GameClockManager>();
+            _networkService = Services.GetService<IGameNetworkService>();
 
             if (AnimationComponent == null)
                 throw new InvalidOperationException("The animation component is not set");
@@ -225,7 +227,7 @@ namespace MultiplayerExample.Player
         public override void Update()
         {
             bool isGroundedNewValue;
-            if (_clientPredictionSnapshotsComponent != null)
+            if (_networkEntityComponent.IsLocalEntity && _clientPredictionSnapshotsComponent != null && !_networkService.IsGameHost)
             {
                 var predictedMovements = _clientPredictionSnapshotsComponent.PredictedMovements;
                 if (predictedMovements.Count <= 0)

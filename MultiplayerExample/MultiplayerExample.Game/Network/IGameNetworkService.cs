@@ -8,12 +8,27 @@ namespace MultiplayerExample.Network
     {
         NetworkGameMode NetworkGameMode { get; }
 
+        /// <summary>
+        /// When true, the game is the authoritive server.
+        /// </summary>
         bool IsGameHost { get; }
 
-        void StartLocalGame();
+        /// <summary>
+        /// Sets the <see cref="NetworkGameMode"/> to <see cref="NetworkGameMode.Local"/>.
+        /// </summary>
+        IGameNetworkServerHandler StartLocalGame();
+        /// <summary>
+        /// Connects to a server, and sets the <see cref="NetworkGameMode"/> to <see cref="NetworkGameMode.RemoteClient"/>.
+        /// </summary>
         Task<ConnectResult> BeginConnectToServer(string serverIp, ushort serverPortNumber);
-        IGameNetworkServerHandler StartHost();
-        IGameNetworkServerHandler StartDedicatedServer();
+        /// <summary>
+        /// Starts the game as a server and a local client, and sets the <see cref="NetworkGameMode"/> to <see cref="NetworkGameMode.ListenServer"/>.
+        /// </summary>
+        IGameNetworkServerHandler StartHost(ushort serverPortNumber);
+        /// <summary>
+        /// Starts the game as a server, and sets the <see cref="NetworkGameMode"/> to <see cref="NetworkGameMode.DedicatedServer"/>.
+        /// </summary>
+        IGameNetworkServerHandler StartDedicatedServer(ushort serverPortNumber);
 
         IGameNetworkClientHandler GetClientHandler();
         IGameNetworkServerHandler GetServerHandler();
@@ -22,9 +37,13 @@ namespace MultiplayerExample.Network
     interface IGameNetworkClientHandler
     {
         TimeSpan AverageNetworkLatency { get; }
+        /// <summary>
+        /// Disconnect from the server.
+        /// </summary>
         void EndConnection();
 
         Task<JoinGameRequestResult> SendJoinGameRequest(string playerName);
+
         Task<ClockSyncResult> SendClockSynchronization();
 
         Task<ClientInGameReadyResult> SendClientInGameReady();
@@ -32,6 +51,8 @@ namespace MultiplayerExample.Network
 
     interface IGameNetworkServerHandler
     {
+        void CreateLocalPlayer(string playerName);
+
         void SendMessageToAllPlayers(NetworkMessageWriter message, SendNetworkMessageType sendType);
     }
 

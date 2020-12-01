@@ -32,11 +32,11 @@ namespace MultiplayerExample.GameScreens.PageHandlers
         {
             _inputManager = GameManager.Services.GetService<InputManager>();
 
-            _networkService = GameManager.Services.GetSafeServiceAs<IGameNetworkService>();
-            _gameClockManager = GameManager.Services.GetService<GameClockManager>();
+            _networkService = GameManager.NetworkService;
+            _gameClockManager = GameManager.GameClockManager;
         }
 
-        public async override void OnActivate()
+        public override void OnActivate()
         {
             _ignoreInputEvents = false;
 
@@ -48,16 +48,6 @@ namespace MultiplayerExample.GameScreens.PageHandlers
             _gameManager = sceneSystem.GetGameManagerFromRootScene();
             _gameManager.PlayerAdded += OnPlayerAdded;
             _gameManager.PlayerRemoved += OnPlayerRemoved;
-
-            var networkClientHandler = _networkService.GetClientHandler();
-            var readyTask = networkClientHandler.SendClientInGameReady();
-            var readyResult = await readyTask;
-            if (!readyResult.IsOk)
-            {
-                //ShowErrorMessage(readyResult.ErrorMessage);
-                // TODO: return to previous screen?
-                return;
-            }
         }
 
         public override void OnDeactivate()
@@ -109,11 +99,20 @@ namespace MultiplayerExample.GameScreens.PageHandlers
 
         public override void Update()
         {
-            var networkClientHandler = _networkService.GetClientHandler();
-            _clockTimeUI.Text = @$"LocTime: {_gameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {_gameClockManager.SimulationClock.SimulationTickNumber}
+            switch (_networkService.NetworkGameMode)
+            {
+                case NetworkGameMode.Local:
+                case NetworkGameMode.ListenServer:
+                    _clockTimeUI.Text = @$"LocTime: {_gameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {_gameClockManager.SimulationClock.SimulationTickNumber}";
+                    break;
+                case NetworkGameMode.RemoteClient:
+                    var networkClientHandler = _networkService.GetClientHandler();
+                    _clockTimeUI.Text = @$"LocTime: {_gameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {_gameClockManager.SimulationClock.SimulationTickNumber}
 NetTime: {_gameClockManager.NetworkServerSimulationClock.TargetTotalTime:hh\:mm\:ss\.ff} - TickNo: {_gameClockManager.NetworkServerSimulationClock.LastServerSimulationTickNumber}
-Latency: {networkClientHandler.AverageNetworkLatency.TotalMilliseconds} ms
-";
+Latency: {networkClientHandler.AverageNetworkLatency.TotalMilliseconds} ms";
+                    break;
+            }
+
             //if (_ignoreInputEvents || !IsTopMostScreen)
             //{
             //    return;
