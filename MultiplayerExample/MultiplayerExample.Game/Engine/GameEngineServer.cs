@@ -1,10 +1,14 @@
 ﻿using MultiplayerExample.Network;
+using MultiplayerExample.Utilities;
 using Stride.Core;
 using Stride.Core.Serialization.Contents;
+using Stride.Core.Streaming;
 using Stride.Engine;
 using Stride.Games;
 using Stride.Graphics;
+using Stride.Graphics.Data;
 using Stride.Physics;
+using Stride.Streaming;
 
 namespace MultiplayerExample.Engine
 {
@@ -23,16 +27,19 @@ namespace MultiplayerExample.Engine
         private readonly GameSystemKeyValue<ScenePreUpdateSystem> _scenePreUpdateSystem;
         private readonly GameSystemKeyValue<SceneSystem> _sceneSystem;
         private readonly GameSystemKeyValue<ScenePostUpdateSystem> _scenePostUpdateSystem;
+        private readonly GameSystemKeyValue<StreamingManager> _streamingManager;
         //private readonly GameSystemKeyValue<DynamicNavigationMeshSystem> _dynamicNavigationMeshSystem;
 
         private IGameNetworkService _networkService;
 
-        public GameEngineServer(ContentManager contentManager, IServiceRegistry globalServices)
-            : base(contentManager, globalServices)
+        public GameEngineServer(ContentManager contentManager, IServiceRegistry services)
+            : base(contentManager, services)
         {
-            // TODO: load content manager stuff accounting for ContentManagerLoaderSettings
+            // Note that IGame already part of Services in the client engine because Stride specific systems depends
+            // on IGame's existence, however be aware this is NOT included in GameEngineServer, so you must be careful
+            // not to get IGame in server side systems.
 
-            Services.AddService(new GameEngineContext(isClient: false));
+            Services.AddOrOverwriteService(new GameEngineContext(isClient: false));
 
             _networkSystem = CreateKeyValue(new NetworkSystem(Services));
             //_scriptSystem = CreateKeyValue(new ScriptSystem(Services));
@@ -40,61 +47,62 @@ namespace MultiplayerExample.Engine
             _sceneSystem = CreateKeyValue(new HeadlessSceneSystem(Services) as SceneSystem);
             _scenePreUpdateSystem = CreateKeyValue(new ScenePreUpdateSystem(Services, _sceneSystem.System));
             _scenePostUpdateSystem = CreateKeyValue(new ScenePostUpdateSystem(Services, _sceneSystem.System));
+            _streamingManager = CreateKeyValue(() => new StreamingManager(Services));
             //_dynamicNavigationMeshSystem = CreateKeyValue(new DynamicNavigationMeshSystem(Services));
 
-            Services.AddService(DefaultGraphicsDeviceService);
+            Services.AddOrOverwriteService(_streamingManager.System);
+            Services.AddOrOverwriteService<IStreamingManager>(_streamingManager.System);
+            Services.AddOrOverwriteService<ITexturesStreamingProvider>(_streamingManager.System);
+
+            Services.AddOrOverwriteService(DefaultGraphicsDeviceService);
 
             _networkService = _networkSystem.System;
         }
 
-        protected override void OnInitialize(IServiceRegistry globalServices)
+        protected override void OnInitialize()
         {
+            if (Settings != null)
+            {
+                _streamingManager.System.SetStreamingSettings(Settings.Configurations.Get<StreamingSettings>());
+            }
             _sceneSystem.System.InitialSceneUrl = Settings?.DefaultSceneUrl;
-
-            // ---------------------------------------------------------
-            // Add common GameSystems - Adding order is important
-            // (Unless overriden by gameSystem.UpdateOrder)
-            // ---------------------------------------------------------
 
             // Add the input manager
             // Add it first so that it can obtained by the UI system
             //Input = new InputManager(Services);
-            //Services.AddService(Input);
+            //Services.AddOrOverwriteService(Input);
             //GameSystems.Add(Input);
 
             // Initialize the systems
             GameSystems.Initialize();
 
-            Services.AddService<IGameSystemCollection>(GameSystems);
+            Services.AddOrOverwriteService<IGameSystemCollection>(GameSystems);
 
-            // Add the scheduler system
-            // - Must be after Input, so that scripts are able to get latest input
-            // - Must be before Entities/Camera/Audio/UI, so that scripts can apply
-            // changes in the same frame they will be applied
             //GameSystems.Add(_scriptSystem.System);
-
-            // Add the Font system
             //GameSystems.Add(gameFontSystem);
-
-            // Add the Audio System
             //GameSystems.Add(Audio);
 
             //var dynamicNavigationMeshSystem = new Stride.Navigation.DynamicNavigationMeshSystem(_services);
             //GameSystems.Add(dynamicNavigationMeshSystem);
 
-            Services.AddService(_scenePreUpdateSystem.System);
+            Services.AddOrOverwriteService(_scenePreUpdateSystem.System);
             GameSystems.Add(_scenePreUpdateSystem.System);
 
-            Services.AddService(_sceneSystem.System);
+            Services.AddOrOverwriteService(_sceneSystem.System);
             GameSystems.Add(_sceneSystem.System);
 
-            Services.AddService(_scenePostUpdateSystem.System);
+            Services.AddOrOverwriteService(_scenePostUpdateSystem.System);
             GameSystems.Add(_scenePostUpdateSystem.System);
 
-            Services.AddService<IPhysicsSystem>(_physicsSystem.System);
+            Services.AddOrOverwriteService<IPhysicsSystem>(_physicsSystem.System);
             GameSystems.Add(_physicsSystem.System);
 
             GameSystems.Add(_networkSystem.System);     // Make sure this is added AFTER _sceneSystem due to dependency on it
+        }
+
+        protected override void OnLoadContent()
+        {
+            GameSystems.LoadContent();
         }
 
         public override void InitialUpdate()
@@ -121,6 +129,8 @@ namespace MultiplayerExample.Engine
             //System.Diagnostics.Debug.WriteLine(@$"Time: {GameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {GameClockManager.SimulationClock.SimulationTickNumber}");
 #endif
             //_scriptSystem.TryUpdate(gameTime);
+            _streamingManager.TryUpdate(gameTime);
+
             _sceneSystem.TryUpdate(gameTime);   // This runs all the standard entity processors
             _scenePostUpdateSystem.TryUpdate(gameTime);
             //_dynamicNavigationMeshSystem.TryUpdate(gameTime);

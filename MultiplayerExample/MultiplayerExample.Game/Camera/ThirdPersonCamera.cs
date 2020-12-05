@@ -187,5 +187,11 @@ namespace MultiplayerExample.Camera
 
             if (Entity.GetParent() == null) throw new ArgumentException("ThirdPersonCamera should be placed as a child entity of its target entity!");
         }
+
+        public override void Cancel()
+        {
+            Input.UnlockMousePosition();
+            Game.IsMouseVisible = true;
+        }
     }
 }

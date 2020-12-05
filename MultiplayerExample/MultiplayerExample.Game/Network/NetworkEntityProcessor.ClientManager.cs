@@ -313,16 +313,22 @@ namespace MultiplayerExample.Network
 
             internal void DespawnAllLocalPlayers()
             {
-                var gameplayScene = GetGameplayScene();
-                var gameManager = GetGameManager();
-                for (int i = 0; i < _localPlayers.Count; i++)
+                // Note: this might get called during a connection 'disconnect' when trying to join a server from the
+                // title screen (and failing), and gameplay scene hasn't been created yet, so this outer count check
+                // is an easy way to guard against this case.
+                if (_localPlayers.Count > 0)
                 {
-                    ref var player = ref _localPlayers.Items[i];
-                    var playerEntity = player.NetworkEntityComponent.Entity;
-                    _networkEntityProcessor.RemoveAndUnregisterEntity(player.PlayerId, playerEntity, gameplayScene);
-                    gameManager.RaisePlayerRemovedEntity(playerEntity);
+                    var gameplayScene = GetGameplayScene();
+                    var gameManager = GetGameManager();
+                    for (int i = 0; i < _localPlayers.Count; i++)
+                    {
+                        ref var player = ref _localPlayers.Items[i];
+                        var playerEntity = player.NetworkEntityComponent.Entity;
+                        _networkEntityProcessor.RemoveAndUnregisterEntity(player.PlayerId, playerEntity, gameplayScene);
+                        gameManager.RaisePlayerRemovedEntity(playerEntity);
+                    }
+                    _localPlayers.Clear();
                 }
-                _localPlayers.Clear();
             }
 
             internal void SpawnRemotePlayer(SpawnRemotePlayerMessage spawnPlayerMessage)

@@ -2,7 +2,6 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 
 using MultiplayerExample.Engine;
-using MultiplayerExample.Network;
 using Stride.Core;
 using Stride.Core.Diagnostics;
 using Stride.Core.IO;
@@ -13,7 +12,6 @@ using Stride.Engine.Design;
 using Stride.Games;
 using Stride.Games.Time;
 using Stride.Physics;
-using Stride.Streaming;
 using System;
 using System.Reflection;
 
@@ -28,18 +26,15 @@ namespace MultiplayerExample
     {
         private readonly ILogger _logger;
 
-        private readonly ServiceRegistry _globalServices = new ServiceRegistry();
+        private readonly ServiceRegistry _services = new ServiceRegistry();
 
         private GameEngineServer _gameEngine;
-        // Global systems, that are shared among the game engines (assuming there will be multiple)
-        private readonly GameSystemKeyValue<StreamingManager> _streamingManager;
 
         private readonly TimerTick _autoTickTimer = new TimerTick();
         private readonly GameTimeExt _updateTime = new GameTimeExt();
 
         private bool _initializeDatabase = true;
 
-        private NetworkAssetDatabase _networkAssetDatabase;
         private DatabaseFileProvider _databaseFileProvider;
 
         public ContentManager Content { get; private set; }
@@ -62,12 +57,10 @@ namespace MultiplayerExample
             _logger = GlobalLogger.GetLogger(GetType().GetTypeInfo().Name);
 
             // Database file provider
-            _globalServices.AddService<IDatabaseFileProviderService>(new DatabaseFileProviderService(null));
+            _services.AddService<IDatabaseFileProviderService>(new DatabaseFileProviderService(null));
 
-            _streamingManager = CreateKeyValue(new StreamingManager(_globalServices));
-
-            _globalServices.AddService(GameEngineServer.DefaultGraphicsDeviceService);  // ContentManager requires a GraphicsDeviceService if graphical assets are loaded (eg. Textures)
-            _globalServices.AddService<IExitGameService>(this);
+            _services.AddService(GameEngineServer.DefaultGraphicsDeviceService);  // ContentManager requires a GraphicsDeviceService if graphical assets are loaded (eg. Textures)
+            _services.AddService<IExitGameService>(this);
         }
 
         /// <summary>
@@ -126,7 +119,6 @@ namespace MultiplayerExample
                 using (Profiler.Begin(GameProfilingKeys.GameUpdate))
                 {
                     _updateTime.Update(_updateTime.Total + elapsedTime, elapsedTime, incrementFrameCount: true);
-                    _streamingManager.TryUpdate(_updateTime);
                     _gameEngine.Update();
                 }
             }
@@ -153,15 +145,15 @@ namespace MultiplayerExample
         private void PrepareContext()
         {
             // Content manager (this will be shared to all the EngineCores)
-            Content = new ContentManager(_globalServices);
-            _globalServices.AddService<IContentManager>(Content);
-            _globalServices.AddService(Content);
+            Content = new ContentManager(_services);
+            _services.AddService<IContentManager>(Content);
+            _services.AddService(Content);
 
             // Initialize assets
             if (_initializeDatabase)
             {
                 _databaseFileProvider = InitializeAssetDatabase();
-                ((DatabaseFileProviderService)_globalServices.GetService<IDatabaseFileProviderService>()).FileProvider = _databaseFileProvider;
+                ((DatabaseFileProviderService)_services.GetService<IDatabaseFileProviderService>()).FileProvider = _databaseFileProvider;
 
                 if (Content.Exists(GameSettings.AssetUrl))  // TODO: maybe server needs its own GameSettings asset url?
                 {
@@ -183,7 +175,7 @@ namespace MultiplayerExample
                     //    Settings.Configurations.Configurations.Add(navConfigSettings);
                     //}
                 }
-                _globalServices.AddService<IGameSettingsService>(this);
+                _services.AddService<IGameSettingsService>(this);
             }
             // HACK (kind of): Server must run at a fixed rate, which we'll manually control with _physicGameTime
             var physicsSettings = Settings.Configurations.Get<PhysicsSettings>() ?? new PhysicsSettings();
@@ -195,9 +187,6 @@ namespace MultiplayerExample
                 Configuration = physicsSettings
             };
             Settings.Configurations.Configurations.Add(physicsConfigSettings);
-
-            _networkAssetDatabase = new NetworkAssetDatabase(Content, assetFolderUrls: new[] { "Prefabs", "Scenes" });
-            _globalServices.AddService(_networkAssetDatabase);
         }
 
         private void InitializeBeforeRun()
@@ -236,14 +225,7 @@ namespace MultiplayerExample
         {
             Content.Serializer.LowLevelSerializerSelector = ParameterContainerExtensions.DefaultSceneSerializerSelector;
 
-            if (Settings != null)
-            {
-                _streamingManager.System.SetStreamingSettings(Settings.Configurations.Get<StreamingSettings>());
-            }
-
-            _streamingManager.System.Initialize();
-
-            _gameEngine = new GameEngineServer(Content, _globalServices);
+            _gameEngine = new GameEngineServer(Content, _services);
             _gameEngine.Initialize();
         }
 
@@ -279,12 +261,6 @@ namespace MultiplayerExample
         void IDisposable.Dispose()
         {
             //throw new NotImplementedException();
-        }
-
-        private static GameSystemKeyValue<T> CreateKeyValue<T>(T gameSystem) where T : GameSystemBase
-        {
-            var gameSystemKey = new ProfilingKey(GameProfilingKeys.GameUpdate, gameSystem.GetType().Name);
-            return new GameSystemKeyValue<T>(gameSystemKey, gameSystem);
         }
     }
 }

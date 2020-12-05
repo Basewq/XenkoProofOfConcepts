@@ -10,6 +10,7 @@ namespace MultiplayerExample.GameServices
     class LazyLoadedSceneData : IDisposable
     {
         private readonly SceneSystem _sceneSystem;
+        private Scene _previousRootScene = null;
 
         private Scene _gameplayScene;
         private MovementSnapshotsInputProcessor _movementSnapshotsInputProcessor;
@@ -21,6 +22,16 @@ namespace MultiplayerExample.GameServices
         public LazyLoadedSceneData(SceneSystem sceneSystem)
         {
             _sceneSystem = sceneSystem;
+            _sceneSystem.SceneInstance.RootSceneChanged += OnRootSceneChanged;
+        }
+
+        private void OnRootSceneChanged(object sender, EventArgs e)
+        {
+            if (_previousRootScene != null)
+            {
+                UnregisterMainSceneChangedEventHandler(_previousRootScene);
+            }
+            _previousRootScene = null;
         }
 
         /// <summary>
@@ -36,7 +47,8 @@ namespace MultiplayerExample.GameServices
             }
 
             // Entities are added to the InGameScreen scene rather than the root scene
-            var sceneManager = _sceneSystem.GetSceneManagerFromRootScene();
+            _previousRootScene = _sceneSystem.SceneInstance.RootScene;
+            var sceneManager = GameServicesExt.GetSceneManagerFromRootScene(_previousRootScene);
             Debug.Assert(sceneManager != null, $"SceneManager entity must contain {nameof(SceneManager)} component.");
             Debug.Assert(sceneManager.ActiveMainSceneHandler is InGameSceneHandler, "Must be in-game.");
             _gameplayScene = sceneManager.ActiveMainSceneHandler.Scene;
@@ -74,7 +86,17 @@ namespace MultiplayerExample.GameServices
 
         public void Dispose()
         {
-            var sceneManager = _sceneSystem.GetSceneManagerFromRootScene();
+            _sceneSystem.SceneInstance.RootSceneChanged -= OnRootSceneChanged;
+            if (_previousRootScene != null)
+            {
+                UnregisterMainSceneChangedEventHandler(_previousRootScene);
+            }
+            _previousRootScene = null;
+        }
+
+        private void UnregisterMainSceneChangedEventHandler(Scene rootScene)
+        {
+            var sceneManager = GameServicesExt.GetSceneManagerFromRootScene(rootScene);
             sceneManager.MainSceneChanged -= OnMainSceneChanged;
         }
     }

@@ -1,14 +1,12 @@
 ﻿using MultiplayerExample.Network;
+using MultiplayerExample.Utilities;
 using Stride.Core;
 using Stride.Core.Diagnostics;
 using Stride.Core.IO;
 using Stride.Core.Serialization.Contents;
-using Stride.Core.Streaming;
 using Stride.Engine.Design;
 using Stride.Games;
 using Stride.Games.Time;
-using Stride.Graphics.Data;
-using Stride.Streaming;
 using System;
 using System.Reflection;
 
@@ -16,8 +14,6 @@ namespace MultiplayerExample.Engine
 {
     abstract class GameEngineBase
     {
-        private readonly IServiceRegistry _globalServices;
-
         private readonly TimerTick _autoTickTimer = new TimerTick();
         private const int MaxSimulationsPerUpdate = 30;     // Max 30 simulations in a single Update call
         private readonly TimeSpan _maximumElapsedTime = TimeSpan.FromSeconds(MaxSimulationsPerUpdate / (double)GameConfig.PhysicsSimulationRate);
@@ -55,49 +51,51 @@ namespace MultiplayerExample.Engine
 
         public bool IsFullyShutDown => IsExiting && IsRunning;
 
-        public GameEngineBase(ContentManager contentManager, IServiceRegistry globalServices)
+        public GameEngineBase(ContentManager contentManager, IServiceRegistry services, GameSystemCollection gameSystems = null)
         {
-            _globalServices = globalServices;
-
             Logger = GlobalLogger.GetLogger(GetType().GetTypeInfo().Name);
 
-            Services = new ServiceRegistry();
+            Services = (ServiceRegistry)services;
             Content = contentManager;
-            GameSystems = new GameSystemCollection(Services);
+            GameSystems = gameSystems ?? new GameSystemCollection(Services);
+
+            // Replacing existing IGameSystemCollection with our own
+            var existingGameSystems = Services.GetService<IGameSystemCollection>();
+            if (existingGameSystems != null)
+            {
+                Services.RemoveService<IGameSystemCollection>();
+            }
+            Services.AddOrOverwriteService<IGameSystemCollection>(GameSystems);
 
             // This is a bit of a implementation detail hack, but necessary so that we don't
             // blow out the memory if multiple 'engines' are loading the same content.
-            Services.AddService<IContentManager>(Content);
-            Services.AddService(Content);
+            Services.AddOrOverwriteService<IContentManager>(Content);
+            Services.AddOrOverwriteService(Content);
 
-            Services.AddService(globalServices.GetSafeServiceAs<IExitGameService>());
-            Services.AddService(globalServices.GetSafeServiceAs<IDatabaseFileProviderService>());
+            Services.AddOrOverwriteService(services.GetSafeServiceAs<IExitGameService>());
+            Services.AddOrOverwriteService(services.GetSafeServiceAs<IDatabaseFileProviderService>());
 
-            Services.AddService(globalServices.GetSafeServiceAs<StreamingManager>());
-            Services.AddService(globalServices.GetSafeServiceAs<IStreamingManager>());
-            Services.AddService(globalServices.GetSafeServiceAs<ITexturesStreamingProvider>());
+            var networkAssetDatabase = new NetworkAssetDatabase(Content, assetFolderUrls: new[] { "Prefabs", "Scenes" });
+            Services.AddOrOverwriteService(networkAssetDatabase);
 
-            Services.AddService(globalServices.GetSafeServiceAs<NetworkAssetDatabase>());
+            Services.AddOrOverwriteService(GameClockManager);
 
-            Services.AddService(GameClockManager);
-
-            var gameSettingsService = globalServices.GetSafeServiceAs<IGameSettingsService>();
-            Services.AddService(gameSettingsService);
+            var gameSettingsService = services.GetSafeServiceAs<IGameSettingsService>();
+            Services.AddOrOverwriteService(gameSettingsService);
             Settings = gameSettingsService.Settings;
         }
 
         public void Initialize()
         {
-            OnInitialize(_globalServices);
+            OnInitialize();
         }
 
-        protected abstract void OnInitialize(IServiceRegistry globalServices);
+        protected abstract void OnInitialize();
 
         public abstract void InitialUpdate();
 
         public void LoadContent()
         {
-            GameSystems.LoadContent();
             OnLoadContent();
         }
 
@@ -272,7 +270,7 @@ namespace MultiplayerExample.Engine
 
         protected virtual void UpdateDrawTimer(GameTime updateTime) { }
 
-        public virtual bool BeginDraw() { return false; }
+        public virtual bool BeginDraw() => false;
 
         public virtual void Draw() { }
 
@@ -289,15 +287,34 @@ namespace MultiplayerExample.Engine
         /// <summary>
         /// Called after all components are initialized, before the game loop starts.
         /// </summary>
-        protected virtual void BeginRun()
-        {
-        }
+        protected virtual void BeginRun() { }
 
         /// <summary>Called after the game loop has stopped running before exiting.</summary>
-        protected virtual void EndRun()
+        protected virtual void EndRun() { }
+
+        /// <summary>
+        /// Creates the game system key value from the GameSystems collection if it exists, or creates a game system.
+        /// </summary>
+        protected GameSystemKeyValue<T> CreateKeyValue<T>(Func<T> createGameSystem) where T : GameSystemBase
         {
+            T gameSystem = null;
+            for (int i = 0; i < GameSystems.Count; i++)
+            {
+                if (GameSystems[i] is T existingGameSystem)
+                {
+                    gameSystem = existingGameSystem;
+                    break;
+                }
+            }
+            gameSystem ??= createGameSystem();
+
+            var gameSystemKey = new ProfilingKey(GameProfilingKeys.GameUpdate, gameSystem.GetType().Name);
+            return new GameSystemKeyValue<T>(gameSystemKey, gameSystem);
         }
 
+        /// <summary>
+        /// Creates the game system key value from the supplied game system..
+        /// </summary>
         protected static GameSystemKeyValue<T> CreateKeyValue<T>(T gameSystem) where T : GameSystemBase
         {
             var gameSystemKey = new ProfilingKey(GameProfilingKeys.GameUpdate, gameSystem.GetType().Name);

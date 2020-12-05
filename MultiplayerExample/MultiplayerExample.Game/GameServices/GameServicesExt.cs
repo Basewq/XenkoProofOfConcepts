@@ -27,6 +27,15 @@ namespace MultiplayerExample.GameServices
             return sceneManager;
         }
 
+        internal static SceneManager GetSceneManagerFromRootScene(Scene rootScene)
+        {
+            var entityManager = rootScene.Entities;
+            var gameMgrEntity = entityManager.First(x => x.Name == GameManager.EntityName);      // This entity must exist in the root scene!
+            var sceneManager = gameMgrEntity.Get<SceneManager>();
+            Debug.Assert(sceneManager != null, $"{nameof(SceneManager)} component is missing from entity '{GameManager.EntityName}'.");
+            return sceneManager;
+        }
+
         internal static T GetSceneHandlerFromScene<T>(this Scene scene) where T : class, ISceneHandler
         {
             var entityManager = scene.Entities;
