@@ -176,16 +176,32 @@ namespace MultiplayerExample.Network
             // Set initial position
             var data = _networkEntityIdToEntityDataMap[networkEntityId];
             var movementSnapshotsComp = data.MovementSnapshotsComponent;
-            Debug.Assert(movementSnapshotsComp != null);
-            ref var movementData = ref movementSnapshotsComp.SnapshotStore.GetOrCreate(simulationTickNumber);
-            movementData.LocalPosition = position;
-            movementData.SetRotationFromQuaternion(rotation);
+            var characterComp = data.CharacterComponent;
+            SetPlayerTransform(simulationTickNumber, movementSnapshotsComp, characterComp, ref position, ref rotation);
 
             // The 'viewable' player is added separately
             var playerViewEntity = clientPlayerEntities.PlayerViewEntity;
             gameplayScene.Entities.Add(playerViewEntity);
 
             return playerEntity;
+        }
+
+        private static void SetPlayerTransform(
+            SimulationTickNumber simulationTickNumber,
+            MovementSnapshotsComponent movementSnapshotsComponent,
+            CharacterComponent characterComponent,
+            ref Vector3 position,
+            ref Quaternion rotation)
+        {
+            Debug.Assert(movementSnapshotsComponent != null);
+            ref var movementData = ref movementSnapshotsComponent.SnapshotStore.GetOrCreate(simulationTickNumber);
+            movementData.LocalPosition = position;
+            movementData.SetRotationFromQuaternion(rotation);
+
+            var transformComp = movementSnapshotsComponent.Entity.Transform;
+            transformComp.Position = position;
+            transformComp.UpdateWorldMatrix();
+            characterComponent?.UpdatePhysicsTransformation();
         }
 
         private void AddAndRegisterEntity(Entity entity, Scene gameplayScene, SimulationTickNumber simulationTickNumberCreated)

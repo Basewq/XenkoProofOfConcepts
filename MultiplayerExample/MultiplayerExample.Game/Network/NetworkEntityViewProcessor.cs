@@ -12,12 +12,11 @@ namespace MultiplayerExample.Network
 {
     class NetworkEntityViewProcessor : EntityProcessor<NetworkEntityViewComponent, NetworkEntityViewProcessor.AssociatedData>
     {
-        private readonly List<Entity> _workingRemovePlayerViewEntities = new List<Entity>();
+        private readonly List<Entity> _workingRemoveEntityViews = new List<Entity>();
 
         private GameClockManager _gameClockManager;
 
         private LazyLoadedSceneData _lazyLoadedScene;
-        private GameManager _gameManager;
 
         public NetworkEntityViewProcessor()
         {
@@ -32,47 +31,46 @@ namespace MultiplayerExample.Network
             var sceneSystem = Services.GetSafeServiceAs<SceneSystem>();
             _lazyLoadedScene = new LazyLoadedSceneData(sceneSystem);
 
-            // GameManager is expected to already be generated at this point since due to how Stride works,
-            // NetworkEntityViewProcessor is created after an entity with NetworkEntityViewComponent is created,
-            // which is after when the root scene has been created.
-            _gameManager = _lazyLoadedScene.GetGameManager();
-            Debug.Assert(_gameManager != null);
-            //_gameManager.PlayerAdded += OnPlayerAdded;
-            _gameManager.PlayerRemoved += OnPlayerRemoved;
+            //EntityManager.EntityAdded += OnEntityAdded;
+            EntityManager.EntityRemoved += OnEntityRemoved;
         }
 
         protected override void OnSystemRemove()
         {
-            //_gameManager.PlayerAdded -= OnPlayerAdded;
-            _gameManager.PlayerRemoved -= OnPlayerRemoved;
-            _gameManager = null;
+            //EntityManager.EntityAdded -= OnEntityAdded;
+            EntityManager.EntityRemoved -= OnEntityRemoved;
 
             _lazyLoadedScene.Dispose();
             _lazyLoadedScene = null;
         }
 
-        //private void OnPlayerAdded(Entity playerEntity)
+        //private void OnEntityAdded(object sender, Entity entity)
         //{
         //
         //}
 
-        private void OnPlayerRemoved(Entity playerEntity)
+        private void OnEntityRemoved(object sender, Entity entity)
         {
+            if (entity.Get<NetworkEntityComponent>() == null)
+            {
+                // Not relevant to this processor
+                return;
+            }
             foreach (var networkEntityViewComp in ComponentDatas.Keys)
             {
-                if (networkEntityViewComp.NetworkedEntity == playerEntity)
+                if (networkEntityViewComp.NetworkedEntity == entity)
                 {
-                    _workingRemovePlayerViewEntities.Add(networkEntityViewComp.Entity);
+                    _workingRemoveEntityViews.Add(networkEntityViewComp.Entity);
                 }
             }
             var gameplayScene = _lazyLoadedScene.GetGameplayScene();
-            foreach (var viewEnt in _workingRemovePlayerViewEntities)
+            foreach (var viewEnt in _workingRemoveEntityViews)
             {
                 bool wasRemoved = gameplayScene.Entities.Remove(viewEnt);
                 Debug.Assert(wasRemoved);
             }
 
-            _workingRemovePlayerViewEntities.Clear();
+            _workingRemoveEntityViews.Clear();
         }
 
         protected override AssociatedData GenerateComponentData([NotNull] Entity entity, [NotNull] NetworkEntityViewComponent component)

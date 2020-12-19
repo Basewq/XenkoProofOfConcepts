@@ -338,6 +338,8 @@ namespace MultiplayerExample.Network
 
                 var gameplayScene = GetGameplayScene();
                 _networkEntityProcessor.RemoveAndUnregisterEntity(playerId, playerEntity, gameplayScene);
+                var gameManager = GetGameManager();
+                gameManager.RaisePlayerRemovedEntity(playerEntity);
                 return true;
             }
 
@@ -394,6 +396,8 @@ namespace MultiplayerExample.Network
 
                 var gameplayScene = GetGameplayScene();
                 _networkEntityProcessor.RemoveAndUnregisterEntity(playerId, playerEntity, gameplayScene);
+                var gameManager = GetGameManager();
+                gameManager.RaisePlayerRemovedEntity(playerEntity);
             }
 
             internal void CollectPendingInputs(
