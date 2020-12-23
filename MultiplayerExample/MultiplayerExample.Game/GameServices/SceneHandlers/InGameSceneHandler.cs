@@ -10,6 +10,8 @@ namespace MultiplayerExample.GameServices.SceneHandlers
 {
     public class InGameSceneHandler : SceneHandlerBase
     {
+        private IGameNetworkClientHandler _networkClientHandler;
+
         internal InitialSceneSettings InitialSettings = default;
 
         protected override void OnInitialize()
@@ -64,8 +66,8 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                     break;
                 case NetworkGameMode.RemoteClient:
                     {
-                        var networkClientHandler = networkService.GetClientHandler();
-                        var readyTask = networkClientHandler.SendClientInGameReady();
+                        _networkClientHandler = networkService.GetClientHandler();
+                        var readyTask = _networkClientHandler.SendClientInGameReady();
                         var readyResult = await readyTask;
                         if (!readyResult.IsOk)
                         {
@@ -74,13 +76,26 @@ namespace MultiplayerExample.GameServices.SceneHandlers
                             SceneManager.SetAsActiveMainScene(scene);
                             return;
                         }
+                        _networkClientHandler.Disconnected += OnNetworkClientDisconnected;
                         break;
                     }
             }
         }
 
+        private void OnNetworkClientDisconnected()
+        {
+            var scene = SceneManager.LoadSceneSync(SceneManager.TitleScreenSceneUrl);
+            // TODO: should ShowErrorMessage(readyResult.ErrorMessage);
+            SceneManager.SetAsActiveMainScene(scene);
+        }
+
         public override void OnDeactivate()
         {
+            if (_networkClientHandler != null)
+            {
+                _networkClientHandler.Disconnected -= OnNetworkClientDisconnected;
+            }
+
             if (GameManager.NetworkService.IsGameHost)
             {
                 var gameClockManager = GameManager.GameClockManager;

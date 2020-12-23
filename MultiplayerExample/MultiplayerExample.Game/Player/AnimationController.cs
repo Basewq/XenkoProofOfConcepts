@@ -160,8 +160,8 @@ namespace MultiplayerExample.Player
                 animationClipWalkLerp2 = AnimationRun;
             }
 
-            // Use DrawTime rather than UpdateTime
-            var time = Game.DrawTime;
+            // Original code used Game.DrawTime but script may run multiple times in a single update so must use UpdateTime
+            var time = Game.UpdateTime;
             // This update function will account for animation with different durations, keeping a current time relative to the blended maximum duration
             long blendedMaxDuration =
                 (long)MathUtil.Lerp(animationClipWalkLerp1.Duration.Ticks, animationClipWalkLerp2.Duration.Ticks, walkLerpFactor);
@@ -178,9 +178,11 @@ namespace MultiplayerExample.Player
 
         private void UpdateJumping()
         {
+            // Original code used Game.DrawTime but script may run multiple times in a single update so must use UpdateTime
+            var time = Game.UpdateTime;
             var speedFactor = 1;
             var currentTicks = TimeSpan.FromTicks((long)(currentTime * AnimationJumpStart.Duration.Ticks));
-            var updatedTicks = currentTicks.Ticks + (long)(Game.DrawTime.Elapsed.Ticks * TimeFactor * speedFactor);
+            var updatedTicks = currentTicks.Ticks + (long)(time.Elapsed.Ticks * TimeFactor * speedFactor);
 
             if (updatedTicks < AnimationJumpStart.Duration.Ticks)
             {
@@ -197,8 +199,8 @@ namespace MultiplayerExample.Player
 
         private void UpdateAirborne()
         {
-            // Use DrawTime rather than UpdateTime
-            var time = Game.DrawTime;
+            // Original code used Game.DrawTime but script may run multiple times in a single update so must use UpdateTime
+            var time = Game.UpdateTime;
             var currentTicks = TimeSpan.FromTicks((long)(currentTime * AnimationJumpMid.Duration.Ticks));
             currentTicks = TimeSpan.FromTicks((currentTicks.Ticks + (long)(time.Elapsed.Ticks * TimeFactor)) %
                                      AnimationJumpMid.Duration.Ticks);
@@ -207,9 +209,11 @@ namespace MultiplayerExample.Player
 
         private void UpdateLanding()
         {
+            // Original code used Game.DrawTime but script may run multiple times in a single update so must use UpdateTime
+            var time = Game.UpdateTime;
             var speedFactor = 1;
             var currentTicks = TimeSpan.FromTicks((long)(currentTime * AnimationJumpEnd.Duration.Ticks));
-            var updatedTicks = currentTicks.Ticks + (long) (Game.DrawTime.Elapsed.Ticks * TimeFactor * speedFactor);
+            var updatedTicks = currentTicks.Ticks + (long) (time.Elapsed.Ticks * TimeFactor * speedFactor);
 
             if (updatedTicks < AnimationJumpEnd.Duration.Ticks)
             {

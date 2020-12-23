@@ -36,6 +36,8 @@ namespace MultiplayerExample.Network
 
     interface IGameNetworkClientHandler
     {
+        event Action Disconnected;
+
         TimeSpan AverageNetworkLatency { get; }
         /// <summary>
         /// Disconnect from the server.

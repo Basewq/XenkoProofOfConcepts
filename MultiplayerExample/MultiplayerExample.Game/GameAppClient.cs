@@ -40,7 +40,7 @@ namespace MultiplayerExample
             // Ignore whatever was set in the config asset
             physicsSettings.Flags = PhysicsEngineFlags.ContinuousCollisionDetection;
             physicsSettings.MaxSubSteps = 0;    // Important to keep this at 0 since this makes BulletPhysics simulate exactly one step per update
-            physicsSettings.FixedTimeStep = 1f / GameConfig.PhysicsSimulationRate;
+            physicsSettings.FixedTimeStep = (float)GameConfig.PhysicsFixedTimeStep.TotalSeconds;
         }
 
         protected override void Initialize()

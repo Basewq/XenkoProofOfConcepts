@@ -108,32 +108,32 @@ namespace MultiplayerExample.Engine
         public override void InitialUpdate()
         {
             _networkService.StartDedicatedServer(DefaultServerPortNumber);
-            UpdateGameSystems(UpdateTime, updatePhysicsSimulation: true, PhysicsGameTime);
+            GameSystemsUpdate(updatePhysicsSimulation: true, updateSingleCallSystems: true);
         }
 
-        protected override void UpdateGameSystems(GameTimeExt gameTime, bool updatePhysicsSimulation, GameTimeExt physicsGameTime)
+        protected override void GameSystemsUpdate(bool updatePhysicsSimulation, bool updateSingleCallSystems)
         {
-            _networkSystem.TryUpdate(gameTime);
+            _networkSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
 
-            _scenePreUpdateSystem.TryUpdate(gameTime);
+            _scenePreUpdateSystem.UpdateIfEnabled(UpdateTime);
 
             if (updatePhysicsSimulation)
             {
-                _physicsSystem.TryUpdate(physicsGameTime);
+                _physicsSystem.UpdateIfEnabled(PhysicsGameTime);
 #if DEBUG
-                //System.Diagnostics.Debug.WriteLine($"GameTime: {gameTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
+                //System.Diagnostics.Debug.WriteLine($"GameTime: {UpdateTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
 #endif
             }
 
 #if DEBUG
             //System.Diagnostics.Debug.WriteLine(@$"Time: {GameClockManager.SimulationClock.TotalTime:hh\:mm\:ss\.ff} - TickNo: {GameClockManager.SimulationClock.SimulationTickNumber}");
 #endif
-            //_scriptSystem.TryUpdate(gameTime);
-            _streamingManager.TryUpdate(gameTime);
+            //_scriptSystem.TryUpdate(UpdateTime);
+            _streamingManager.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
 
-            _sceneSystem.TryUpdate(gameTime);   // This runs all the standard entity processors
-            _scenePostUpdateSystem.TryUpdate(gameTime);
-            //_dynamicNavigationMeshSystem.TryUpdate(gameTime);
+            _sceneSystem.UpdateIfEnabled(UpdateTime);   // This runs all the standard entity processors
+            _scenePostUpdateSystem.UpdateIfEnabled(UpdateTime);
+            //_dynamicNavigationMeshSystem.TryUpdate(SingleCallSystemsGameTime, updateSingleCallSystems);
         }
     }
 }

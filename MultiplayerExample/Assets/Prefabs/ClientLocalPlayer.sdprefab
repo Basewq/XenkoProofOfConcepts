@@ -105,7 +105,7 @@ Hierarchy:
                         PlayerIndex: 0
                         IsKeyboardControlsEnabled: true
                         IsMouseControlsEnabled: true
-                        IsControllerEnabled: false
+                        IsControllerEnabled: true
                         MouseSensitivity: 50.0
                     00443e1c19e564414910dc5d816432bf: !MultiplayerExample.Network.SnapshotStores.InputSnapshotsComponent,MultiplayerExample.Game
                         Id: 0cf92934-9a61-489c-a91b-cdb3cd0c52c4

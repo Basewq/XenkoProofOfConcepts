@@ -14,9 +14,20 @@ namespace MultiplayerExample.Engine
             System = system;
         }
 
-        public void TryUpdate(GameTime gameTime)
+        public void UpdateIfEnabled(GameTime gameTime)
         {
             if (System.Enabled)
+            {
+                using (Profiler.Begin(ProfilingKey))
+                {
+                    System.Update(gameTime);
+                }
+            }
+        }
+
+        public readonly void UpdateIfEnabled(GameTime gameTime, bool canUpdate)
+        {
+            if (canUpdate && System.Enabled)
             {
                 using (Profiler.Begin(ProfilingKey))
                 {

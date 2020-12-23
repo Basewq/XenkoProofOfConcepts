@@ -161,51 +161,51 @@ namespace MultiplayerExample.Engine
 
         public override void InitialUpdate()
         {
-            UpdateGameSystems(UpdateTime, updatePhysicsSimulation: true, PhysicsGameTime);
+            GameSystemsUpdate(updatePhysicsSimulation: true, updateSingleCallSystems: true);
         }
 
-        protected override void UpdateGameSystems(GameTimeExt gameTime, bool updatePhysicsSimulation, GameTimeExt physicsGameTime)
+        protected override void GameSystemsUpdate(bool updatePhysicsSimulation, bool updateSingleCallSystems)
         {
-            // While GameSystems.Update(gameTime) can be used, I prefer seeing explicitly what I'm updating
-            // (easier to place breakpoints, as well)
-            _debugTextSystem.TryUpdate(gameTime);
-            //_vrDeviceSystem.TryUpdate(gameTime);
-            _inputManager.TryUpdate(gameTime);
+            // Don't use GameSystems.Update(updateTime), because we use different GameTimes depending on
+            // what we're trying to update.
+            _debugTextSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            //_vrDeviceSystem.TryUpdate(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _inputManager.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
 
-            _networkSystem.TryUpdate(gameTime);
+            _networkSystem.UpdateIfEnabled(UpdateTime);
 
-            _scenePreUpdateSystem.TryUpdate(gameTime);  // Must occur before the physics & scripts
+            _scenePreUpdateSystem.UpdateIfEnabled(UpdateTime);  // Must occur before the physics & scripts
 
             if (updatePhysicsSimulation)
             {
-                _physicsSystem.TryUpdate(physicsGameTime);
+                _physicsSystem.UpdateIfEnabled(PhysicsGameTime);
 #if DEBUG
-                //System.Diagnostics.Debug.WriteLine($"GameTime: {gameTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
+                //System.Diagnostics.Debug.WriteLine($"GameTime: {UpdateTime.Total.TotalMilliseconds} - PhysTime: {physicsGameTime.Total.TotalMilliseconds}");
 #endif
             }
-
             // Scripts are run before everything (except physics)
-            _scriptSystem.TryUpdate(gameTime);
+            _scriptSystem.UpdateIfEnabled(UpdateTime);
 
-            _streamingManager.TryUpdate(gameTime);
-            _audioSystem.TryUpdate(gameTime);
-            _gameFontSystem.TryUpdate(gameTime);
-            _effectSystem.TryUpdate(gameTime);
-            _spriteAnimationSystem.TryUpdate(gameTime);
-            _uiSystem.TryUpdate(gameTime);
+            _streamingManager.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _audioSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _gameFontSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _effectSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _spriteAnimationSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _uiSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
 
-            //_dynamicNavigationMeshSystem.TryUpdate(gameTime);
+            //_dynamicNavigationMeshSystem.TryUpdate(SingleCallSystemsGameTime, updateSingleCallSystems);
 
-            _sceneSystem.TryUpdate(gameTime);   // This runs all the standard entity processors
-            _scenePostUpdateSystem.TryUpdate(gameTime);
+            _sceneSystem.UpdateIfEnabled(UpdateTime);   // This runs all the standard entity processors
+            _scenePostUpdateSystem.UpdateIfEnabled(UpdateTime);
 
-            _profilingSystem.TryUpdate(gameTime);
+            _profilingSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
         }
 
-        protected override void UpdateDrawTimer(GameTime updateTime)
+        protected override void GameSystemsPostUpdate()
         {
-            var elapsedTime = updateTime.Total - RenderTime.Total;
-            RenderTime.Update(RenderTime.Total + elapsedTime, elapsedTime, incrementFrameCount: true);
+            // Update the render time
+            var elapsedTime = UpdateTime.Total - RenderTime.Total;
+            RenderTime.Update(UpdateTime.Total, elapsedTime, incrementFrameCount: true);
         }
 
         public sealed override bool BeginDraw() => true;

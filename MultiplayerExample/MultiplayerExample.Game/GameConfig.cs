@@ -9,6 +9,7 @@ namespace MultiplayerExample
         /// </summary>
         public const int PhysicsSimulationRate = 30;
 
-        public static readonly TimeSpan PhysicsFixedTimeStep = TimeSpan.FromSeconds(1.0 / PhysicsSimulationRate);
+        // Note: do not use TimeSpan.FromSeconds because it is less precise in calculating the time for some reason.
+        public static readonly TimeSpan PhysicsFixedTimeStep = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / PhysicsSimulationRate);
     }
 }

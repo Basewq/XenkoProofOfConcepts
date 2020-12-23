@@ -8,21 +8,21 @@ using Stride.Engine.Design;
 using Stride.Games;
 using Stride.Games.Time;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace MultiplayerExample.Engine
 {
     abstract class GameEngineBase
     {
-        private readonly TimerTick _autoTickTimer = new TimerTick();
         private const int MaxSimulationsPerUpdate = 30;     // Max 30 simulations in a single Update call
-        private readonly TimeSpan _maximumElapsedTime = TimeSpan.FromSeconds(MaxSimulationsPerUpdate / (double)GameConfig.PhysicsSimulationRate);
-        private TimeSpan _simulationAccumulatedElapsedGameTime;
-        private TimeSpan _nonSimulationAccumulatedElapsedGameTime;
-        private bool _previousUpdateWasSimulationUpdate;
+        private static readonly TimeSpan MaximumElapsedTime = TimeSpan.FromSeconds(MaxSimulationsPerUpdate / (double)GameConfig.PhysicsSimulationRate);
+
+        private readonly TimerTick _autoTickTimer = new TimerTick();
+        private TimeSpan _previousUpdatedNonSimulationElapsedGameTime = TimeSpan.Zero;
         private bool _forceElapsedTimeToZero;
 
-        private readonly long _targetTimeDriftAdjustmentThreshold = GameConfig.PhysicsFixedTimeStep.Ticks / 10;     // 10% of a single sim step
+        private readonly long _targetTimeDriftAdjustmentThreshold;
 
         protected readonly ILogger Logger;
         protected readonly ServiceRegistry Services;
@@ -30,11 +30,17 @@ namespace MultiplayerExample.Engine
         protected readonly ContentManager Content;
         protected readonly GameSystemCollection GameSystems;
 
-        protected readonly GameClockManager GameClockManager = new GameClockManager();
+        protected readonly GameClockManager GameClockManager;
 
         // The GameTime for physics is faked. The real time is restricted by the PhysicsSystem, so we purposely
         // add more than the physics time to ensure it will always run the simulation.
         protected readonly GameTimeExt PhysicsGameTime = new GameTimeExt(TimeSpan.Zero, TimeSpan.Zero);
+
+        // Many GameSystems are only called once per engine Update. In those systems we want to pass a
+        // GameTime with the full elapsed time between each engine Update call, because the 'standard' UpdateTime
+        // may be passed multiple times if multiple simulation updates are needed, and UpdateTime will
+        // only have at most one simulation time step for the elapsed time per simulation update.
+        protected readonly GameTimeExt SingleCallSystemsGameTime = new GameTimeExt(TimeSpan.Zero, TimeSpan.Zero);
 
         public readonly GameTimeExt UpdateTime = new GameTimeExt();
 
@@ -55,6 +61,9 @@ namespace MultiplayerExample.Engine
         {
             Logger = GlobalLogger.GetLogger(GetType().GetTypeInfo().Name);
 
+            GameClockManager = new GameClockManager(PhysicsGameTime);
+            _targetTimeDriftAdjustmentThreshold = GameClockManager.SimulationDeltaTime.Ticks / 10;     // 10% of a single sim step
+
             Services = (ServiceRegistry)services;
             Content = contentManager;
             GameSystems = gameSystems ?? new GameSystemCollection(Services);
@@ -67,21 +76,12 @@ namespace MultiplayerExample.Engine
             }
             Services.AddOrOverwriteService<IGameSystemCollection>(GameSystems);
 
-            // This is a bit of a implementation detail hack, but necessary so that we don't
-            // blow out the memory if multiple 'engines' are loading the same content.
-            Services.AddOrOverwriteService<IContentManager>(Content);
-            Services.AddOrOverwriteService(Content);
-
-            Services.AddOrOverwriteService(services.GetSafeServiceAs<IExitGameService>());
-            Services.AddOrOverwriteService(services.GetSafeServiceAs<IDatabaseFileProviderService>());
-
             var networkAssetDatabase = new NetworkAssetDatabase(Content, assetFolderUrls: new[] { "Prefabs", "Scenes" });
             Services.AddOrOverwriteService(networkAssetDatabase);
 
             Services.AddOrOverwriteService(GameClockManager);
 
             var gameSettingsService = services.GetSafeServiceAs<IGameSettingsService>();
-            Services.AddOrOverwriteService(gameSettingsService);
             Settings = gameSettingsService.Settings;
         }
 
@@ -132,61 +132,63 @@ namespace MultiplayerExample.Engine
                     elapsedAdjustedTime = TimeSpan.Zero;
                     _forceElapsedTimeToZero = false;
                 }
-                if (elapsedAdjustedTime > _maximumElapsedTime)
+                if (elapsedAdjustedTime > MaximumElapsedTime)
                 {
-                    elapsedAdjustedTime = _maximumElapsedTime;
+                    elapsedAdjustedTime = MaximumElapsedTime;
                 }
 
                 // If the rounded targetElapsedTime is equivalent to current ElapsedAdjustedTime
                 // then make ElapsedAdjustedTime = TargetElapsedTime. We take the same internal rules as XNA
-                var targetElapsedTime = GameConfig.PhysicsFixedTimeStep;
+                var targetElapsedTime = GameClockManager.SimulationDeltaTime;
                 var targetElapsedTimeTicks = targetElapsedTime.Ticks;
                 if (Math.Abs(elapsedAdjustedTime.Ticks - targetElapsedTimeTicks) < (targetElapsedTimeTicks >> 6))
                 {
                     elapsedAdjustedTime = targetElapsedTime;
                 }
 
-                var prevSimAccumulatedElapsedGameTime = _simulationAccumulatedElapsedGameTime;
-                // Update the accumulated time
-                _simulationAccumulatedElapsedGameTime += elapsedAdjustedTime;
-
-                int updateCount = (int)(_simulationAccumulatedElapsedGameTime.Ticks / targetElapsedTimeTicks);
-                if (updateCount >= 1)
+                var updatableElapsedTimeRemaining = elapsedAdjustedTime + _previousUpdatedNonSimulationElapsedGameTime;     // Technically we are allowing to go a little over the constrained limit...
+                int simUpdateCount = (int)(updatableElapsedTimeRemaining.Ticks / targetElapsedTimeTicks);
+                int simUpdateCountRemaining = simUpdateCount;
+                var singleFrameElapsedTime = GameClockManager.SimulationDeltaTime;
+                bool updateSingleCallSystems = true;
+                var singleCallSystemsElapsedTime = elapsedAdjustedTime;
+                SingleCallSystemsGameTime.Update(SingleCallSystemsGameTime.Total + singleCallSystemsElapsedTime, singleCallSystemsElapsedTime, incrementFrameCount: true);
+                if (_previousUpdatedNonSimulationElapsedGameTime > TimeSpan.Zero && simUpdateCountRemaining > 0)
                 {
-                    // There is at least one simulation to run
-
-                    // We are going to call Update updateCount times, so we can subtract this from accumulated elapsed game time
-                    _simulationAccumulatedElapsedGameTime = new TimeSpan(_simulationAccumulatedElapsedGameTime.Ticks - (updateCount * targetElapsedTimeTicks));
-
-                    // If the last update was not a simulation update, the clock time elapsed is the amount that
-                    // pushed it over the threshold.
-                    // If the last update was a simulation update, the clock is currently in-synced with the physics clock,
-                    // and discard the prevSimAccumulatedElapsedGameTime.
-                    var firstSimUpdateTimeElapsed = _previousUpdateWasSimulationUpdate
-                                                    ? GameConfig.PhysicsFixedTimeStep
-                                                    : GameConfig.PhysicsFixedTimeStep - prevSimAccumulatedElapsedGameTime;
-                    UpdateForTimeElapsed(firstSimUpdateTimeElapsed, currentTickTimeElapsed: TimeSpan.Zero, updatePhysicsSimulation: true);
-
-                    if (updateCount >= 2)
-                    {
-                        //Console.WriteLine($"-----Too slow, updateCount: {updateCount}");
-                        // These are full sim time-steps
-                        var singleFrameElapsedTime = GameConfig.PhysicsFixedTimeStep;
-                        UpdateForTimeElapsed(singleFrameElapsedTime, currentTickTimeElapsed: TimeSpan.Zero, updatePhysicsSimulation: true, updateCount - 1);
-                    }
-
-                    // The remaining unused time is to be used in the next update
-                    _nonSimulationAccumulatedElapsedGameTime = _simulationAccumulatedElapsedGameTime;
-                    _previousUpdateWasSimulationUpdate = true;
+                    // Special case update - There was a partial (non-simulated) update in the previous Update call,
+                    // this update is the remainder of the update which is also simulation update.
+                    var prevFrameSimElapsedTime = singleFrameElapsedTime - _previousUpdatedNonSimulationElapsedGameTime;
+                    Debug.Assert(prevFrameSimElapsedTime.Ticks > 0);
+                    UpdateForTimeElapsed(prevFrameSimElapsedTime, currentTickTimeElapsed: TimeSpan.Zero, updatePhysicsSimulation: true, ref updateSingleCallSystems);
+                    updatableElapsedTimeRemaining -= singleFrameElapsedTime;        // Remove a full update's worth because this was added from _previousUpdatedNonSimulationElapsedGameTime
+                    _previousUpdatedNonSimulationElapsedGameTime = TimeSpan.Zero;
+                    simUpdateCountRemaining--;
                 }
-                else
+                if (simUpdateCountRemaining > 0)
                 {
-                    UpdateForTimeElapsed(elapsedAdjustedTime + _nonSimulationAccumulatedElapsedGameTime, currentTickTimeElapsed: _nonSimulationAccumulatedElapsedGameTime, updatePhysicsSimulation: false);
-                    _nonSimulationAccumulatedElapsedGameTime = TimeSpan.Zero;
-                    _previousUpdateWasSimulationUpdate = false;
+                    // Additional full simulation update(s). Multiple updates may occur if the engine needs to
+                    // catch up to the target time, or the game froze for some reason.
+                    UpdateForTimeElapsed(singleFrameElapsedTime, currentTickTimeElapsed: TimeSpan.Zero, updatePhysicsSimulation: true, ref updateSingleCallSystems, updateCount: simUpdateCountRemaining);
+                    updatableElapsedTimeRemaining -= TimeSpan.FromTicks(singleFrameElapsedTime.Ticks * simUpdateCountRemaining);
+                }
+                else if (simUpdateCountRemaining == 0 && _previousUpdatedNonSimulationElapsedGameTime > TimeSpan.Zero)
+                {
+                    // Remove the previous updated time, otherwise we double up on the update
+                    updatableElapsedTimeRemaining -= _previousUpdatedNonSimulationElapsedGameTime;
+                }
+                //if (updatableElapsedTimeRemaining > GameUpdateMinimumNonSimulationElapsedTime || simUpdateCount == 0)
+                if (updatableElapsedTimeRemaining > TimeSpan.Zero)
+                {
+                    // Do a non-simulation update because this Update call isn't hasn't
+                    // elapsed enough for a simulation, or there is still some time remaining.
+                    // The purpose of this is to make the rendering time closer to the actual time elapsed,
+                    // or ensure at least one engine update call is done per Update call.
+                    var currentTickTimeElapsed = updatableElapsedTimeRemaining + _previousUpdatedNonSimulationElapsedGameTime;
+                    UpdateForTimeElapsed(updatableElapsedTimeRemaining, currentTickTimeElapsed, updatePhysicsSimulation: false, ref updateSingleCallSystems);
+                    _previousUpdatedNonSimulationElapsedGameTime = currentTickTimeElapsed;
                 }
 
-                UpdateDrawTimer(UpdateTime);
+                GameSystemsPostUpdate();
             }
             catch (Exception ex)
             {
@@ -201,7 +203,7 @@ namespace MultiplayerExample.Engine
         /// <param name="updateCount">
         /// The amount of updates that will be executed on the game's systems.
         /// </param>
-        private void UpdateForTimeElapsed(TimeSpan elapsedTimePerUpdate, TimeSpan currentTickTimeElapsed, bool updatePhysicsSimulation, int updateCount = 1)
+        private void UpdateForTimeElapsed(TimeSpan elapsedTimePerUpdate, TimeSpan currentTickTimeElapsed, bool updatePhysicsSimulation, ref bool updateSingleCallSystems, int updateCount = 1)
         {
             try
             {
@@ -218,7 +220,8 @@ namespace MultiplayerExample.Engine
                     //Console.WriteLine($"GameTime Total: {UpdateTime.Total.TotalMilliseconds} - Elapsed: {elapsedTimePerUpdate.TotalMilliseconds}");
                     using (Profiler.Begin(GameProfilingKeys.GameUpdate))
                     {
-                        UpdateInternal(UpdateTime, updatePhysicsSimulation, currentTickTimeElapsed);
+                        InternalUpdate(UpdateTime, updatePhysicsSimulation, currentTickTimeElapsed, updateSingleCallSystems);
+                        updateSingleCallSystems = false;
                     }
                 }
             }
@@ -237,21 +240,20 @@ namespace MultiplayerExample.Engine
             }
         }
 
-        private void UpdateInternal(GameTimeExt gameTime, bool updatePhysicsSimulation, TimeSpan currentTickTimeElapsed)
+        private void InternalUpdate(GameTimeExt gameTime, bool updatePhysicsSimulation, TimeSpan currentTickTimeElapsed, bool updateSingleCallSystems)
         {
             if (updatePhysicsSimulation)
             {
                 // Update the physics time (which is in fixed time steps)
-                PhysicsGameTime.Update(PhysicsGameTime.Total + GameConfig.PhysicsFixedTimeStep, GameConfig.PhysicsFixedTimeStep, incrementFrameCount: true);
+                PhysicsGameTime.Update(PhysicsGameTime.Total + GameClockManager.SimulationDeltaTime, GameClockManager.SimulationDeltaTime, incrementFrameCount: true);
             }
             if (GameClockManager.SimulationClock.IsEnabled)
             {
-                GameClockManager.SimulationClock.CurrentTickTimeElapsed += gameTime.Elapsed;
+                GameClockManager.SimulationClock.CurrentTickTimeElapsed = currentTickTimeElapsed;
                 GameClockManager.SimulationClock.TotalTime += gameTime.Elapsed;
                 GameClockManager.SimulationClock.IsNextSimulation = updatePhysicsSimulation;
                 if (updatePhysicsSimulation)
                 {
-                    GameClockManager.SimulationClock.CurrentTickTimeElapsed = currentTickTimeElapsed;
                     GameClockManager.SimulationClock.SimulationTickNumber++;
                     //System.Diagnostics.Debug.WriteLine($"UPDATE: TICK: {_gameClockManager.SimulationTickNumber}");
                 }
@@ -263,12 +265,12 @@ namespace MultiplayerExample.Engine
                 //}
 #endif
             }
-            UpdateGameSystems(gameTime, updatePhysicsSimulation, PhysicsGameTime);
+            GameSystemsUpdate(updatePhysicsSimulation, updateSingleCallSystems);
         }
 
-        protected abstract void UpdateGameSystems(GameTimeExt gameTime, bool updatePhysicsSimulation, GameTimeExt physicsGameTime);
+        protected abstract void GameSystemsUpdate(bool updatePhysicsSimulation, bool updateSingleCallSystems);
 
-        protected virtual void UpdateDrawTimer(GameTime updateTime) { }
+        protected virtual void GameSystemsPostUpdate() { }
 
         public virtual bool BeginDraw() => false;
 

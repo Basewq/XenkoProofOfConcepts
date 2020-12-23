@@ -18,6 +18,13 @@ namespace MultiplayerExample.Network
 {
     partial class NetworkSystem : IGameNetworkClientHandler
     {
+        private event Action _networkClientDisconnected;
+        event Action IGameNetworkClientHandler.Disconnected
+        {
+            add => _networkClientDisconnected += value;
+            remove => _networkClientDisconnected -= value;
+        }
+
         TimeSpan IGameNetworkClientHandler.AverageNetworkLatency => _clientNetworkHandler.AverageNetworkLatency;
 
         void IGameNetworkClientHandler.EndConnection()
@@ -46,9 +53,7 @@ namespace MultiplayerExample.Network
             {
                 case NetworkGameMode.RemoteClient:
                 case NetworkGameMode.ListenServer:
-                    //_clientNetworkHandler
-
-                    ///???? Deactivate game somehow?
+                    _networkClientDisconnected?.Invoke();
                     break;
 
                 default:
@@ -70,8 +75,6 @@ namespace MultiplayerExample.Network
             private int _syncClockRetryCountRemaining = 5;
 
             private TaskCompletionSource<JoinGameRequestResult> _joinGameTaskCompletionSource;
-
-            private TaskCompletionSource<ClientInGameReadyResult> _inGameReadyTaskCompletionSource;
 
             private readonly NetworkSystem _networkSystem;
             private readonly NetManager _netManager;
@@ -218,9 +221,11 @@ namespace MultiplayerExample.Network
                 clientReadyMsg.WriteTo(_networkMessageWriter);
                 _connectionToServer.Send(_networkMessageWriter, SendNetworkMessageType.ReliableOrdered);
 
-                Debug.Assert(_inGameReadyTaskCompletionSource == null);
-                _inGameReadyTaskCompletionSource = new TaskCompletionSource<ClientInGameReadyResult>();
-                return _inGameReadyTaskCompletionSource.Task;
+                // Not sure if a direct reponse is required, currently we'll just accept that it's sent...
+                return Task.FromResult(new ClientInGameReadyResult
+                {
+                    IsOk = true
+                });
             }
 
             void INetEventListener.OnConnectionRequest(ConnectionRequest request)
@@ -253,7 +258,6 @@ namespace MultiplayerExample.Network
                 var errMsg = "Disconnected from server.";
                 SetTaskFailureIfExists(ref _clockSyncTaskCompletionSource, errMsg);
                 SetTaskFailureIfExists(ref _joinGameTaskCompletionSource, errMsg);
-                SetTaskFailureIfExists(ref _inGameReadyTaskCompletionSource, errMsg);
 
                 var networkEntityProcessor = _networkSystem._networkEntityProcessor;
                 var clientPlayerManager = networkEntityProcessor.GetClientPlayerManager();

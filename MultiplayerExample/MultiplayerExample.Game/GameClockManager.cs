@@ -5,6 +5,8 @@ namespace MultiplayerExample
 {
     class GameClockManager
     {
+        public readonly TimeSpan SimulationDeltaTime = GameConfig.PhysicsFixedTimeStep;
+
         /// <summary>
         /// The simulation clock on the local machine.
         /// </summary>
@@ -20,6 +22,11 @@ namespace MultiplayerExample
         public NetworkServerSimulationClock NetworkServerSimulationClock;
 
         public TimeSpan RemoteEntityRenderTimeDelay = TimeSpan.FromMilliseconds(100);
+
+        public GameClockManager(GameTimeExt physicsGameTime)
+        {
+            SimulationClock = new SimulationClock(physicsGameTime);
+        }
 
         public static TimeSpan CalculateTickTimeElapsed(TimeSpan totalTime, SimulationTickNumber simulationTickNumber)
         {
@@ -38,6 +45,8 @@ namespace MultiplayerExample
 
     struct SimulationClock
     {
+        private readonly GameTimeExt _physicsGameTime;
+
         public bool IsEnabled;
 
         /// <summary>
@@ -66,8 +75,14 @@ namespace MultiplayerExample
         /// </remarks>
         public bool IsNextSimulation;
 
+        internal SimulationClock(GameTimeExt physicsGameTime) : this()
+        {
+            _physicsGameTime = physicsGameTime;
+        }
+
         internal void Reset()
         {
+            _physicsGameTime.Reset(TimeSpan.Zero);
             SimulationTickNumber = default;
             CurrentTickTimeElapsed = TimeSpan.Zero;
             TotalTime = TimeSpan.Zero;

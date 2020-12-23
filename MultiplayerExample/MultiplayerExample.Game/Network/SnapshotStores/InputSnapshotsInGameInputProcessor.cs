@@ -133,8 +133,8 @@ namespace MultiplayerExample.Network.SnapshotStores
                 RemoveBindings(mouseBindings, virtualButtons);
 
                 float mouseScale = inputDeviceComp.MouseSensitivity;
-                mouseBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotateYaw, VirtualButton.Mouse.DeltaX, scaleValue: mouseScale));
-                mouseBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotatePitch, VirtualButton.Mouse.DeltaY, scaleValue: -mouseScale));
+                mouseBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotateYaw, VirtualButton.Mouse.DeltaX, new VirtualButtonScaleValue(mouseScale)));
+                mouseBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotatePitch, VirtualButton.Mouse.DeltaY, new VirtualButtonScaleValue(-mouseScale)));
 
                 mouseBindings.Add(new VirtualButtonBinding(InputAction.CameraLockIn, VirtualButton.Mouse.Left));
 
@@ -153,15 +153,15 @@ namespace MultiplayerExample.Network.SnapshotStores
                 int padIndex = inputDeviceComp.ActiveController.Index;
                 float deadZoneThreshold = inputDeviceComp.DeadZoneThreshold;
 
-                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterMoveStrafe, VirtualButton.GamePad.LeftThumbAxisX.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
-                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterMoveForwardOrBackward, VirtualButton.GamePad.LeftThumbAxisY.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
-                //controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterRotateYaw, VirtualButton.GamePad.RightThumbAxisX.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
-                //controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterRotatePitch, VirtualButton.GamePad.RightThumbAxisY.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
+                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterMoveStrafe, VirtualButton.GamePad.LeftThumbAxisX.WithIndex(padIndex), new VirtualButtonDeadZoneThresholdValue(deadZoneThreshold)));
+                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterMoveForwardOrBackward, VirtualButton.GamePad.LeftThumbAxisY.WithIndex(padIndex), new VirtualButtonDeadZoneThresholdValue(deadZoneThreshold)));
+                //controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterRotateYaw, VirtualButton.GamePad.RightThumbAxisX.WithIndex(padIndex), new VirtualButtonDeadZoneThresholdValue(deadZoneThreshold)));
+                //controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CharacterRotatePitch, VirtualButton.GamePad.RightThumbAxisY.WithIndex(padIndex), new VirtualButtonDeadZoneThresholdValue(deadZoneThreshold)));
 
                 controllerBindings.Add(new VirtualButtonBinding(InputAction.CharacterJump, VirtualButton.GamePad.A.WithIndex(padIndex)));
 
-                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotateYaw, VirtualButton.GamePad.RightThumbAxisX.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
-                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotatePitch, VirtualButton.GamePad.RightThumbAxisY.WithIndex(padIndex), deadZoneThreshold: deadZoneThreshold));
+                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotateYaw, VirtualButton.GamePad.RightThumbAxisX.WithIndex(padIndex), new VirtualButtonDeadZoneThresholdValue(deadZoneThreshold)));
+                controllerBindings.Add(new VirtualButtonBindingExt(InputAction.CameraRotatePitch, VirtualButton.GamePad.RightThumbAxisY.WithIndex(padIndex), new VirtualButtonDeadZoneThresholdValue(deadZoneThreshold)));
 
                 virtualButtons.AddRange(controllerBindings);
                 data.IsControllerVirtualButtonsAssigned = true;
