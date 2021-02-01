@@ -33,7 +33,7 @@ namespace MultiplayerExample.Engine
         private readonly GameSystemKeyValue<SceneSystem> _sceneSystem;
         private readonly GameSystemKeyValue<ScenePostUpdateSystem> _scenePostUpdateSystem;
 
-        private readonly GameSystemKeyValue<InputManager> _inputManager;
+        private readonly GameSystemKeyValue<InputSystem> _inputSystem;
         private readonly GameSystemKeyValue<StreamingManager> _streamingManager;
         private readonly GameSystemKeyValue<AudioSystem> _audioSystem;
         private readonly GameSystemKeyValue<GameFontSystem> _gameFontSystem;
@@ -67,9 +67,10 @@ namespace MultiplayerExample.Engine
             _scriptSystem = CreateKeyValue(() => new ScriptSystem(Services));
             Services.AddOrOverwriteService(_scriptSystem.System);
 
-            var inputMgr = gameSystems.First(x => x is InputManager) as InputManager;
-            _inputManager = CreateKeyValue(inputMgr);
-            inputMgr.VirtualButtonConfigSet = new VirtualButtonConfigSet();
+            var inputSystem = gameSystems.First(x => x is InputSystem) as InputSystem;
+            _inputSystem = CreateKeyValue(inputSystem);
+            var inputManager = inputSystem.Manager;
+            inputManager.VirtualButtonConfigSet = new VirtualButtonConfigSet();
 
             _streamingManager = CreateKeyValue(() => new StreamingManager(Services));
 
@@ -170,7 +171,7 @@ namespace MultiplayerExample.Engine
             // what we're trying to update.
             _debugTextSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
             //_vrDeviceSystem.TryUpdate(SingleCallSystemsGameTime, updateSingleCallSystems);
-            _inputManager.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
+            _inputSystem.UpdateIfEnabled(SingleCallSystemsGameTime, updateSingleCallSystems);
 
             _networkSystem.UpdateIfEnabled(UpdateTime);
 
