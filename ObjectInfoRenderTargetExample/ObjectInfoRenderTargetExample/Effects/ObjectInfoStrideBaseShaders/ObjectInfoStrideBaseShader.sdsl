@@ -1,0 +1,14 @@
+﻿using Stride.Rendering;
+using Stride.Rendering.Data;
+using Stride.Rendering.Materials;
+
+namespace ObjectInfoRenderTargetExample.Effects
+{
+    shader ObjectInfoStrideBaseShader : ShaderBase
+    {
+        float4 GetShadingPosition()
+        {
+            return float4(1,0,0,0);
+        }
+    };
+}

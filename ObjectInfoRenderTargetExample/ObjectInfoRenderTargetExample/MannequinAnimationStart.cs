@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Xenko.Animations;
-using Xenko.Core;
-using Xenko.Engine;
+using System.Collections.Generic;
+using Stride.Animations;
+using Stride.Core;
+using Stride.Engine;
 
 namespace ObjectInfoRenderTargetExample
 {

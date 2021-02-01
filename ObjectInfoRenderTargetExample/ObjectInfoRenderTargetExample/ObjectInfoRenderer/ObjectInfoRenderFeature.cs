@@ -1,8 +1,8 @@
-﻿using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Threading;
-using Xenko.Engine;
-using Xenko.Rendering;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Core.Threading;
+using Stride.Engine;
+using Stride.Rendering;
 
 namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {
@@ -65,7 +65,7 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
                     }
                 }
 
-                // RuntimeIdHelper.ToRuntimeId is how Xenko does it for its 'Picking' scene.
+                // RuntimeIdHelper.ToRuntimeId is how Stride does it for its 'Picking' scene.
                 // We should probably change this to use something more appropriate for our data.
                 var modelCompId = RuntimeIdHelper.ToRuntimeId(modelComponent);
                 var objectInfoData = new ObjectInfoData((uint)modelCompId, (ushort)meshIndex, (ushort)renderMesh.Mesh.MaterialIndex);
@@ -87,7 +87,7 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
         public override void Prepare(RenderDrawContext context)
         {
             // This entire method shows how we pass the ObjectInfoData to the shader, and is similar to
-            // how Xenko does it when it needs to pass data. The only change is we use Utilities.Write
+            // how Stride does it when it needs to pass data. The only change is we use Utilities.Write
             // where the underlying method call handles the pointer writing code, so we can avoid
             // marking this project with 'unsafe' code.
             var objectInfoDataHolder = RootRenderFeature.RenderData.GetData(_objectInfoPropertyKey);

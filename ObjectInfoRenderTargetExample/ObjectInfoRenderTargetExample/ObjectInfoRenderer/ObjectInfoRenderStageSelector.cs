@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using Xenko.Rendering;
+using System.ComponentModel;
+using Stride.Rendering;
 
 namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {

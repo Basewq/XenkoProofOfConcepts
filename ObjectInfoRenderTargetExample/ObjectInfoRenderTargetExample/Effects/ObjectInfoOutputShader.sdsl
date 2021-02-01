@@ -1,0 +1,39 @@
+﻿namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
+{
+    // The shader that outputs the supplied ObjectInfoData (ModelComponentId, MeshIndexAndMaterialIndex) on a texture.
+    shader ObjectInfoOutputShader : PositionStream4, Transformation, OioShaderBase
+    {
+        // Inheriting PositionStream4 gives streams.Position, Transformation gives WorldViewProjection.
+
+        // Note that we cannot inherit ShaderBase because it defines SV_Target0 as float4.
+        // Since our texture is defined as R32G32_UInt (see ObjectInfoSceneRenderer where the
+        // output texture is defined), we need the output to be uint2, otherwise there will
+        // be subtle precision loss due to converting from float to uint.
+        // This is defined in OioShaderBase, and this and many more parameters are
+        // pulled in via ObjectInfoStrideBaseShaders\ObjectInfoStrideBaseEffect.xkfx
+        // (which is pulled in via ObjectInfoOutputEffect.xkfx)
+
+        // This is the same structure as the C# struct ObjectInfoData
+        // Because this appears as a shader key, be sure to make the namespace declaration
+        // the SAME as the C#'s version, otherwise it won't reference that one properly
+        // in the generated shader key file.
+        struct ObjectInfoData
+        {
+            uint ModelComponentId;
+            uint MeshIndexAndMaterialIndex;
+        };
+
+        cbuffer PerDraw
+        {
+            stage ObjectInfoData ObjectInfo;
+        }
+
+        // Note that we do not need to override VSMain. Due to inheriting OioShaderBase and the use of effect mixins,
+        // VSMain will be handled by one of the shader. This is necessary for handling skinned (animated) models.
+
+        stage override void PSMain()
+        {
+            streams.ColorTarget = uint2(ObjectInfo.ModelComponentId, ObjectInfo.MeshIndexAndMaterialIndex);
+        }
+    };
+}
