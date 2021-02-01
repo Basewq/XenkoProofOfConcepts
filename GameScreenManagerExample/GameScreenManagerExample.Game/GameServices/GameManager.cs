@@ -24,6 +24,11 @@ namespace GameScreenManagerExample.GameServices
             Services = services;
         }
 
+        internal void ResetGameplayFields()
+        {
+            CoinCollected = 0;
+        }
+
         // Add any game play related method/properties here
         public event Action<int> CoinCollectedChanged;
 

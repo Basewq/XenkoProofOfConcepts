@@ -21,6 +21,7 @@ namespace GameScreenManagerExample.GameServices.SceneHandlers
         {
             var uiPageEntity = await UIManager.LoadUIEntityAsync(UIManager.InGameScreenUIUrl);
             UIManager.SetAsMainScreen(uiPageEntity);
+            GameManager.ResetGameplayFields();
         }
 
         public override void OnDeactivate()
