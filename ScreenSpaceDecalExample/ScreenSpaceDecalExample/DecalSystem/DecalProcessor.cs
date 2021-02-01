@@ -1,14 +1,14 @@
-﻿using Xenko.Core;
-using Xenko.Core.Annotations;
-using Xenko.Core.Extensions;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Threading;
-using Xenko.Engine;
-using Xenko.Graphics;
-using Xenko.Rendering;
-using Xenko.Rendering.Materials;
-using Xenko.Rendering.Materials.ComputeColors;
-using Xenko.Rendering.ProceduralModels;
+using Stride.Core;
+using Stride.Core.Annotations;
+using Stride.Core.Extensions;
+using Stride.Core.Mathematics;
+using Stride.Core.Threading;
+using Stride.Engine;
+using Stride.Graphics;
+using Stride.Rendering;
+using Stride.Rendering.Materials;
+using Stride.Rendering.Materials.ComputeColors;
+using Stride.Rendering.ProceduralModels;
 
 namespace ScreenSpaceDecalExample.DecalSystem
 {

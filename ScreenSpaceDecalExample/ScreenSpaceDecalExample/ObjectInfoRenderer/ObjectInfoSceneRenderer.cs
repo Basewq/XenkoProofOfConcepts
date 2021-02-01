@@ -1,8 +1,8 @@
-﻿using Xenko.Core.Mathematics;
-using Xenko.Core.Storage;
-using Xenko.Graphics;
-using Xenko.Rendering;
-using Xenko.Rendering.Compositing;
+using Stride.Core.Mathematics;
+using Stride.Core.Storage;
+using Stride.Graphics;
+using Stride.Rendering;
+using Stride.Rendering.Compositing;
 
 namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 {

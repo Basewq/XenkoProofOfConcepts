@@ -1,8 +1,8 @@
-﻿using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Threading;
-using Xenko.Engine;
-using Xenko.Rendering;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Core.Threading;
+using Stride.Engine;
+using Stride.Rendering;
 
 namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 {
@@ -74,7 +74,7 @@ namespace ScreenSpaceDecalExample.ObjectInfoRenderer
         public override void Prepare(RenderDrawContext context)
         {
             // This entire method shows how we pass the ObjectInfoData to the shader, and is similar to
-            // how Xenko does it when it needs to pass data. The only change is we use Utilities.Write
+            // how Stride does it when it needs to pass data. The only change is we use Utilities.Write
             // where the underlying method call handles the pointer writing code, so we can avoid
             // marking this project with 'unsafe' code.
             var objectInfoDataHolder = RootRenderFeature.RenderData.GetData(_objectInfoPropertyKey);

@@ -1,10 +1,10 @@
-﻿using System.ComponentModel;
-using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Engine.Design;
-using Xenko.Graphics;
-using Xenko.Rendering;
+using System.ComponentModel;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Engine.Design;
+using Stride.Graphics;
+using Stride.Rendering;
 
 namespace ScreenSpaceDecalExample.DecalSystem
 {

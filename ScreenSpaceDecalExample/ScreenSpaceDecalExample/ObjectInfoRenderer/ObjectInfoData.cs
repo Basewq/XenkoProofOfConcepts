@@ -1,4 +1,4 @@
-﻿using Xenko.Rendering;
+using Stride.Rendering;
 
 namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 {
