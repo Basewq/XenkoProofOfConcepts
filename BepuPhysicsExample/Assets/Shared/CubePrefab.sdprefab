@@ -1,0 +1,47 @@
+!PrefabAsset
+Id: 04c4431a-7431-441f-b579-21748d863971
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 7bab5198-56f2-4bda-8979-f5b7022b951a
+    Parts:
+        -   Entity:
+                Id: 7bab5198-56f2-4bda-8979-f5b7022b951a
+                Name: crate
+                Components:
+                    41f03e2e802fb24d95a774c7f12119bd: !TransformComponent
+                        Id: 2e3ef041-2f80-4db2-95a7-74c7f12119bd
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    4084aa5894db3744b91eaee2c10b59d9: !BepuPhysicsExample.ImpulseOnSpaceScript,BepuPhysicsExample.Game
+                        Id: 58aa8440-db94-4437-b91e-aee2c10b59d9
+                    b8c6c588b5610144adb1357b024c4015: !BepuRigidbodyComponent
+                        Id: 88c5c6b8-61b5-4401-adb1-357b024c4015
+                        CanSleep: true
+                        Restitution: 0.0
+                        RollingFriction: 0.0
+                        CcdMotionThreshold: 0.0
+                        CcdSweptSphereRadius: 0.0
+                        IsTrigger: false
+                        IsKinematic: false
+                        Mass: 1.0
+                        LinearDamping: 0.0
+                        AngularDamping: 0.0
+                        SpringSettings:
+                            AngularFrequency: 188.49556
+                            TwiceDampingRatio: 40.0
+                            Frequency: 30.0
+                            DampingRatio: 20.0
+                        OverrideGravity: false
+                        Gravity: {X: 0.0, Y: 0.0, Z: 0.0}
+                        NodeName: null
+                        ColliderShapes:
+                            7d102f94372bb148b1442fd78041aa91: !BepuColliderShapeAssetDesc
+                                Shape: a9014178-3593-4598-9d38-c1db609fd7de:ColliderShapes/crate_cs
+                    f8939861c2b39c4494f061673c9dfdcd: !ModelComponent
+                        Id: 619893f8-b3c2-449c-94f0-61673c9dfdcd
+                        Model: aa73c111-e09e-494b-92c0-a9948749bdcc:Models/BoxE
+                        Materials: {}

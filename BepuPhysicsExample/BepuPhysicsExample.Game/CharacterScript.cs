@@ -2,13 +2,13 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using System;
 using System.Linq;
-using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Animations;
-using Xenko.Engine;
-using Xenko.Input;
-using Xenko.Physics;
-using Xenko.Rendering.Sprites;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Animations;
+using Stride.Engine;
+using Stride.Input;
+using Stride.Physics;
+using Stride.Rendering.Sprites;
 
 namespace BepuPhysicsExample
 {

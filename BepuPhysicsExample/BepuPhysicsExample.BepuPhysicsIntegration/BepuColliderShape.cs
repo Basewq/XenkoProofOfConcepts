@@ -1,11 +1,11 @@
 using BepuPhysics.Collidables;
 using System;
 using System.Runtime.CompilerServices;
-using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Graphics;
-using Xenko.Physics;
-using Xenko.Rendering;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Graphics;
+using Stride.Physics;
+using Stride.Rendering;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

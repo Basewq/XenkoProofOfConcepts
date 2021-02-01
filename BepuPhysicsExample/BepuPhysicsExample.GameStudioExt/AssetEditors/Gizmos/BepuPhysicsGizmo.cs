@@ -1,12 +1,12 @@
 using BepuPhysicsExample.BepuPhysicsIntegration;
 using System.Collections.Generic;
-using Xenko.Assets.Presentation.AssetEditors.Gizmos;
-using Xenko.Core;
-using Xenko.Core.Assets;
-using Xenko.Core.Extensions;
-using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Rendering;
+using Stride.Assets.Presentation.AssetEditors.Gizmos;
+using Stride.Core;
+using Stride.Core.Assets;
+using Stride.Core.Extensions;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Rendering;
 
 namespace BepuPhysicsExample.GameStudioExt.AssetEditors.Gizmos
 {

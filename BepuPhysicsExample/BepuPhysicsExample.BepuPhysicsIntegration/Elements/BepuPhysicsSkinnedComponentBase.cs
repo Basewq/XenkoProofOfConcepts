@@ -1,8 +1,8 @@
 using BepuPhysics;
 using System;
-using Xenko.Core;
-using Xenko.Core.Extensions;
-using Xenko.Core.Mathematics;
+using Stride.Core;
+using Stride.Core.Extensions;
+using Stride.Core.Mathematics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

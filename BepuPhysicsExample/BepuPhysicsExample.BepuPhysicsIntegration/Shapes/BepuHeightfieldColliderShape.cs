@@ -2,13 +2,13 @@ using BepuPhysics.Collidables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Threading;
-using Xenko.Graphics;
-using Xenko.Physics;
-using Xenko.Rendering;
-using Buffer = Xenko.Graphics.Buffer;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Core.Threading;
+using Stride.Graphics;
+using Stride.Physics;
+using Stride.Rendering;
+using Buffer = Stride.Graphics.Buffer;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration.Shapes
 {

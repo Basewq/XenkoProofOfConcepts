@@ -3,12 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Xenko.Core.Mathematics;
-using Xenko.Extensions;
-using Xenko.Graphics;
-using Xenko.Graphics.GeometricPrimitives;
-using Xenko.Physics;
-using Xenko.Rendering;
+using Stride.Core.Mathematics;
+using Stride.Extensions;
+using Stride.Graphics;
+using Stride.Graphics.GeometricPrimitives;
+using Stride.Physics;
+using Stride.Rendering;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

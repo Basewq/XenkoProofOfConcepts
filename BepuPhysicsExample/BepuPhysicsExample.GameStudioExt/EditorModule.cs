@@ -1,5 +1,5 @@
-﻿using Xenko.Core;
-using Xenko.Core.Reflection;
+using Stride.Core;
+using Stride.Core.Reflection;
 
 namespace BepuPhysicsExample.GameStudioExt
 {

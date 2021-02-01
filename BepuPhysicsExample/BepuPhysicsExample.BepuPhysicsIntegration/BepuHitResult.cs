@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using Xenko.Core.Mathematics;
+using Stride.Core.Mathematics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

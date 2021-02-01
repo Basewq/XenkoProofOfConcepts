@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VHACDSharp;
-using Xenko.Assets.Textures;
-using Xenko.Core;
-using Xenko.Core.Assets;
-using Xenko.Core.Assets.Analysis;
-using Xenko.Core.Assets.Compiler;
-using Xenko.Core.BuildEngine;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Serialization;
-using Xenko.Core.Serialization.Contents;
-using Xenko.Graphics.Data;
-using Xenko.Rendering;
-using Buffer = Xenko.Graphics.Buffer;
+using Stride.Assets.Textures;
+using Stride.Core;
+using Stride.Core.Assets;
+using Stride.Core.Assets.Analysis;
+using Stride.Core.Assets.Compiler;
+using Stride.Core.BuildEngine;
+using Stride.Core.Mathematics;
+using Stride.Core.Serialization;
+using Stride.Core.Serialization.Contents;
+using Stride.Graphics.Data;
+using Stride.Rendering;
+using Buffer = Stride.Graphics.Buffer;
 
 namespace BepuPhysicsExample.GameStudioExt.Physics
 {

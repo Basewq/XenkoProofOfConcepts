@@ -1,13 +1,13 @@
 using BepuPhysicsExample.BepuPhysicsIntegration.Shapes;
 using System;
 using System.Collections.Generic;
-using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Games;
-using Xenko.Graphics;
-using Xenko.Physics;
-using Xenko.Rendering;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Games;
+using Stride.Graphics;
+using Stride.Physics;
+using Stride.Rendering;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration.Engine
 {

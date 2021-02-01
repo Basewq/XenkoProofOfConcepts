@@ -1,5 +1,5 @@
-using Xenko.Games;
-using Xenko.Physics;
+using Stride.Games;
+using Stride.Physics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

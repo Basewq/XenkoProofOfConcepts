@@ -1,6 +1,6 @@
-﻿using BepuPhysics;
-using Xenko.Core;
-using Xenko.Data;
+using BepuPhysics;
+using Stride.Core;
+using Stride.Data;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

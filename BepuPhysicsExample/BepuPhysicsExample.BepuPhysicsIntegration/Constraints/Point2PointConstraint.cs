@@ -1,7 +1,7 @@
 using BepuPhysics;
 using BepuPhysics.Constraints;
 using System;
-using Xenko.Core.Mathematics;
+using Stride.Core.Mathematics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

@@ -2,12 +2,12 @@ using BepuPhysics;
 using BepuPhysics.Collidables;
 using System;
 using System.Collections.Generic;
-using Xenko.Core;
-using Xenko.Core.Annotations;
-using Xenko.Core.Collections;
-using Xenko.Core.Mathematics;
-using Xenko.Physics;
-using Xenko.Rendering;
+using Stride.Core;
+using Stride.Core.Annotations;
+using Stride.Core.Collections;
+using Stride.Core.Mathematics;
+using Stride.Physics;
+using Stride.Rendering;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

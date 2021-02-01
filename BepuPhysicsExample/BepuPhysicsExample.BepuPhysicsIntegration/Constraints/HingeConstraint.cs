@@ -1,5 +1,5 @@
 using BepuPhysics.Constraints;
-using Xenko.Core.Mathematics;
+using Stride.Core.Mathematics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

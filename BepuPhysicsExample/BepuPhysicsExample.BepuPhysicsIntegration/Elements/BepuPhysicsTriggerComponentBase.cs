@@ -1,6 +1,6 @@
 using System.ComponentModel;
-using Xenko.Core;
-using Xenko.Engine;
+using Stride.Core;
+using Stride.Engine;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

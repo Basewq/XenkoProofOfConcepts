@@ -1,9 +1,9 @@
 using BepuPhysicsExample.BepuPhysicsIntegration;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Xenko.Core;
-using Xenko.Core.Annotations;
-using Xenko.Core.Assets;
+using Stride.Core;
+using Stride.Core.Annotations;
+using Stride.Core.Assets;
 
 namespace BepuPhysicsExample.GameStudioExt.Physics
 {

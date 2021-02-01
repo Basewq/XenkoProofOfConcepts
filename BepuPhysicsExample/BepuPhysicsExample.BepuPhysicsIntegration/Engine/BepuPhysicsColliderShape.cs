@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Xenko.Core;
-using Xenko.Core.Annotations;
-using Xenko.Core.Serialization;
-using Xenko.Core.Serialization.Contents;
-using Xenko.Engine.Design;
+using Stride.Core;
+using Stride.Core.Annotations;
+using Stride.Core.Serialization;
+using Stride.Core.Serialization.Contents;
+using Stride.Engine.Design;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

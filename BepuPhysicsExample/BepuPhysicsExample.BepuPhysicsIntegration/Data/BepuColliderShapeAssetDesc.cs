@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using Xenko.Core;
-using Xenko.Core.Serialization.Contents;
+using Stride.Core;
+using Stride.Core.Serialization.Contents;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

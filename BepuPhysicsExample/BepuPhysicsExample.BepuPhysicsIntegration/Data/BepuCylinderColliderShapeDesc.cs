@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
-using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Serialization.Contents;
-using Xenko.Physics;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Core.Serialization.Contents;
+using Stride.Physics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

@@ -1,8 +1,8 @@
-﻿using BepuPhysics.Collidables;
+using BepuPhysics.Collidables;
 using BepuPhysics.Constraints;
 using System;
 using System.Diagnostics;
-using Xenko.Physics;
+using Stride.Physics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

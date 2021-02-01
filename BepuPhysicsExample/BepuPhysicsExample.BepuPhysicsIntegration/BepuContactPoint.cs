@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-using Xenko.Core.Mathematics;
+using Stride.Core.Mathematics;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

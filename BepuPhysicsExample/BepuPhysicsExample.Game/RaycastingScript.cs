@@ -2,11 +2,11 @@
 // Distributed under the MIT license. See the LICENSE.md file in the project root for more information.
 using BepuPhysicsExample.BepuPhysicsIntegration;
 using System.Linq;
-using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Graphics;
-using Xenko.Input;
-using Xenko.Physics;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Graphics;
+using Stride.Input;
+using Stride.Physics;
 
 namespace BepuPhysicsExample
 {

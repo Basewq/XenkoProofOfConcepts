@@ -3,16 +3,16 @@ using BepuPhysics.Constraints;
 using BepuPhysicsExample.BepuPhysicsIntegration.Engine;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Xenko.Core;
-using Xenko.Core.Annotations;
-using Xenko.Core.Collections;
-using Xenko.Core.Diagnostics;
-using Xenko.Core.Mathematics;
-using Xenko.Core.MicroThreading;
-using Xenko.Engine;
-using Xenko.Engine.Design;
-using Xenko.Physics;
-using Xenko.Rendering;
+using Stride.Core;
+using Stride.Core.Annotations;
+using Stride.Core.Collections;
+using Stride.Core.Diagnostics;
+using Stride.Core.Mathematics;
+using Stride.Core.MicroThreading;
+using Stride.Engine;
+using Stride.Engine.Design;
+using Stride.Physics;
+using Stride.Rendering;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

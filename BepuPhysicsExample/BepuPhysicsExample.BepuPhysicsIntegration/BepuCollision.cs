@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xenko.Core.MicroThreading;
+using Stride.Core.MicroThreading;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

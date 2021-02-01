@@ -1,6 +1,6 @@
-using Xenko.Core;
-using Xenko.Core.Mathematics;
-using Xenko.Core.Serialization.Contents;
+using Stride.Core;
+using Stride.Core.Mathematics;
+using Stride.Core.Serialization.Contents;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

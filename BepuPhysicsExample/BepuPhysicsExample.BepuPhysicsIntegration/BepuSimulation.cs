@@ -10,13 +10,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Xenko.Core.Collections;
-using Xenko.Core.Diagnostics;
-using Xenko.Physics;
-using Xenko.Rendering;
-using Matrix = Xenko.Core.Mathematics.Matrix;
-using Quaternion = Xenko.Core.Mathematics.Quaternion;
-using Vector3 = Xenko.Core.Mathematics.Vector3;
+using Stride.Core.Collections;
+using Stride.Core.Diagnostics;
+using Stride.Physics;
+using Stride.Rendering;
+using Matrix = Stride.Core.Mathematics.Matrix;
+using Quaternion = Stride.Core.Mathematics.Quaternion;
+using Vector3 = Stride.Core.Mathematics.Vector3;
 
 namespace BepuPhysicsExample.BepuPhysicsIntegration
 {

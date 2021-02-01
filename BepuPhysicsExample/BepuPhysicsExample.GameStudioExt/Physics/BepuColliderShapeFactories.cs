@@ -1,5 +1,5 @@
 using BepuPhysicsExample.BepuPhysicsIntegration;
-using Xenko.Core.Assets;
+using Stride.Core.Assets;
 
 namespace BepuPhysicsExample.GameStudioExt.Physics
 {
