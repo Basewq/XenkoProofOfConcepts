@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Xenko.Core.Annotations;
-using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Games;
-using Xenko.Input;
+using System.Collections.Generic;
+using Stride.Core.Annotations;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Games;
+using Stride.Input;
 
 namespace EntityProcessorExample.Player
 {

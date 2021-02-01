@@ -1,6 +1,6 @@
-﻿using Xenko.Core.Mathematics;
-using Xenko.Engine;
-using Xenko.Games;
+using Stride.Core.Mathematics;
+using Stride.Engine;
+using Stride.Games;
 
 namespace EntityProcessorExample.Player
 {
