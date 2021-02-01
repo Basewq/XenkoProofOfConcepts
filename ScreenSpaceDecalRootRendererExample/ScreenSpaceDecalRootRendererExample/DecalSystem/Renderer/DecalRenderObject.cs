@@ -1,7 +1,7 @@
-﻿using Xenko.Core.Mathematics;
-using Xenko.Graphics;
-using Xenko.Graphics.GeometricPrimitives;
-using Xenko.Rendering;
+using Stride.Core.Mathematics;
+using Stride.Graphics;
+using Stride.Graphics.GeometricPrimitives;
+using Stride.Rendering;
 
 namespace ScreenSpaceDecalExample.DecalSystem.Renderer
 {

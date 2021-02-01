@@ -1,8 +1,8 @@
-﻿using ScreenSpaceDecalExample.DecalSystem.Renderer;
-using Xenko.Core.Annotations;
-using Xenko.Core.Threading;
-using Xenko.Engine;
-using Xenko.Rendering;
+using ScreenSpaceDecalExample.DecalSystem.Renderer;
+using Stride.Core.Annotations;
+using Stride.Core.Threading;
+using Stride.Engine;
+using Stride.Rendering;
 
 namespace ScreenSpaceDecalExample.DecalSystem
 {

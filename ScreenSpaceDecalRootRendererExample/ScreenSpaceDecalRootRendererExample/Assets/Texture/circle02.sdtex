@@ -1,6 +1,6 @@
 !Texture
 Id: 591415c1-cc4a-47d5-b045-f954989af028
-SerializedVersion: {Xenko: 2.0.0.0}
+SerializedVersion: {Stride: 2.0.0.0}
 Tags: []
 Source: !file ../../Textures/circle02.png
 Type: !ColorTextureType
