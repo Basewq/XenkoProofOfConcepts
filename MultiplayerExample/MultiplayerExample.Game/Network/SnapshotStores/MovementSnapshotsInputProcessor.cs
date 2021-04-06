@@ -208,7 +208,7 @@ namespace MultiplayerExample.Network.SnapshotStores
                 var clientPredictionSnapshotsComp = entityData.ClientPredictionSnapshotsComponent;
                 clientPredictionSnapshotsComp.PredictedMovements.Clear();
                 // Add a fake prediction values, which is actually just the most recent two server values.
-                // This is done so MovementSnapshotsRenderProcessor will always have two values to use for interpolation
+                // This is done so NetworkMovementViewProcessor will have two values to use for interpolation
                 // even if all input predictions have been consumed.
                 var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
                 int movementCopyCount = Math.Min(2, movementSnapshotsComp.SnapshotStore.Count);

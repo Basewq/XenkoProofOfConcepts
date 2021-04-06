@@ -11,9 +11,9 @@ For development, it is best to set the VS solution to run multiple projects (ie.
 ### Limitations of this proof of concept include:
 - `GameTimeExt` derives from Stride's `GameTime` and uses reflection in order to access the internal `Update` & `Reset` methods. Since those methods are not exposed publically, they may potentially change on version updates so keep this in mind as the app may crash if the methods change.
 - The standard `ScriptComponent` classes (ie. `StartupScript`/`SyncScript`/`AsyncScript`) **cannot** be used in any server side entities, and will crash the server side application if you try to load the entity into the scene. The reason they cannot be used is because `ScriptComponent`s enforce retrieving systems that have been cut out from the server engine, eg. audio, input, graphics related systems.
-- Changing the networked entity's position multiple times in a single 'simulation' update. This is because `MovementSnapshotsRenderProcessor` moves entities to the appropriate render position for interpolation, however `MovementSnapshotsProcessor` must reset these entities back to their valid simulation positions so the that client side prediction can be predicted properly.
+- Each visible networked entity comes in a pair, the actual networked entity and the network 'view' entity (whose position is always set to the appropriate render interpolation position). This doubling of entities may be inefficient memory/processing-wise if too many pairs are created.
 - While a `IGraphicsDeviceService` is required to be registered even for the server engine, a 'headless' version is implemented to essentially do nothing. This hasn't been fully tested, so there's no guarantee the headless server application is truly 'headless'.
-- Some usage of IL generation is done (eg. `BulletPhysicsExt` methods), potentially making it not usable on other platforms (eg. iOS?), however these are mainly used to provide access to internal/private properties & fields under the assumption you can't modify the Stride source code (or you're too laxy to modify the source code and just want to use the official libraries, like this project). If you can modify the Stride source code (it's open source, so it is possible!), it is probably advised to do it that way.
+- Some usage of IL generation is done (eg. `BulletPhysicsExt` methods), potentially making it not usable on other platforms (eg. iOS?), however these are mainly used to provide access to internal/private properties & fields under the assumption you can't modify the Stride source code (or you're too lazy to modify the source code and just want to use the official libraries, like this project). If you can modify the Stride source code (it's open source, so it is possible!), it is probably advised to do it that way.
 
 
 ## Implementation Details
@@ -47,5 +47,5 @@ For development, it is best to set the VS solution to run multiple projects (ie.
 - Optimization (network packet, memory allocations, etc).
 - Server rollback not implemented. Past position data is stored in `MovementSnapshotsComponent` so it should be simple to add.
 - Gracefully handle client/server timeouts and rejoining existing game.
-- Minor warning on the client game about the camera slot not set.
+- Minor warning that appears on the client game about the camera slot not set.
 - Lower latency players having input advantage over high latency players.
