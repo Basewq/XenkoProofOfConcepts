@@ -1,6 +1,6 @@
-# XenkoProofOfConcepts
+# Stride Proof of Concepts
 
-This repository houses a few basic projects to test capabilities of the Stride Game Engine (formally called Xenko).
+This repository houses a few basic projects to test capabilities of the Stride Game Engine (formerly called Xenko).
 
 The projects are currently built with Stride version **4.0.1.1400**, and have only been created with the Windows projects (apologies to any non-Windows developers!).
 Note that some projects were originally created with Xenko, then upgraded to Stride through its launcher, however some things do not get upgraded (eg. Xenko assets & icons), so some things may differ if you have created a new project from the Stride templates.
