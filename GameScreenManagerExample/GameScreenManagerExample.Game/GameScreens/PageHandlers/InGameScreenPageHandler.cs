@@ -2,6 +2,7 @@
 using Stride.Engine;
 using Stride.Input;
 using Stride.UI.Controls;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace GameScreenManagerExample.GameScreens.PageHandlers
@@ -14,7 +15,10 @@ namespace GameScreenManagerExample.GameScreens.PageHandlers
 
         private InputManager _inputManager;
         private bool _ignoreInputEvents;
+
+        private readonly object _syncRoot = new object();
         private Task _loadOptionsScreenTask;
+        private Task<Entity> _loadUIEntityTask;
 
         protected override void OnInitialize()
         {
@@ -49,24 +53,36 @@ namespace GameScreenManagerExample.GameScreens.PageHandlers
 
         public override void Update()
         {
+            if (_loadOptionsScreenTask?.IsFaulted ?? false)
+            {
+                // Should probably log to a file.
+                Debug.WriteLine("Error loading Options Screen UI: " + _loadOptionsScreenTask.Exception.ToString());
+            }
             if (_ignoreInputEvents || !IsTopMostScreen)
             {
                 return;
             }
-            if (_inputManager.HasKeyboard)
+            if (_inputManager.HasKeyboard && _inputManager.IsKeyPressed(Keys.Escape))
             {
-                if (_loadOptionsScreenTask == null && _inputManager.IsKeyPressed(Keys.Escape))
+                lock (_syncRoot)
                 {
-                    _loadOptionsScreenTask = LoadOptionsScreen();
+                    if (_loadUIEntityTask == null)
+                    {
+                        _loadOptionsScreenTask = LoadOptionsScreen();
+                    }
                 }
             }
         }
 
         private async Task LoadOptionsScreen()
         {
-            var uiPageEntity = await UIManager.LoadUIEntityAsync(UIManager.InGameOptionsScreenUIUrl);
-            UIManager.PushScreen(uiPageEntity);
-            _loadOptionsScreenTask = null;
+            _loadUIEntityTask = UIManager.LoadUIEntityAsync(UIManager.InGameOptionsScreenUIUrl);
+            var uiPageEntity = await _loadUIEntityTask;
+            lock (_syncRoot)
+            {
+                UIManager.PushScreen(uiPageEntity);
+                _loadUIEntityTask = null;
+            }
         }
     }
 }
