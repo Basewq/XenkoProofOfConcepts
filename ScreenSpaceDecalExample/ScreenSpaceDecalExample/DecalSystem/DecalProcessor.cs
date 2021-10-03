@@ -45,7 +45,7 @@ namespace ScreenSpaceDecalExample.DecalSystem
             // Set up a new material with our decal shader.
             var shader = new ComputeShaderClassColor
             {
-                MixinReference = "DecalShader"      // This is referring to our shader at Effects\DecalShader.xksl
+                MixinReference = "DecalShader"      // This is referring to our shader at Effects\DecalShader.sdsl
             };
 
             var materialDescription = new MaterialDescriptor

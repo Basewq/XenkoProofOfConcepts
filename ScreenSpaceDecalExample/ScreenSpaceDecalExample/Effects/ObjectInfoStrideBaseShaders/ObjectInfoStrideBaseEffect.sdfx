@@ -6,7 +6,7 @@ namespace ScreenSpaceDecalExample.Effects
     partial effect ObjectInfoStrideBaseEffect
     {
         // We cannot use StrideForwardShadingEffect because it defines SV_Target0 as float4,
-        // which we do not want (refer to notes in ObjectInfoOutputShader.xksl).
+        // which we do not want (refer to notes in ObjectInfoOutputShader.sdsl).
         // Because skinned (animated) models are transformed in shaders, we need to copy
         // the behavior of StrideForwardShadingEffect (or most of it), but create our own version whenever
         // the existing shader inherits ShaderBase.

@@ -9,7 +9,7 @@
     {
         // Do not include StrideForwardShadingEffect!
         // It inherits ShaderBase which defines SV_Target0 as float4, which we do
-        // not want (refer to notes in ObjectInfoOutputShader.xksl).
+        // not want (refer to notes in ObjectInfoOutputShader.sdsl).
         // We must selectively include the parameters we need, and carefully avoid
         // inheriting anything that may inherit ShaderBase.
 

@@ -10,8 +10,8 @@
         // output texture is defined), we need the output to be uint, otherwise there will
         // be subtle precision loss due to converting from float to uint.
         // This is defined in OioShaderBase, and this and many more parameters are
-        // pulled in via ObjectInfoStrideBaseShaders\ObjectInfoStrideBaseEffect.xkfx
-        // (which is pulled in via ObjectInfoOutputEffect.xkfx)
+        // pulled in via ObjectInfoStrideBaseShaders\ObjectInfoStrideBaseEffect.sdfx
+        // (which is pulled in via ObjectInfoOutputEffect.sdfx)
 
         // This is the same structure as the C# struct ObjectInfoData
         // Because this appears as a shader key, be sure to make the namespace declaration

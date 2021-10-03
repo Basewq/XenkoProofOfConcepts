@@ -27,6 +27,8 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
             // Changing this means changing ObjectInfoData, ObjectInfoInputShader, and OioShaderBase.
             ObjectInfoRenderStage.Output = new RenderOutputDescription(renderTargetFormat: PixelFormat.R32G32_UInt, depthStencilFormat: PixelFormat.D32_Float);
 
+            // Note: if context.RenderView is null, then most likely the GraphicsCompositor is not
+            // set up correctly. Ensure this renderer is a child of a CameraRenderer.
             context.RenderView.RenderStages.Add(ObjectInfoRenderStage);
         }
 
@@ -74,7 +76,7 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
                 // This texture is accessible as a resource in shaders in future rendering stages, eg. see
                 // ObjectInfoInputShader declaring the following:
                 // rgroup PerView.ObjectInfo { stage Texture2D<uint2> ObjectInfoData; }
-                // Inherit the shader in ObjectInfoInputShader.xksl to use in your own shader.
+                // Inherit the shader in ObjectInfoInputShader.sdsl to use in your own shader.
                 var objectInfoLogicalKey = rootEffectRenderFeature.CreateViewLogicalGroup("ObjectInfo");
                 var viewFeature = renderView.Features[renderFeature.Index];
 
