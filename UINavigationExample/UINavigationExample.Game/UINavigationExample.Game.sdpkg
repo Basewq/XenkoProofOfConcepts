@@ -1,0 +1,18 @@
+!Package
+SerializedVersion: {Assets: 3.1.0.0}
+Meta:
+    Name: UINavigationExample.Game
+    Version: 1.0.0
+    Authors: []
+    Owners: []
+    Dependencies: null
+AssetFolders:
+    -   Path: !dir ../Assets/Shared
+    -   Path: !dir Effects
+ResourceFolders: []
+OutputGroupDirectories: {}
+ExplicitFolders: []
+Bundles: []
+TemplateFolders: []
+RootAssets:
+    - e407fb55-d0f3-4b58-94ca-0a0dc61574af:MainScene

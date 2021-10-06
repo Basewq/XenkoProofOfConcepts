@@ -1,0 +1,11 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UINavigationExample.Windows", "UINavigationExample.Windows\UINavigationExample.Windows.csproj", "{58D5F46C-0FD9-4343-A20A-D689000862DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UINavigationExample.Game", "UINavigationExample.Game\UINavigationExample.Game.csproj", "{E2AD93A7-D6A0-4C3F-A0D3-D382A4686B14}"
+EndProject
+Global
+EndGlobal

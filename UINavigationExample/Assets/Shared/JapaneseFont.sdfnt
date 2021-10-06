@@ -1,0 +1,8 @@
+!SpriteFont
+Id: cc506503-8e75-4c8f-a12c-c84b08da3453
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+FontSource: !FileFontProvider
+    Source: !file ../../Resources/Fonts/SourceHanSans-Light.otf
+FontType: !RuntimeRasterizedSpriteFontType
+    Size: 24.0
