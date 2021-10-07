@@ -28,6 +28,9 @@ Hierarchy:
                     fd54344b6ac8b2ed232d62dc08820239: !UINavigationExample.SplashScript,UINavigationExample.Game
                         Id: c7c92d4b-2c04-446f-b8c5-59e9d2b989cd
                         NextSceneUrl: e407fb55-d0f3-4b58-94ca-0a0dc61574af:MainScene
+                    831c4d7c31b1d0f27619d0bddb2bac59: !UINavigationExample.GameStartupScript,UINavigationExample.Game
+                        Id: 35af0268-e167-4538-ad91-69190628af8a
+                        Priority: -1
         -   Entity:
                 Id: a604bc4e-f7f3-42c1-b98f-eeea9e10b54c
                 Name: Camera

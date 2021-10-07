@@ -17,6 +17,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: controlStatus
                 Padding: {}
                 Content: !ImageElement ref!! 47dbccde-6d77-4862-83fa-183ae0147dc7
@@ -81,6 +84,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth*: 3.4028235E+38
+                MaximumHeight*: 3.4028235E+38
+                MaximumDepth*: 3.4028235E+38
                 Name*: powerStatus
                 Padding: {}
                 Content: !ImageElement ref!! 9f60c963-03eb-42d5-829e-b10d5dd3fb5b
@@ -106,16 +112,19 @@ Hierarchy:
                 BackgroundImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 18
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: 400204bb-f5df-46ab-a676-e45f1817e586
                 DependencyProperties:
-                    1a4051fdbaacf8ac0c6443bc63fdcd00*~GridBase.RowPropertyKey: 1
+                    1a4051fdbaacf8ac0c6443bc63fdcd00~GridBase.RowPropertyKey: 1
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
                 MinimumWidth: 80.0
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: speedStatusButton
                 Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
                 Content: !TextBlock ref!! 7650aa4d-3d1a-4dbd-a89f-179c6bb4a1cd
@@ -128,36 +137,13 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 10
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 36
             Base:
                 BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
-                BasePartId: dab3aa68-8d2a-4ca6-98d1-2d105b28679f
+                BasePartId: f23e1b07-8731-4d77-9f7b-50138dce3f4b
                 InstanceId: 89152f56-4839-46bb-832e-639865f4eebb
-        -   UIElement: !Button
-                Id: 45cab71f-f28c-44af-a372-1115c4720ded
-                DependencyProperties:
-                    83073f5a465d48df0401f826d6890f61*~GridBase.ColumnPropertyKey: 1
-                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                DrawLayerNumber: 2
-                HorizontalAlignment: Center
-                VerticalAlignment: Center
-                Margin: {}
-                MinimumWidth: 80.0
-                Name*: controlStatusButton
-                Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
-                Content: !TextBlock ref!! 61ef5641-e38f-482c-b925-0a87f986e386
-                PressedImage: !SpriteFromSheet
-                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
-                    CurrentFrame: 11
-                NotPressedImage: !SpriteFromSheet
-                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
-                    CurrentFrame: 10
-                MouseOverImage: !SpriteFromSheet
-                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
-                    CurrentFrame: 10
-            Base:
-                BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
-                BasePartId: dab3aa68-8d2a-4ca6-98d1-2d105b28679f
-                InstanceId: 18c89bbd-ad8a-4fac-9872-3162cd96c22f
         -   UIElement: !ImageElement
                 Id: 47dbccde-6d77-4862-83fa-183ae0147dc7
                 DependencyProperties: {}
@@ -173,22 +159,6 @@ Hierarchy:
                 BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
                 BasePartId: bb0e5ff1-a42a-4aba-aae0-c000d6098595
                 InstanceId: 6099e082-d161-48f1-842c-713a14d15c68
-        -   UIElement: !TextBlock
-                Id: 4f82b8bd-cfe4-4a78-8433-e6b5c78ea151
-                DependencyProperties: {}
-                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                HorizontalAlignment: Center
-                VerticalAlignment: Center
-                Margin: {}
-                Name*: powerStatusText
-                Text*: P
-                Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
-                TextSize: 54.0
-                TextColor: {R: 0, G: 0, B: 0, A: 255}
-            Base:
-                BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
-                BasePartId: ff603298-54a0-4d64-9efa-3a855e759809
-                InstanceId: b58d8198-aa8e-4b89-8a7b-627cfcc55129
         -   UIElement: !StackPanel
                 Id: 5053fa40-46ac-43be-8dde-a82569860dfc
                 DependencyProperties:
@@ -232,12 +202,15 @@ Hierarchy:
                 TextSize: 32.0
                 TextColor: {R: 255, G: 215, B: 0, A: 255}
         -   UIElement: !TextBlock
-                Id: 61ef5641-e38f-482c-b925-0a87f986e386
+                Id: 6ba82728-c45e-4f11-882a-690e31f5361a
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: controlStatusText
                 Text*: C
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
@@ -245,8 +218,8 @@ Hierarchy:
                 TextColor: {R: 0, G: 0, B: 0, A: 255}
             Base:
                 BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
-                BasePartId: ff603298-54a0-4d64-9efa-3a855e759809
-                InstanceId: 18c89bbd-ad8a-4fac-9872-3162cd96c22f
+                BasePartId: 1fd56929-f258-4d4c-b2d1-a0762da05382
+                InstanceId: 11caaf09-78da-49fa-a20a-956075cc0898
         -   UIElement: !ImageElement
                 Id: 6c951770-f43d-4af0-a13a-62b042eae4da
                 DependencyProperties:
@@ -277,12 +250,15 @@ Hierarchy:
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 HorizontalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: heroImage
                 Source: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 30
                 Color: {R: 255, G: 255, B: 255, A: 255}
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: 72e391dc-8623-446f-908a-05cb379af0fd
                 DependencyProperties:
                     cebf0d33178f141ac3a3254df2c59be1~GridBase.ColumnPropertyKey: 3
@@ -290,6 +266,9 @@ Hierarchy:
                 DrawLayerNumber: 2
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: currentShipButton
                 Padding: {Left: 45.0, Top: 20.0, Bottom: 25.0}
                 Content: !Grid ref!! fbf628c9-3863-4f63-9b7b-fdb282077ce8
@@ -302,6 +281,9 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 35
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 37
         -   UIElement: !UniformGrid
                 Id: 738595eb-2075-4262-a286-307ad6019676
                 DependencyProperties: {}
@@ -333,6 +315,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: speedStatusText
                 Text*: S
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
@@ -350,12 +335,15 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: statusUpgradePanel
                 Children:
-                    da796cfeaa9a4b4aa4b6fb34187955c4: !Button ref!! fe6c79da-9aaa-4a4b-a4b6-fb34187955c4
-                    1fb7ca458cf2af44a3721115c4720ded: !Button ref!! 45cab71f-f28c-44af-a372-1115c4720ded
-                    bb040240dff5ab46a676e45f1817e586: !Button ref!! 400204bb-f5df-46ab-a676-e45f1817e586
-                    ef40f4a00fa80f4fba20389111ccbade: !Button ref!! a0f440ef-a80f-4f0f-ba20-389111ccbade
+                    8f9d232f9f81871beb5ea6d5b973ec6d: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! b98b51c4-fc73-4054-beb1-579ba3cde681
+                    16ed22f6ee0eeff96b7e646239f1da02: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! b01764be-b3ad-471b-a98b-11c7246400de
+                    bb040240dff5ab46a676e45f1817e586: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! 400204bb-f5df-46ab-a676-e45f1817e586
+                    ef40f4a00fa80f4fba20389111ccbade: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! a0f440ef-a80f-4f0f-ba20-389111ccbade
                 Rows: 2
                 Columns: 2
         -   UIElement: !Grid
@@ -444,6 +432,9 @@ Hierarchy:
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 Margin: {}
+                MaximumWidth*: 3.4028235E+38
+                MaximumHeight*: 3.4028235E+38
+                MaximumDepth*: 3.4028235E+38
                 Name*: powerStatusStar
                 Source: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
@@ -454,17 +445,20 @@ Hierarchy:
                 BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
                 BasePartId: bb0e5ff1-a42a-4aba-aae0-c000d6098595
                 InstanceId: 3fdc96e4-2f1a-489c-a286-625af39fd94f
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: a0f440ef-a80f-4f0f-ba20-389111ccbade
                 DependencyProperties:
-                    1ef9843b0f9ccad16e505646bf851e91*~GridBase.RowPropertyKey: 1
-                    cb1475499f0dbc1b28a40c0bbbd73617*~GridBase.ColumnPropertyKey: 1
+                    1ef9843b0f9ccad16e505646bf851e91~GridBase.RowPropertyKey: 1
+                    cb1475499f0dbc1b28a40c0bbbd73617~GridBase.ColumnPropertyKey: 1
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
                 MinimumWidth: 80.0
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: lifeStatusButton
                 Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
                 Content: !TextBlock ref!! fa2c4c58-4a68-4e11-96c0-ebb8febbce24
@@ -477,9 +471,12 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 10
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 36
             Base:
                 BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
-                BasePartId: dab3aa68-8d2a-4ca6-98d1-2d105b28679f
+                BasePartId: f23e1b07-8731-4d77-9f7b-50138dce3f4b
                 InstanceId: 4197d51c-e59c-44ab-86fb-29dfeb8c42ab
         -   UIElement: !Canvas
                 Id: a5c4acd9-a0c1-4573-8761-be377dd39eaf
@@ -495,14 +492,99 @@ Hierarchy:
                     aaba185fae8fad4ba0c137071cbad445: !TextBlock ref!! 5f18baaa-8fae-4bad-a0c1-37071cbad445
                     40fa5350ac46be438ddea82569860dfc: !StackPanel ref!! 5053fa40-46ac-43be-8dde-a82569860dfc
         -   UIElement: !TextBlock
+                Id: ae71a392-75cf-40dc-8a9a-eae5c824c81e
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name*: powerStatusText
+                Text*: P
+                Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
+                TextSize: 54.0
+                TextColor: {R: 0, G: 0, B: 0, A: 255}
+            Base:
+                BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
+                BasePartId: 1fd56929-f258-4d4c-b2d1-a0762da05382
+                InstanceId: 70ad285a-6fca-47e7-a7eb-ae223006866b
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
+                Id: b01764be-b3ad-471b-a98b-11c7246400de
+                DependencyProperties:
+                    b504935372d02c8143efd1123bcdc09a~GridBase.ColumnPropertyKey: 1
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MinimumWidth: 80.0
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name*: controlStatusButton
+                Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
+                Content: !TextBlock ref!! 6ba82728-c45e-4f11-882a-690e31f5361a
+                PressedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 11
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 10
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 10
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 36
+            Base:
+                BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
+                BasePartId: f23e1b07-8731-4d77-9f7b-50138dce3f4b
+                InstanceId: 11caaf09-78da-49fa-a20a-956075cc0898
+        -   UIElement: !TextBlock
                 Id: b1f4bd45-d914-4488-b56c-e6ddd23103b7
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: quitText
                 Text: Quit Sample
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
                 TextColor: {R: 255, G: 255, B: 255, A: 255}
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
+                Id: b98b51c4-fc73-4054-beb1-579ba3cde681
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MinimumWidth: 80.0
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name*: powerStatusButton
+                Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
+                Content: !TextBlock ref!! ae71a392-75cf-40dc-8a9a-eae5c824c81e
+                PressedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 11
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 10
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 10
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 36
+            Base:
+                BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
+                BasePartId: f23e1b07-8731-4d77-9f7b-50138dce3f4b
+                InstanceId: 70ad285a-6fca-47e7-a7eb-ae223006866b
         -   UIElement: !ContentDecorator
                 Id: be7dac6e-2cd7-4942-ae90-29d9b0c70d87
                 DependencyProperties:
@@ -512,6 +594,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: speedStatus
                 Padding: {}
                 Content: !ImageElement ref!! 73e5f3f8-4402-4dd0-b35f-4feac3e2a879
@@ -531,7 +616,7 @@ Hierarchy:
                 Name: shipStatusPanel
                 Children:
                     1791e90a6113244fba944dbeade5c8bf: !UniformGrid ref!! 0ae99117-1361-4f24-ba94-4dbeade5c8bf
-                    dc91e37223866f44908a05cb379af0fd: !Button ref!! 72e391dc-8623-446f-908a-05cb379af0fd
+                    dc91e37223866f44908a05cb379af0fd: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! 72e391dc-8623-446f-908a-05cb379af0fd
                     ec34ce7c944108438543738a610c0ae3: !UniformGrid ref!! 7cce34ec-4194-4308-8543-738a610c0ae3
                 RowDefinitions:
                     f3093b9502fea4469496aee3d21e6dc9: {}
@@ -587,7 +672,7 @@ Hierarchy:
                         SizeValue: 85.0
                 LayerDefinitions:
                     a485e6229f8a0147a3c79d0bf4ae5721: {}
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: d0041b6e-e2ac-4a1a-8efb-34b43a2c0f63
                 DependencyProperties:
                     f6cde5f23fd411677b5757983c241ebe~GridBase.RowPropertyKey: 5
@@ -596,6 +681,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: quitButton
                 Padding: {Left: 90.0, Top: 30.0, Right: 25.0, Bottom: 35.0}
                 Content: !TextBlock ref!! b1f4bd45-d914-4488-b56c-e6ddd23103b7
@@ -608,6 +696,9 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 28
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 38
         -   UIElement: !TextBlock
                 Id: f388d14a-fa2b-4015-b18a-feb03845ff9e
                 DependencyProperties: {}
@@ -628,6 +719,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name*: lifeStatusText
                 Text*: L
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
@@ -657,28 +751,3 @@ Hierarchy:
                     3fe61c90566c404497f31578c1de7f82: {}
                 LayerDefinitions:
                     a5405c0bfaed544ba7b7e82f66147149: {}
-        -   UIElement: !Button
-                Id: fe6c79da-9aaa-4a4b-a4b6-fb34187955c4
-                DependencyProperties: {}
-                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
-                DrawLayerNumber: 2
-                HorizontalAlignment: Center
-                VerticalAlignment: Center
-                Margin: {}
-                MinimumWidth: 80.0
-                Name*: powerStatusButton
-                Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
-                Content: !TextBlock ref!! 4f82b8bd-cfe4-4a78-8433-e6b5c78ea151
-                PressedImage: !SpriteFromSheet
-                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
-                    CurrentFrame: 11
-                NotPressedImage: !SpriteFromSheet
-                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
-                    CurrentFrame: 10
-                MouseOverImage: !SpriteFromSheet
-                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
-                    CurrentFrame: 10
-            Base:
-                BasePartAsset: 7875b271-4e64-42d3-883e-760ff1451ac2:MainLibrary
-                BasePartId: dab3aa68-8d2a-4ca6-98d1-2d105b28679f
-                InstanceId: b58d8198-aa8e-4b89-8a7b-627cfcc55129

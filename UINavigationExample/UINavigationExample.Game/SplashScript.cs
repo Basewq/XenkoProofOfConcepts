@@ -19,7 +19,18 @@ namespace UINavigationExample
 
         protected override void UpdateScene()
         {
-            if (Input.PointerEvents.Any(e => e.EventType == PointerEventType.Pressed))
+            bool hasInput = Input.PointerEvents.Any(e => e.EventType == PointerEventType.Pressed);
+            hasInput = hasInput || Input.IsKeyPressed(Keys.Space) || Input.IsKeyPressed(Keys.Enter);
+            if (Input.HasGamePad && Input.DefaultGamePad != null)
+            {
+                var gamePad = Input.DefaultGamePad;
+                hasInput = hasInput
+                    || gamePad.IsButtonPressed(GamePadButton.A)
+                    || gamePad.IsButtonPressed(GamePadButton.B)
+                    || gamePad.IsButtonPressed(GamePadButton.X)
+                    || gamePad.IsButtonPressed(GamePadButton.Y);
+            }
+            if (hasInput)
             {
                 // Next scene
                 SceneSystem.SceneInstance.RootScene = Content.Load(NextSceneUrl);

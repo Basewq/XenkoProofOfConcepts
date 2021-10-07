@@ -15,7 +15,7 @@ Hierarchy:
         - !ModalElement ref!! 0b37bd5e-d5ef-4cfe-b41e-0aad87c4df72
         - !UniformGrid ref!! 3f43a337-c8d0-4d80-830f-dd1621f717cd
         - !ModalElement ref!! efdc3200-c774-4cea-a94d-e0e706bd7c4d
-        - !Button ref!! dab3aa68-8d2a-4ca6-98d1-2d105b28679f
+        - !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! dab3aa68-8d2a-4ca6-98d1-2d105b28679f
         - !ContentDecorator ref!! 4a091c2c-0978-404f-99b3-dbf13f6468f5
     Parts:
         -   UIElement: !ImageElement
@@ -36,6 +36,9 @@ Hierarchy:
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: ShipSelectPopup
                 Padding: {}
                 Content: !ContentDecorator ref!! a407797f-2bb7-4d43-be29-bd8682e09164
@@ -49,13 +52,16 @@ Hierarchy:
                 Text: Validate
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
                 TextColor: {R: 255, G: 255, B: 255, A: 255}
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: 14f2fc6b-320f-48e3-bfc6-121d8a6e3cfb
                 DependencyProperties:
                     d7d0d5432abcbf7e3a64f7b31109541d~GridBase.ColumnPropertyKey: 1
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: cancelButton
                 Padding: {Left: 90.0, Top: 30.0, Right: 25.0, Bottom: 35.0}
                 Content: !TextBlock ref!! ab061694-a406-4e39-b174-c95e023d1b66
@@ -68,7 +74,10 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 28
-        -   UIElement: !EditText
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 38
+        -   UIElement: !UINavigationExample.UI.EditTextExt,UINavigationExample.Game
                 Id: 17e65222-cb1c-4e25-9a7e-e8f8807d3d09
                 DependencyProperties:
                     9693d21c8b1a2f328399f7058d38ae76~GridBase.RowPropertyKey: 1
@@ -79,6 +88,9 @@ Hierarchy:
                 VerticalAlignment: Center
                 Margin: {Top: 80.0, Bottom: 80.0}
                 MinimumWidth: 340.0
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: nameEditText
                 Padding: {Left: 30.0, Top: 30.0, Right: 30.0, Bottom: 40.0}
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
@@ -130,6 +142,9 @@ Hierarchy:
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: layoutGrid
                 Children:
                     401e3aa2c2bd7a418cb0df68dc17cd06: !TextBlock ref!! a23a1e40-bdc2-417a-8cb0-df68dc17cd06
@@ -163,10 +178,12 @@ Hierarchy:
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
                 MaximumHeight: 100.0
+                MaximumDepth: 3.4028235E+38
                 Name: ShipButton
                 Children:
-                    e11f00be0866fe4bb639702029d9ffa1: !Button ref!! be001fe1-6608-4bfe-b639-702029d9ffa1
+                    e11f00be0866fe4bb639702029d9ffa1: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! be001fe1-6608-4bfe-b639-702029d9ffa1
                     1252f03dbb2e804bb63d82c8c5181fc0: !ImageElement ref!! 3df05212-2ebb-4b80-b63d-82c8c5181fc0
         -   UIElement: !ContentDecorator
                 Id: 4a091c2c-0978-404f-99b3-dbf13f6468f5
@@ -176,6 +193,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: StatusStar
                 Padding: {}
                 Content: !ImageElement ref!! bb0e5ff1-a42a-4aba-aae0-c000d6098595
@@ -195,13 +215,16 @@ Hierarchy:
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont
                 TextSize: 19.0
                 TextColor: {R: 0, G: 0, B: 0, A: 255}
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: 54f5ff1d-4e87-4ba9-9fd5-e585f02f4ac1
                 DependencyProperties:
                     4bb09791328ed5b45cb57ed818b51dcb~GridBase.ColumnPropertyKey: 3
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: validateButton
                 Padding: {Left: 90.0, Top: 30.0, Right: 25.0, Bottom: 35.0}
                 Content: !TextBlock ref!! 0ef632cb-94ee-4836-b983-05975c6b6e62
@@ -214,16 +237,22 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 28
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 38
         -   UIElement: !Grid
                 Id: 56441c6b-3ffd-49d3-afa7-3e6d3498a682
                 DependencyProperties:
                     1d677c4788c9341114ccb130e5982762~GridBase.RowPropertyKey: 2
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: buttonPanel
                 Children:
-                    6bfcf2140f32e348bfc6121d8a6e3cfb: !Button ref!! 14f2fc6b-320f-48e3-bfc6-121d8a6e3cfb
-                    1dfff554874ea94b9fd5e585f02f4ac1: !Button ref!! 54f5ff1d-4e87-4ba9-9fd5-e585f02f4ac1
+                    6bfcf2140f32e348bfc6121d8a6e3cfb: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! 14f2fc6b-320f-48e3-bfc6-121d8a6e3cfb
+                    1dfff554874ea94b9fd5e585f02f4ac1: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game ref!! 54f5ff1d-4e87-4ba9-9fd5-e585f02f4ac1
                 RowDefinitions:
                     ff32e1f9fc33504aa59c11f6418d3e5e: {}
                 ColumnDefinitions:
@@ -248,7 +277,7 @@ Hierarchy:
                 Name: popupContentPanel
                 Children:
                     e98b9567e8efbf409ff56f41765b4d16: !TextBlock ref!! 67958be9-efe8-40bf-9ff5-6f41765b4d16
-                    2252e6171ccb254e9a7ee8f8807d3d09: !EditText ref!! 17e65222-cb1c-4e25-9a7e-e8f8807d3d09
+                    2252e6171ccb254e9a7ee8f8807d3d09: !UINavigationExample.UI.EditTextExt,UINavigationExample.Game ref!! 17e65222-cb1c-4e25-9a7e-e8f8807d3d09
                     6b1c4456fd3fd349afa73e6d3498a682: !Grid ref!! 56441c6b-3ffd-49d3-afa7-3e6d3498a682
                 RowDefinitions:
                     d1e27dfde3aaa84e8443ad00d3d689da:
@@ -357,6 +386,9 @@ Hierarchy:
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 DrawLayerNumber: 2
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: welcomePopupContent
                 Padding: {Left: 85.0, Top: 130.0, Right: 85.0, Bottom: 110.0}
                 Content: !Grid ref!! 58768f72-7962-4070-a314-ff9947177867
@@ -430,7 +462,7 @@ Hierarchy:
                     CurrentFrame: 13
                 Color: {R: 255, G: 255, B: 255, A: 255}
                 StretchDirection: DownOnly
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: be001fe1-6608-4bfe-b639-702029d9ffa1
                 DependencyProperties:
                     5b7f4429dada50f0f023d8dc7cc527ea~Panel.ZIndexPropertyKey: 0
@@ -449,7 +481,7 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 21
-        -   UIElement: !Button
+        -   UIElement: !UINavigationExample.UI.ButtonExt,UINavigationExample.Game
                 Id: dab3aa68-8d2a-4ca6-98d1-2d105b28679f
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
@@ -458,6 +490,9 @@ Hierarchy:
                 VerticalAlignment: Center
                 Margin: {}
                 MinimumWidth: 80.0
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: StatusButton
                 Padding: {Left: 22.0, Top: 11.0, Right: 22.0, Bottom: 15.0}
                 Content: !TextBlock ref!! ff603298-54a0-4d64-9efa-3a855e759809
@@ -470,6 +505,9 @@ Hierarchy:
                 MouseOverImage: !SpriteFromSheet
                     Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
                     CurrentFrame: 10
+                NavigatableSelectedImage: !SpriteFromSheet
+                    Sheet: fff83dea-bbad-4725-b985-1c5029dfb14a:MainSceneImages
+                    CurrentFrame: 36
         -   UIElement: !ModalElement
                 Id: efdc3200-c774-4cea-a94d-e0e706bd7c4d
                 DependencyProperties:
@@ -478,6 +516,9 @@ Hierarchy:
                 DrawLayerNumber: 2
                 DepthAlignment: Stretch
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: WelcomePopup
                 Padding: {}
                 Content: !ContentDecorator ref!! 8c3e5c16-2960-4539-8dee-395ab1cf1eb4
@@ -501,6 +542,9 @@ Hierarchy:
                 HorizontalAlignment: Center
                 VerticalAlignment: Center
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Name: statusText
                 Text: A
                 Font: 5ad0470e-d8ef-47be-9434-36d8580e3881:WesternFont

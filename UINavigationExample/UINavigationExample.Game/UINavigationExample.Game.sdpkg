@@ -15,4 +15,5 @@ ExplicitFolders: []
 Bundles: []
 TemplateFolders: []
 RootAssets:
+    - 8dd0d509-b0d7-4955-a202-7a46b806f4fb:ControlsExt
     - e407fb55-d0f3-4b58-94ca-0a0dc61574af:MainScene

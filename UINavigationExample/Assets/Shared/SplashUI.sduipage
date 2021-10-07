@@ -51,6 +51,7 @@ Hierarchy:
                 Margin: {}
                 MaximumWidth: 600.0
                 MaximumHeight: 900.0
+                MaximumDepth: 3.4028235E+38
                 Children:
                     82da850a9933864f8e7ccccae6c6e799: !ContentDecorator ref!! 0a85da82-3399-4f86-8e7c-cccae6c6e799
                     9aead6489c39f74da62543db690bf6d2: !ContentDecorator ref!! 48d6ea9a-399c-4df7-a625-43db690bf6d2
@@ -120,6 +121,9 @@ Hierarchy:
                 DependencyProperties: {}
                 BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
                 Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
                 Children:
                     6ed8156387f6514dab9019a73d34dd7e: !ImageElement ref!! 6315d86e-f687-4d51-ab90-19a73d34dd7e
                     6797a846c14ec741b7c0a12cd0fac7a1: !Grid ref!! 46a89767-4ec1-41c7-b7c0-a12cd0fac7a1

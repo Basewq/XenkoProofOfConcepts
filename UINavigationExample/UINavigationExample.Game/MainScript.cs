@@ -10,6 +10,7 @@ using Stride.Rendering.Sprites;
 using Stride.UI;
 using Stride.UI.Controls;
 using Stride.UI.Panels;
+using UINavigationExample.UI;
 
 namespace UINavigationExample
 {
@@ -37,11 +38,13 @@ namespace UINavigationExample
         private int powerStatus;
         private int controlStatus;
         private int speedStatus;
-        
+
         private int activeShipIndex; // Current SpaceShip of the character
 
         private readonly List<int> starSpriteIndices = new List<int>();
         private readonly List<int> borderStarSpriteIndices = new List<int>();
+
+        private IUINavigationManager _uiNavigationManager;
 
         #region Visuals
 
@@ -50,10 +53,13 @@ namespace UINavigationExample
         private ModalElement shipSelectPopup; // Root of SpaceShip select popup
         private ModalElement welcomePopup; // Root of welcome popup
 
+        private Grid mainLayoutGrid;
+
         // Life gauge
         private RectangleF gaugeBarRegion;
         private Grid lifebarGrid;
         private Sprite lifebarGaugeImage;
+
         // Counters
         private TextBlock bonusCounter;
         private TextBlock lifeCounter;
@@ -147,6 +153,9 @@ namespace UINavigationExample
         public override void Start()
         {
             base.Start();
+
+            _uiNavigationManager = Services.GetService<IUINavigationManager>();
+
             ShowWelcomePopup();
         }
 
@@ -183,7 +192,7 @@ namespace UINavigationExample
             InitializeWelcomePopup();
 
             // Add pop-ups to the overlay
-            var overlay = (UniformGrid) page.RootElement;
+            var overlay = (UniformGrid)page.RootElement;
             overlay.Children.Add(shipSelectPopup);
             overlay.Children.Add(welcomePopup);
 
@@ -217,11 +226,15 @@ namespace UINavigationExample
         private void CloseShipSelectPopup()
         {
             shipSelectPopup.Visibility = Visibility.Collapsed;
+            mainLayoutGrid.IsEnabled = true;
+            _uiNavigationManager?.OnControlStatesUpdated();
         }
 
         private void CloseWelcomePopup()
         {
             welcomePopup.Visibility = Visibility.Collapsed;
+            mainLayoutGrid.IsEnabled = true;
+            _uiNavigationManager?.OnControlStatesUpdated();
         }
 
         private string CreateBonusCountText()
@@ -251,7 +264,7 @@ namespace UINavigationExample
             spaceShip.SpeedImageElement = shipButton.FindVisualChildOfType<ImageElement>("speedImage");
 
             var shipIndex = MainSceneImages.FindImageIndex(spaceShip.Name);
-            ((SpriteFromSheet) shipImage.Source).CurrentFrame = shipIndex;
+            ((SpriteFromSheet)shipImage.Source).CurrentFrame = shipIndex;
 
             shipButton.Click += delegate
             {
@@ -278,6 +291,8 @@ namespace UINavigationExample
         private void InitializeMainPage()
         {
             var rootElement = page.RootElement;
+
+            mainLayoutGrid = rootElement.FindVisualChildOfType<Grid>("mainLayout");
 
             // counters
             bonusCounter = rootElement.FindVisualChildOfType<TextBlock>("bonusCounter");
@@ -364,7 +379,7 @@ namespace UINavigationExample
             // FIXME: UI asset should support multiline text
             var welcomeText = welcomePopup.FindVisualChildOfType<TextBlock>("welcomeText");
             welcomeText.Text = "Welcome to stride UI sample.\nPlease name your character";
-            
+
             var cancelButton = welcomePopup.FindVisualChildOfType<Button>("cancelButton");
             cancelButton.Click += delegate
             {
@@ -408,11 +423,15 @@ namespace UINavigationExample
         private void ShowShipSelectionPopup()
         {
             shipSelectPopup.Visibility = Visibility.Visible;
+            mainLayoutGrid.IsEnabled = false;
+            _uiNavigationManager?.OnControlStatesUpdated();
         }
 
         public void ShowWelcomePopup()
         {
             welcomePopup.Visibility = Visibility.Visible;
+            mainLayoutGrid.IsEnabled = false;
+            _uiNavigationManager?.OnControlStatesUpdated();
         }
 
         private void UpdateShipStatus()

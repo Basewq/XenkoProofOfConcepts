@@ -258,3 +258,24 @@ Sprites:
         Center: {X: 0.0, Y: 0.0}
         Borders: {X: 48.0, Y: 21.0, Z: 106.0, W: 25.0}
         BorderColor: {R: 0, G: 0, B: 0, A: 0}
+    1b2c44cb4291c2f01293774a064e6162:
+        Source: !file ../../Resources/ui_tex.png
+        Name: small_display_element_selected
+        TextureRegion: {X: 804, Y: 486, Width: 94, Height: 97}
+        Center: {X: 0.0, Y: 0.0}
+        Borders: {X: 0.0, Y: 0.0, Z: 0.0, W: 0.0}
+        BorderColor: {R: 0, G: 0, B: 0, A: 0}
+    dd3e1c0f758239cc8ded85b2d4171ffb:
+        Source: !file ../../Resources/ui_tex.png
+        Name: display_element_selected
+        TextureRegion: {X: 596, Y: 484, Width: 204, Height: 193}
+        Center: {X: 0.0, Y: 0.0}
+        Borders: {X: 48.0, Y: 21.0, Z: 106.0, W: 25.0}
+        BorderColor: {R: 0, G: 0, B: 0, A: 0}
+    af0dc63a97fc4745143dbe7e52cd4820:
+        Source: !file ../../Resources/ui_tex.png
+        Name: button0_selected
+        TextureRegion: {X: 620, Y: 677, Width: 219, Height: 89}
+        Center: {X: 0.0, Y: 0.0}
+        Borders: {X: 110.0, Y: 0.0, Z: 88.0, W: 0.0}
+        BorderColor: {R: 0, G: 0, B: 0, A: 0}
