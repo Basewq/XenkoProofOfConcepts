@@ -9,7 +9,7 @@ Note that some projects were originally created with Xenko, then upgraded to Str
 
 These projects are aimed more towards intermediate to advanced programmers, and may require further investigation into the Stride source code, or search online, for more information on how some of the applied code works, as some of the some techniques may not be officially what the Stride developers intended for us to use.
 
-Currently there are seven projects:
+Currently there are 8 projects:
 * `EntityProcessorExample`: Processor-centric code rather than "Script"/Component-centric code.
 * `ObjectInfoRenderTargetExample`: Render entity information onto a `Texture` and then read this in a subsequent shader.
 * `ScreenSpaceDecalExample`: Use a cube projector and renders a given `Texture` onto any surfaces within the projector.
@@ -17,6 +17,7 @@ Currently there are seven projects:
 * `GameScreenManagerExample`: Game screen navigation via a GameScreenManager entity.
 * `BepuPhysicsExample`: A rough attempt at integrating Bepu2 physics engine into Stride (this is not completed and has been abandoned).
 * `MultiplayerExample`: Multiplayer project with a client application and a server application, both running with Stride code.
+* `UINavigationExample`: Example on extending existing UI controls to add the ability to traverse between UI via keyboard/gamepad.
 
 ---
 The only project worth showing a screenshot of for this front-end readme file is the `ScreenSpaceDecalExample`:
