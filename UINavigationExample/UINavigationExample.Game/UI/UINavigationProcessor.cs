@@ -132,7 +132,7 @@ namespace UINavigationExample.UI
                     isTabPressed = true;
                 }
             }
-            if (_selectedControl.Control != null)
+            if (_selectedControl.Control != null && isTabPressed)
             {
                 var navMmnt = new UINavigationInputMovement
                 {
