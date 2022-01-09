@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAssetExample.Windows", "CustomAssetExample.Windows\CustomAssetExample.Windows.csproj", "{7FABA6DC-5FD9-4D94-87A2-E23581E81D98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomAssetExample", "CustomAssetExample\CustomAssetExample.csproj", "{E7D9A9A5-562A-4B51-97A6-EC67BA46A251}"
+EndProject
+Global
+EndGlobal
