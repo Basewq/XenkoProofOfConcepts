@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CutsceneTimelineExample.Windows", "CutsceneTimelineExample.Windows\CutsceneTimelineExample.Windows.csproj", "{12FEB792-01D5-42A7-A0B9-CC138C8ABA0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CutsceneTimelineExample", "CutsceneTimelineExample\CutsceneTimelineExample.csproj", "{3769280B-8C6C-4FDA-B411-5C3F1657A17C}"
+EndProject
+Global
+EndGlobal
