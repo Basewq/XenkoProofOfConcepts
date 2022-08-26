@@ -11,6 +11,9 @@ Hierarchy:
         - ref!! 5b9f7e53-d8c1-4705-8695-b1b04ebc0ed1
         - ref!! 2d3bae78-437e-4544-ae1c-ab304c15a348
         - ref!! 5f9b9d97-924c-42e6-8126-84da73f161ec
+        - ref!! 973d15c5-c3ea-4418-966f-34cb577de56f
+        - ref!! b99c102d-3f34-4bad-a941-50f675939e63
+        - ref!! 573ac3d4-a533-47db-baa3-283537234e40
     Parts:
         -   Entity:
                 Id: 2d3bae78-437e-4544-ae1c-ab304c15a348
@@ -32,8 +35,8 @@ Hierarchy:
                 Components:
                     83ccf9cee80730142f8f1aa9961cb5c1: !TransformComponent
                         Id: ff1ae596-4e26-4275-8fe9-3f71a93bcff4
-                        Position: {X: 2.6, Y: 0.6, Z: -1.0}
-                        Rotation: {X: 0.0, Y: 0.82903755, Z: 0.0, W: 0.5591929}
+                        Position: {X: 3.0, Y: 4.9997816, Z: 8.5}
+                        Rotation: {X: -0.25488698, Y: 0.16773126, Z: 0.044943452, W: 0.9512512}
                         Scale: {X: 1.0, Y: 1.0, Z: 1.0}
                         Children: {}
                     12bb92398fdcf644a2ac8555f5e2a01e: !CameraComponent
@@ -50,6 +53,25 @@ Hierarchy:
                         KeyboardRotationSpeed: {X: 3.0, Y: 3.0}
                         MouseRotationSpeed: {X: 1.0, Y: 1.0}
                         TouchRotationSpeed: {X: 1.0, Y: 0.7}
+        -   Entity:
+                Id: 573ac3d4-a533-47db-baa3-283537234e40
+                Name: TimelineTarget
+                Components:
+                    a149e91ece9cf587482fb5570cfa1f48: !TransformComponent
+                        Id: c11bb2e9-7dcc-4e99-a572-26b779b4ba5c
+                        Position: {X: 0.0, Y: 0.0, Z: -2.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0751a39da11c267d98ba32981159808a: !ModelComponent
+                        Id: abbe7878-f2f1-4865-8e94-a59584d23547
+                        Model: f68ea240-695a-4de5-9884-60d77544fcd6:Models/mannequinModel
+                        Materials: {}
+                    699e7dca3a830b5880b3fcd61c86a60b: !AnimationComponent
+                        Id: 69acf7dd-edad-45c0-9f15-540509d4f2bc
+                        Animations:
+                            ccf4451918a05d73461900ca3b01b2c6~Idle: 5f286f7e-7d38-44cf-9bc1-3aad7be4f0fa:Animations/Idle
+                            53b873c20be42f85e18c76b6149ffbb5~Walk: 9d61b261-66aa-40ed-88ed-3cc448f890c0:Animations/Walk
         -   Entity:
                 Id: 5b9f7e53-d8c1-4705-8695-b1b04ebc0ed1
                 Name: Skybox
@@ -82,6 +104,16 @@ Hierarchy:
                         Model: b30a05dc-634e-482e-9406-f6e40cdb67ab:Sphere
                         Materials: {}
         -   Entity:
+                Id: 5fe50d34-6fe9-49e4-a61b-f27024a7a95e
+                Name: Waypoint2
+                Components:
+                    210d837f23e10a52aa76fdeaee4cd656: !TransformComponent
+                        Id: 7e236a07-0a40-45cb-96b2-bccfad0a768b
+                        Position: {X: 0.0, Y: 0.0, Z: 2.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+        -   Entity:
                 Id: 6c16c487-8432-4eea-bd4a-8f207be361c6
                 Name: Directional light
                 Components:
@@ -106,3 +138,99 @@ Hierarchy:
                                 ComputeTransmittance: false
                                 BiasParameters: {}
                         Intensity: 20.0
+        -   Entity:
+                Id: 973d15c5-c3ea-4418-966f-34cb577de56f
+                Name: TimelineController
+                Components:
+                    210d837f23e10a52aa76fdeaee4cd656: !TransformComponent
+                        Id: 4d965493-4d94-49f0-9ff6-2d9a77f43711
+                        Position: {X: 0.0, Y: 0.5, Z: 2.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    6a3d8002434169986c2ed7a4b4ddc4bb: !CutsceneTimelineExample.Timeline.TimelineController,CutsceneTimelineExample
+                        Id: ac148841-3397-467f-8c92-e21ba0170f2c
+                        EditorControl:
+                            Current Time (s): 0.0
+                            State: Stop
+                            IsPlaybackLooping: false
+                        Timeline:
+                            Tracks:
+                                100d5f5c963703c949296792890b7cd2: !CutsceneTimelineExample.Timeline.TransformTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 0.0
+                                    End Time (s): 2.0
+                                    EntityBindingName: Target
+                                    PositionStartBindingName: Waypoint1
+                                    PositionEndBindingName: Waypoint1
+                                    Entity: ref!! 573ac3d4-a533-47db-baa3-283537234e40
+                                    PositionStart: ref!! 3e657174-6292-4373-8a7c-40a3147dcd87
+                                    PositionEnd: ref!! 3e657174-6292-4373-8a7c-40a3147dcd87
+                                2e097e90ee7a0b11b1453e1aa2761ace: !CutsceneTimelineExample.Timeline.TransformTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 2.0
+                                    End Time (s): 4.0
+                                    EntityBindingName: Target
+                                    PositionStartBindingName: Waypoint1
+                                    PositionEndBindingName: Waypoint2
+                                    Entity: ref!! 573ac3d4-a533-47db-baa3-283537234e40
+                                    PositionStart: ref!! 3e657174-6292-4373-8a7c-40a3147dcd87
+                                    PositionEnd: ref!! 7e236a07-0a40-45cb-96b2-bccfad0a768b
+                                3fc1a0d4d7ef17ef7447dc7844bac20b: !CutsceneTimelineExample.Timeline.PlayAnimationTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 0.0
+                                    End Time (s): 2.0
+                                    EntityBindingName: Target
+                                    AnimationNameBindingName: null
+                                    Entity: ref!! 573ac3d4-a533-47db-baa3-283537234e40
+                                    AnimationName: Idle
+                                a0f3c1a8519ffc6e509324f0ff9b9d65: !CutsceneTimelineExample.Timeline.PlayAnimationTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 2.0
+                                    End Time (s): 4.0
+                                    EntityBindingName: Target
+                                    AnimationNameBindingName: null
+                                    Entity: ref!! 573ac3d4-a533-47db-baa3-283537234e40
+                                    AnimationName: Walk
+                                6fb1e904d4ee352ec141fbaba1777b34: !CutsceneTimelineExample.Timeline.PlayAnimationTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 4.0
+                                    End Time (s): 5.0
+                                    EntityBindingName: Target
+                                    AnimationNameBindingName: null
+                                    Entity: ref!! 573ac3d4-a533-47db-baa3-283537234e40
+                                    AnimationName: Idle
+                            IsLooping: false
+                    fd5e5bf0b9ffb825a66565a0b86edb90: !CutsceneTimelineExample.PlayCutsceneScript,CutsceneTimelineExample
+                        Id: 6d2b606c-7a3d-48ab-9f0f-b43f10755930
+                        TimelineController: ref!! ac148841-3397-467f-8c92-e21ba0170f2c
+                        TimelinePrefab: 6760d803-7d29-44f8-87e3-5302b677eaa5:TimelinePrefab
+                        RetargetWaypoint1: ref!! 3e657174-6292-4373-8a7c-40a3147dcd87
+                        RetargetWaypoint2: ref!! 7e236a07-0a40-45cb-96b2-bccfad0a768b
+                    118c0f1546c5033e3c881086d9359733: !UIComponent
+                        Id: df14848c-d7fa-4e5c-b716-4928c44c4362
+                        Page: c31b07b0-36e9-4608-b888-e3438b7387e2:UIPage
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.28, Y: 0.72, Z: 1.0}
+        -   Entity:
+                Id: b99c102d-3f34-4bad-a941-50f675939e63
+                Name: TimelineWaypoints
+                Components:
+                    906e7da90807cef25bff2645255610b9: !TransformComponent
+                        Id: 7a322ceb-bc0a-4e40-ba1e-2809601abbae
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children:
+                            6dba47059564b930162d4cec72d5d4da: ref!! 3e657174-6292-4373-8a7c-40a3147dcd87
+                            f7a695a4eded61a2aea215434f4f8850: ref!! 7e236a07-0a40-45cb-96b2-bccfad0a768b
+        -   Entity:
+                Id: e35442e1-7704-4a59-83ec-54fb370d4c9f
+                Name: Waypoint1
+                Components:
+                    210d837f23e10a52aa76fdeaee4cd656: !TransformComponent
+                        Id: 3e657174-6292-4373-8a7c-40a3147dcd87
+                        Position: {X: 0.0, Y: 0.0, Z: -2.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}

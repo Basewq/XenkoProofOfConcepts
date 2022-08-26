@@ -1,0 +1,129 @@
+!PrefabAsset
+Id: 6760d803-7d29-44f8-87e3-5302b677eaa5
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! 6493d2fc-715d-4624-a92c-d9e825fb10bb
+        - ref!! 7be507aa-245c-43ff-8ec2-9a635fff6103
+        - ref!! 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+    Parts:
+        -   Entity:
+                Id: 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+                Name: TimelineTarget
+                Components:
+                    a149e91ece9cf587482fb5570cfa1f48: !TransformComponent
+                        Id: 183497fd-7413-4d3c-851d-048a5f5eeb84
+                        Position: {X: -2.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.70710677, Z: 0.0, W: 0.70710677}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    0751a39da11c267d98ba32981159808a: !ModelComponent
+                        Id: fe7dce3e-55e8-4e99-861a-f07a6504e7c3
+                        Model: f68ea240-695a-4de5-9884-60d77544fcd6:Models/mannequinModel
+                        Materials:
+                            7fda21219991fc4aef9ea690d8373e57~0: e90cd67b-0eb7-441c-a67d-50e192918d3a:Materials/MattBlack
+                            bd4df4b2471786cbe50629d7bb571cd8~2: e90cd67b-0eb7-441c-a67d-50e192918d3a:Materials/MattBlack
+                            cfbe340cb212aac2518da2cdfa86db76~5: e90cd67b-0eb7-441c-a67d-50e192918d3a:Materials/MattBlack
+                    699e7dca3a830b5880b3fcd61c86a60b: !AnimationComponent
+                        Id: 9ea5af5a-0df0-4698-a1ea-e930aa56417d
+                        Animations:
+                            ccf4451918a05d73461900ca3b01b2c6~Idle: 5f286f7e-7d38-44cf-9bc1-3aad7be4f0fa:Animations/Idle
+                            53b873c20be42f85e18c76b6149ffbb5~Walk: 9d61b261-66aa-40ed-88ed-3cc448f890c0:Animations/Walk
+        -   Entity:
+                Id: 6493d2fc-715d-4624-a92c-d9e825fb10bb
+                Name: TimelineController
+                Components:
+                    210d837f23e10a52aa76fdeaee4cd656: !TransformComponent
+                        Id: 22601085-b875-4788-b861-e55b26e0514d
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    6a3d8002434169986c2ed7a4b4ddc4bb: !CutsceneTimelineExample.Timeline.TimelineController,CutsceneTimelineExample
+                        Id: 50b7d186-99f6-4cdc-9f93-67f6985a31f8
+                        EditorControl:
+                            Current Time (s): 0.0
+                            State: Pause
+                            IsPlaybackLooping: false
+                        Timeline:
+                            Tracks:
+                                100d5f5c963703c949296792890b7cd2: !CutsceneTimelineExample.Timeline.TransformTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 0.0
+                                    End Time (s): 2.0
+                                    EntityBindingName: Target
+                                    PositionStartBindingName: Waypoint1
+                                    PositionEndBindingName: Waypoint1
+                                    Entity: ref!! 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+                                    PositionStart: ref!! 452089ce-9f25-4f56-b2d3-7e2874f44175
+                                    PositionEnd: ref!! 452089ce-9f25-4f56-b2d3-7e2874f44175
+                                2e097e90ee7a0b11b1453e1aa2761ace: !CutsceneTimelineExample.Timeline.TransformTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 2.0
+                                    End Time (s): 4.0
+                                    EntityBindingName: Target
+                                    PositionStartBindingName: Waypoint1
+                                    PositionEndBindingName: Waypoint2
+                                    Entity: ref!! 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+                                    PositionStart: ref!! 452089ce-9f25-4f56-b2d3-7e2874f44175
+                                    PositionEnd: ref!! 81956142-9f0f-48ce-8464-389229d94144
+                                3fc1a0d4d7ef17ef7447dc7844bac20b: !CutsceneTimelineExample.Timeline.PlayAnimationTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 0.0
+                                    End Time (s): 2.0
+                                    EntityBindingName: Target
+                                    AnimationNameBindingName: null
+                                    Entity: ref!! 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+                                    AnimationName: Idle
+                                a0f3c1a8519ffc6e509324f0ff9b9d65: !CutsceneTimelineExample.Timeline.PlayAnimationTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 2.0
+                                    End Time (s): 4.0
+                                    EntityBindingName: Target
+                                    AnimationNameBindingName: null
+                                    Entity: ref!! 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+                                    AnimationName: Walk
+                                6fb1e904d4ee352ec141fbaba1777b34: !CutsceneTimelineExample.Timeline.PlayAnimationTimelineTrack,CutsceneTimelineExample
+                                    IsTrackMuted: false
+                                    Start Time (s): 4.0
+                                    End Time (s): 5.0
+                                    EntityBindingName: Target
+                                    AnimationNameBindingName: null
+                                    Entity: ref!! 3d5027a3-9b3a-4f6c-a249-52c1acaab15e
+                                    AnimationName: Idle
+                            IsLooping: true
+        -   Entity:
+                Id: 7be507aa-245c-43ff-8ec2-9a635fff6103
+                Name: TimelineWaypoints
+                Components:
+                    906e7da90807cef25bff2645255610b9: !TransformComponent
+                        Id: 3f9125e2-d7ae-435e-a450-0f3ee39f790c
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children:
+                            6dba47059564b930162d4cec72d5d4da: ref!! 452089ce-9f25-4f56-b2d3-7e2874f44175
+                            f7a695a4eded61a2aea215434f4f8850: ref!! 81956142-9f0f-48ce-8464-389229d94144
+        -   Folder: null
+            Entity:
+                Id: 7df44c39-5bd4-441e-b847-6d811d3a0884
+                Name: Waypoint1
+                Components:
+                    210d837f23e10a52aa76fdeaee4cd656: !TransformComponent
+                        Id: 452089ce-9f25-4f56-b2d3-7e2874f44175
+                        Position: {X: -2.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.70710677, Z: 0.0, W: 0.70710677}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+        -   Folder: null
+            Entity:
+                Id: e77e726c-4fe6-4ea3-bb8c-351daf4b80a5
+                Name: Waypoint2
+                Components:
+                    210d837f23e10a52aa76fdeaee4cd656: !TransformComponent
+                        Id: 81956142-9f0f-48ce-8464-389229d94144
+                        Position: {X: 2.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.70710677, Z: 0.0, W: 0.70710677}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}

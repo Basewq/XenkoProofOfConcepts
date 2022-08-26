@@ -4,6 +4,14 @@
     <TargetFrameworks>net6.0-windows</TargetFrameworks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;GAME_EDITOR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Stride.Engine" Version="4.1.0.1734" />
 
@@ -14,5 +22,8 @@
     <PackageReference Include="Stride.UI" Version="4.1.0.1734" />
 
     <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1734" IncludeAssets="build;buildTransitive" />
+  </ItemGroup>
+  <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*GAME_EDITOR(;.*)*$'))">
+    <PackageReference Include="Stride.Editor" Version="4.1.0.1734" />
   </ItemGroup>
 </Project>
