@@ -24,7 +24,7 @@ namespace MultiplayerExample.Engine
 
             foreach (var p in processors)
             {
-                if (!(p is INetworkPreUpdateProcessor proc))
+                if (p is not INetworkPreUpdateProcessor proc)
                 {
                     continue;
                 }
@@ -36,7 +36,7 @@ namespace MultiplayerExample.Engine
 
             foreach (var p in processors)
             {
-                if (!(p is IPreUpdateProcessor proc))
+                if (p is not IPreUpdateProcessor proc)
                 {
                     continue;
                 }
