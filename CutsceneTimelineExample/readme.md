@@ -30,3 +30,5 @@ This can be useful if you want to be able to replay a given cutscene but need to
 The compilation symbol `GAME_EDITOR` is used over the entire `AnimationAssetEditorGameCompilerExt.cs` file and for conditionally referencing `Stride.Editor`. This is because they are not necessary for release builds.
 
 ---
+
+Also note there is a quirk where playing the animation in Game Studio will replay at a low frame rate. This is because Game Studio deems the scene window as out of focus and renders at a low frame rate. Left clicking anywhere within the scene will trigger it as in focus and will render at full frame rate.

@@ -9,14 +9,15 @@ Note that some projects were originally created with Xenko, then upgraded to Str
 
 These projects are aimed more towards intermediate to advanced programmers, and may require further investigation into the Stride source code, or search online, for more information on how some of the applied code works, as some of the some techniques may not be officially what the Stride developers intended for us to use.
 
-Currently there are 8 projects:
+Currently there are 9 projects:
+* `BepuPhysicsExample`: A rough attempt at integrating Bepu2 physics engine into Stride (this is not completed and has been abandoned).
+* `CutsceneTimelineExample`: Playing and previewing a simple cutscene in Stride and Game Studio.
 * `EntityProcessorExample`: Processor-centric code rather than "Script"/Component-centric code.
+* `GameScreenManagerExample`: Game screen navigation via a `GameScreenManager` entity.
+* `MultiplayerExample`: Multiplayer project with a client application and a server application, both running with Stride code.
 * `ObjectInfoRenderTargetExample`: Render entity information onto a `Texture` and then read this in a subsequent shader.
 * `ScreenSpaceDecalExample`: Use a cube projector and renders a given `Texture` onto any surfaces within the projector.
 * `ScreenSpaceDecalRootRendererExample`: Similar to `ScreenSpaceDecalExample`, but uses a `RootRenderFeature` instead of making a processor fake a `RenderMesh`.
-* `GameScreenManagerExample`: Game screen navigation via a GameScreenManager entity.
-* `BepuPhysicsExample`: A rough attempt at integrating Bepu2 physics engine into Stride (this is not completed and has been abandoned).
-* `MultiplayerExample`: Multiplayer project with a client application and a server application, both running with Stride code.
 * `UINavigationExample`: Example on extending existing UI controls to add the ability to traverse between UI via keyboard/gamepad.
 
 ---
