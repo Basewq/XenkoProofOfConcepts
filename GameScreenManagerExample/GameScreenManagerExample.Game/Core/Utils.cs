@@ -163,7 +163,7 @@ namespace GameScreenManagerExample.Core
             var minDistance = float.PositiveInfinity;
 
             var result = new FastList<HitResult>();
-            simulation.RaycastPenetrating(vectorNear.XYZ(), vectorFar.XYZ(), result);
+            simulation.RaycastPenetrating(vectorNear.XYZ(), vectorFar.XYZ(), result, hitTriggers: true);
             foreach (var hitResult in result)
             {
                 ClickType type = ClickType.Empty;
