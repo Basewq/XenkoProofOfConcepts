@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditorExtensionExample.Windows", "LevelEditorExtensionExample.Windows\LevelEditorExtensionExample.Windows.csproj", "{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditorExtensionExample", "LevelEditorExtensionExample\LevelEditorExtensionExample.csproj", "{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}"
+EndProject
+Global
+EndGlobal
