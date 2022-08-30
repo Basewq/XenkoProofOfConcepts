@@ -11,7 +11,22 @@ Hierarchy:
         - ref!! 52278588-7092-4cf9-933e-771925eb2ac6
         - ref!! d066b58f-8162-4718-b533-5891aa9aac33
         - ref!! e2cfbba6-3520-4f71-a4be-026e14c6c54e
+        - ref!! fe67ec01-33c2-45e3-aca2-2275f0400339
     Parts:
+        -   Entity:
+                Id: 0da96512-648e-4fa9-9dff-98d136f0ad8a
+                Name: Sphere
+                Components:
+                    8392619180221bcdc7b49112927cc25d: !TransformComponent
+                        Id: eb5af933-ed6c-4390-b731-f128b3d92cc9
+                        Position: {X: 0.0, Y: 0.5, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    bd3c620e2a222d05ad9393e21eb6e8fa: !ModelComponent
+                        Id: e51d0f4d-165f-40ce-a57e-c2393043ca45
+                        Model: c7d10732-8731-42da-bdf8-8afdba827fa8:Sphere
+                        Materials: {}
         -   Entity:
                 Id: 52278588-7092-4cf9-933e-771925eb2ac6
                 Name: Skybox
@@ -44,7 +59,7 @@ Hierarchy:
                         Name: null
                         Projection: Perspective
                         Slot: 2a90ce50-73bb-4387-bb7e-30cbe30fd381
-                    8d4e6f1e6635564b32d155ff88f2f28c: !LevelEditorExtensionExample.BasicCameraController,LevelEditorExtensionExample
+                    1306a60d759c3e111ed4136f59397fd2: !LevelEditorExtensionExample.BasicCameraController,LevelEditorExtensionExample
                         Id: 3861e403-d58e-402c-b93a-016926d7ce21
                         Gamepad: false
                         KeyboardMovementSpeed: {X: 5.0, Y: 5.0, Z: 5.0}
@@ -106,3 +121,31 @@ Hierarchy:
                         Id: 1ffbcd5d-1932-478e-b69f-b5b81c6c6998
                         Model: c7d10732-8731-42da-bdf8-8afdba827fa8:Sphere
                         Materials: {}
+        -   Entity:
+                Id: fe67ec01-33c2-45e3-aca2-2275f0400339
+                Name: LevelEditor
+                Components:
+                    34c05fcb937b6cce7a95d5b9b69b7ee3: !TransformComponent
+                        Id: 738c7430-7ded-4bc2-9c01-7838f9f15f80
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children:
+                            86caaaee5c11209d3e0d3d7aa77b7115: ref!! eb5af933-ed6c-4390-b731-f128b3d92cc9
+                    b30b01f30608dea44c601de91ee622ac: !UIComponent
+                        Id: 8f7af795-4963-41f2-8605-4fe45799dc02
+                        Page: de1e8acc-46d0-48bf-8459-30968ee9e665:LevelEditorPage
+                        Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+                        Size: {X: 1.28, Y: 0.72, Z: 1.0}
+                        ResolutionStretch: FixedWidthFixedHeight
+                    4962dcd609eec69ccccf20b89753ddc9: !LevelEditorExtensionExample.Editor.LevelEditComponent,LevelEditorExtensionExample
+                        Id: 950940dc-b000-4c97-85e9-1bb7779dcea4
+                        BoxPrefab: 1fe7668b-703d-48ec-9b05-326d02750e45:BoxPrefab
+                        PrefabNextYPosition: 0
+                        InternalData:
+                            - 1
+                            - 2
+                            - 3
+                            - 4
+                            - 5
+                            - 6

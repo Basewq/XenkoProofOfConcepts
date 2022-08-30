@@ -12,6 +12,7 @@
 
     <!-- Force msbuild to check to rebuild this assembly instead of letting VS IDE guess -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <Configurations>Debug;Release;DebugExGameEditor</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

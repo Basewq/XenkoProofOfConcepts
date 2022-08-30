@@ -1,11 +1,36 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 16
-VisualStudioVersion = 16.0.0.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 16.0.0.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditorExtensionExample.Windows", "LevelEditorExtensionExample.Windows\LevelEditorExtensionExample.Windows.csproj", "{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelEditorExtensionExample.Windows", "LevelEditorExtensionExample.Windows\LevelEditorExtensionExample.Windows.csproj", "{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditorExtensionExample", "LevelEditorExtensionExample\LevelEditorExtensionExample.csproj", "{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelEditorExtensionExample", "LevelEditorExtensionExample\LevelEditorExtensionExample.csproj", "{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugExGameEditor|Any CPU = DebugExGameEditor|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCBF29D4-6363-4BC5-B511-D3F4EE36FAFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}.DebugExGameEditor|Any CPU.ActiveCfg = DebugExGameEditor|Any CPU
+		{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}.DebugExGameEditor|Any CPU.Build.0 = DebugExGameEditor|Any CPU
+		{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF9837BC-23C0-4666-9D6D-5D646CB6FDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {766D6AA7-DADC-44A1-A62A-726BB1667950}
+	EndGlobalSection
 EndGlobal
