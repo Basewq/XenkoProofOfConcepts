@@ -153,7 +153,7 @@ namespace MultiplayerExample.Network
                 _networkSystem.DebugWriteLine($"Svr OnNetworkError: {socketError}");
             }
 
-            void INetEventListener.OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
+            void INetEventListener.OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
             {
                 var message = new NetworkMessageReader(reader);
                 if (!message.ReadEnumFromByte<ClientMessageType>(out var messageType))
