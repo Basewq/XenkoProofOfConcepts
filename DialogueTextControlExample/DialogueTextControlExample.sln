@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialogueTextControlExample.Windows", "DialogueTextControlExample.Windows\DialogueTextControlExample.Windows.csproj", "{95BE9276-6EFB-4E8A-8940-FDBD03367AA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DialogueTextControlExample", "DialogueTextControlExample\DialogueTextControlExample.csproj", "{C2DC58DE-3D27-4C1C-853C-46B228CF08E6}"
+EndProject
+Global
+EndGlobal
