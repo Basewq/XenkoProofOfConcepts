@@ -37,9 +37,9 @@ Audio has not been implemented in this example, but there a multiple ways to sol
 ---
 **Advanced programmer note:**
 
-`DialogueTextRenderer` requires access to some internal objects that Stride does not expose publicly. This means this may break in the future (though unlikely!).
+`DialogueTextRenderer` requires access to some internal objects that Stride does not expose publicly, which is done via reflection. This means this may break in the future (though unlikely for the time being).
 
-Refer to `StrideInternalExtensions` to see which fields/methods used.
+Refer to `StrideInternalExtensions` to see which fields/methods accessed.
 
 ---
 **Limitations of this proof of concept:**

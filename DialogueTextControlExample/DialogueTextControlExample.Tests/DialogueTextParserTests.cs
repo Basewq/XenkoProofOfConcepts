@@ -121,6 +121,7 @@ namespace DialogueTextControlExample.Tests
         public void ParseTestExplicitAttributeValueMultipleV2()
         {
             float expectedAmplitude = 2.5f;
+            var expectedDirection = WaveTextEffect.WaveDirection.Left;
             float expectedFrequency = 3.0f;
             string expectedTextToDisplay = "This is a wave text";
             string dialogueText = expectedTextToDisplay
@@ -133,6 +134,28 @@ namespace DialogueTextControlExample.Tests
             var waveTextEffect = builder.TextEffects.FirstOrDefault(x => x is WaveTextEffect) as WaveTextEffect;
             Assert.NotNull(waveTextEffect);
             Assert.Equal(expectedAmplitude, waveTextEffect?.Amplitude ?? float.NaN);
+            Assert.Equal(expectedDirection, waveTextEffect?.Direction ?? (WaveTextEffect.WaveDirection)(-1));
+            Assert.Equal(expectedFrequency, waveTextEffect?.Frequency ?? float.NaN);
+        }
+
+        [Fact]
+        public void ParseTestExplicitAttributeValueMultipleWithExtraWhitespaces()
+        {
+            float expectedAmplitude = 2.5f;
+            var expectedDirection = WaveTextEffect.WaveDirection.Left;
+            float expectedFrequency = 3.0f;
+            string expectedTextToDisplay = "This is a wave text";
+            string dialogueText = expectedTextToDisplay
+                                    .Replace("wave", $"<wave   amp=2.5  dir=left   freq=3  >wave</wave>");
+
+            var parser = new DialogueTextParser();
+            var builder = parser.Parse(dialogueText);
+            var displayText = builder.GetDisplayText();
+            Assert.Equal(expectedTextToDisplay, displayText);
+            var waveTextEffect = builder.TextEffects.FirstOrDefault(x => x is WaveTextEffect) as WaveTextEffect;
+            Assert.NotNull(waveTextEffect);
+            Assert.Equal(expectedAmplitude, waveTextEffect?.Amplitude ?? float.NaN);
+            Assert.Equal(expectedDirection, waveTextEffect?.Direction ?? (WaveTextEffect.WaveDirection)(-1));
             Assert.Equal(expectedFrequency, waveTextEffect?.Frequency ?? float.NaN);
         }
 

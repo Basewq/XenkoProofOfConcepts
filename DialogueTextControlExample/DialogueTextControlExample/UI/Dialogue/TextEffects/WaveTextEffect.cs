@@ -52,6 +52,12 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
 
         public override void Update(GameTime time, DialogueTextGlyphRenderInfo glyphRenderInfo)
         {
+            // A full sine wave cycle = 2 * Pi = 6.28, therefore if an 'O' character is approximately
+            // equal width and height, and has a height approximately equal to fontSize,
+            // one 'O' character is:
+            // OCharWidth / fontSize = 1
+            // So a full sine wave cycle is about 6.28 'O' across by default
+            // (this is only an approximation to get an idea how wide the wave should appear).
             var fontSize = glyphRenderInfo.TextControl.ActualTextSize;
             var dt = (float)time.Total.TotalSeconds;
             float waveDir = (Direction == WaveDirection.Right) ? -1 : 1;
