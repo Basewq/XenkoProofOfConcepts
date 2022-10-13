@@ -1,0 +1,23 @@
+!UILibraryAsset
+Id: 2da10135-51e7-4b6c-93a3-4d6292f39967
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+PublicUIElements:
+    482fc30a-a8a3-4db2-9fb2-e61eef968a60: DialogueText
+Hierarchy:
+    RootParts:
+        - !DialogueTextControlExample.UI.Controls.DialogueText,DialogueTextControlExample ref!! 482fc30a-a8a3-4db2-9fb2-e61eef968a60
+    Parts:
+        -   UIElement: !DialogueTextControlExample.UI.Controls.DialogueText,DialogueTextControlExample
+                BoldFont: 52a4bc7a-8370-4892-8c5d-9b622abb1016:DialogueSpriteFontBold
+                ItalicFont: 451023c8-ecb6-4041-91a6-3f0cc09648d5:DialogueSpriteFontItalic
+                BoldAndItalicFont: 2288809c-386d-4fea-9e1e-9be53db8c1b5:DialogueSpriteFontBoldAndItalic
+                Id: 482fc30a-a8a3-4db2-9fb2-e61eef968a60
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}

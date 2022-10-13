@@ -64,6 +64,8 @@ namespace DialogueTextControlExample
             yaw = 0f;
             pitch = 0f;
 
+            const bool enableKeyboard = false;
+
             // Keyboard and Gamepad based movement
             {
                 // Our base speed is: one unit per second:
@@ -98,7 +100,7 @@ namespace DialogueTextControlExample
                     }
                 }
 
-                if (Input.HasKeyboard)
+                if (enableKeyboard && Input.HasKeyboard)
                 {
                     // Move with keyboard
                     // Forward/Backward
@@ -165,7 +167,7 @@ namespace DialogueTextControlExample
                     rotation.Y += -padState.RightThumb.X;
                 }
 
-                if (Input.HasKeyboard)
+                if (enableKeyboard && Input.HasKeyboard)
                 {
                     if (Input.IsKeyDown(Keys.NumPad2))
                     {

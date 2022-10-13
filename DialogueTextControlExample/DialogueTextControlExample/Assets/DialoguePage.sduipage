@@ -1,0 +1,278 @@
+!UIPageAsset
+Id: c965d73d-46ea-40ca-91f6-79e017091e69
+SerializedVersion: {Stride: 2.1.0.1}
+Tags: []
+Design:
+    Resolution: {X: 1280.0, Y: 720.0, Z: 1000.0}
+Hierarchy:
+    RootParts:
+        - !Grid ref!! 28ad5974-3520-43a9-ac4f-49060a933d0a
+    Parts:
+        -   UIElement: !Grid
+                Id: 28ad5974-3520-43a9-ac4f-49060a933d0a
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    be4fa46310a10fd687122bb05353bda6: !StackPanel ref!! 6f3e4218-bf2a-4e76-a665-3909096b99a1
+                RowDefinitions: {}
+                ColumnDefinitions: {}
+                LayerDefinitions: {}
+        -   UIElement: !Button
+                Id: 330670cd-e641-43b9-a07c-9c2f931aaf12
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {Left: 5.0, Right: 5.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: ShowDialogueButton1
+                Content: !TextBlock ref!! 5f5eeccb-fc9c-4151-ba51-e0e663ca22d9
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !Button
+                Id: 3f615a3b-9d2c-4ce1-8297-ae67458985f2
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {Left: 5.0, Right: 5.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: ShowDialogueButton3
+                Content: !TextBlock ref!! 8e45a7e7-562b-4352-915d-81fc6c1ee149
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !DialogueTextControlExample.UI.Controls.DialogueText,DialogueTextControlExample
+                BoldFont: 52a4bc7a-8370-4892-8c5d-9b622abb1016:DialogueSpriteFontBold
+                ItalicFont: 451023c8-ecb6-4041-91a6-3f0cc09648d5:DialogueSpriteFontItalic
+                BoldAndItalicFont: 2288809c-386d-4fea-9e1e-9be53db8c1b5:DialogueSpriteFontBoldAndItalic
+                Id: 4dda48aa-710c-4d4c-925e-8f53047b6651
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth*: 3.4028235E+38
+                MaximumHeight*: 3.4028235E+38
+                MaximumDepth*: 3.4028235E+38
+                Name*: DialogueText
+                Text*: 
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+            Base:
+                BasePartAsset: 2da10135-51e7-4b6c-93a3-4d6292f39967:DialogueUILibrary
+                BasePartId: 482fc30a-a8a3-4db2-9fb2-e61eef968a60
+                InstanceId: c9240f9a-5a65-4dd1-8ca3-68dede85ca6d
+        -   UIElement: !Border
+                Id: 4ed84bec-2195-4b40-afa7-23454254d8a2
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 200}
+                Height: 150.0
+                Margin: {Bottom: 10.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Padding: {Left: 10.0, Top: 10.0, Right: 10.0, Bottom: 10.0}
+                Content: !DialogueTextControlExample.UI.Controls.DialogueText,DialogueTextControlExample ref!! 4dda48aa-710c-4d4c-925e-8f53047b6651
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 1.0, Top: 1.0, Right: 1.0, Bottom: 1.0}
+        -   UIElement: !TextBlock
+                Id: 5f5eeccb-fc9c-4151-ba51-e0e663ca22d9
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Text: Dialogue 1
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Border
+                Id: 6df1bb80-7974-40fe-b607-efd43a6c3cd3
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 200}
+                Height: 150.0
+                Margin: {Bottom: 10.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Padding: {Left: 10.0, Top: 10.0, Right: 10.0, Bottom: 10.0}
+                Content: !TextBlock ref!! fb0c798d-10d0-4716-8fb2-8301ceae1365
+                BorderColor: {R: 0, G: 0, B: 0, A: 255}
+                BorderThickness: {Left: 1.0, Top: 1.0, Right: 1.0, Bottom: 1.0}
+        -   UIElement: !StackPanel
+                Id: 6f3e4218-bf2a-4e76-a665-3909096b99a1
+                DependencyProperties:
+                    ec88b8c5f5a42f0a10ce3250472d7696~GridBase.RowPropertyKey: 1
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Width: 600.0
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    083dfc95e0e45ea25c2a17986ecfd0df: !EditText ref!! c37ec854-5376-4292-b554-50073e5839a9
+                    1c8625f6a45579f3695b83c8585d52a4: !StackPanel ref!! b5f717a3-e145-4d79-b8cd-c16667691e9f
+                    27610a62c531e560cfc2dde14327f54d: !Border ref!! 6df1bb80-7974-40fe-b607-efd43a6c3cd3
+                    eb2c6574e2e53c9998bcde89f7fefde1: !Border ref!! 4ed84bec-2195-4b40-afa7-23454254d8a2
+                    721da39bb833ebb522927bc3d15e3d8f: !Button ref!! a1af21cb-1064-4057-8439-1f8093886d54
+        -   UIElement: !TextBlock
+                Id: 70ebb9a8-12d2-40b4-aae5-3fef1696b521
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Text: Dialogue 2
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: 8e45a7e7-562b-4352-915d-81fc6c1ee149
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Text: Dialogue 3
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !TextBlock
+                Id: a17e00c1-698e-4420-a33e-327713d55519
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Text: Next
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+        -   UIElement: !Button
+                Id: a1af21cb-1064-4057-8439-1f8093886d54
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Width: 120.0
+                HorizontalAlignment: Center
+                Margin: {Left: 5.0, Right: 5.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: NextDialogueButton
+                Content: !TextBlock ref!! a17e00c1-698e-4420-a33e-327713d55519
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !StackPanel
+                Id: b5f717a3-e145-4d79-b8cd-c16667691e9f
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                HorizontalAlignment: Center
+                VerticalAlignment: Center
+                Margin: {Left: 10.0, Top: 10.0, Right: 10.0, Bottom: 10.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Children:
+                    1e45a01e0f50c3edaf504f39e7e2f2f6: !Button ref!! 330670cd-e641-43b9-a07c-9c2f931aaf12
+                    fe56dff1766f0a6294102d65ad0f7d27: !Button ref!! eadf4c18-7a43-4a8a-b4fd-a8b06889f8db
+                    9d331aa7cb8a51740f49c9fa26f9fb4c: !Button ref!! 3f615a3b-9d2c-4ce1-8297-ae67458985f2
+                Orientation: Horizontal
+        -   UIElement: !EditText
+                Id: c37ec854-5376-4292-b554-50073e5839a9
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 5
+                CanBeHitByUser: true
+                VerticalAlignment: Top
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: DialogueEditText
+                Padding: {Left: 8.0, Top: 4.0, Right: 8.0, Bottom: 8.0}
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                ActiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 3
+                InactiveImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 4
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 5
+                CaretColor: {R: 240, G: 240, B: 240, A: 255}
+                CaretWidth: 1.0
+                SelectionColor: {R: 240, G: 240, B: 240, A: 255}
+                IMESelectionColor: {R: 240, G: 255, B: 240, A: 255}
+                CaretFrequency: 1.0
+        -   UIElement: !Button
+                Id: eadf4c18-7a43-4a8a-b4fd-a8b06889f8db
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                DrawLayerNumber: 2
+                Margin: {Left: 5.0, Right: 5.0}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: ShowDialogueButton2
+                Content: !TextBlock ref!! 70ebb9a8-12d2-40b4-aae5-3fef1696b521
+                PressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 2
+                NotPressedImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+                    CurrentFrame: 1
+                MouseOverImage: !SpriteFromSheet
+                    Sheet: 1be3340c-b797-4557-bff7-d9be92dfdb42:StrideUIDesigns
+        -   UIElement: !TextBlock
+                Id: fb0c798d-10d0-4716-8fb2-8301ceae1365
+                DependencyProperties: {}
+                BackgroundColor: {R: 0, G: 0, B: 0, A: 0}
+                Margin: {}
+                MaximumWidth: 3.4028235E+38
+                MaximumHeight: 3.4028235E+38
+                MaximumDepth: 3.4028235E+38
+                Name: DialogueTextBlock
+                Font: e20013ed-d26a-4298-850b-b3f99b104e50:DialogueSpriteFont
+                TextSize: 24.0
+                TextColor: {R: 240, G: 240, B: 240, A: 255}
+                WrapText: true

@@ -12,6 +12,7 @@ These projects are aimed more towards intermediate to advanced programmers, and 
 This repository contains the following projects:
 * [BepuPhysicsExample](BepuPhysicsExample): A rough attempt at integrating Bepu2 physics engine into Stride (this is not completed and has been abandoned).
 * [CutsceneTimelineExample](CutsceneTimelineExample): Playing and previewing a simple cutscene in Stride and Game Studio.
+* [DialogueTextControlExample](DialogueTextControlExample): Playing and previewing a simple cutscene in Stride and Game Studio.
 * [EntityProcessorExample](EntityProcessorExample): Processor-centric code rather than "Script"/Component-centric code.
 * [GameScreenManagerExample](GameScreenManagerExample): Game screen navigation via a `GameScreenManager` entity.
 * [LevelEditorExtensionExample](LevelEditorExtensionExample): Custom component & processor running in the editor to extend the Game Studio's functionality.
@@ -22,8 +23,17 @@ This repository contains the following projects:
 * [UINavigationExample](UINavigationExample): Example on extending existing UI controls to add the ability to traverse between UI via keyboard/gamepad.
 
 ---
-The only project worth showing a screenshot of for this front-end readme file is the `ScreenSpaceDecalExample`:
+
+Random selection of screenshots for some of the proof of concepts in this repository:
+
+[Dialogue Text Control Example:](DialogueTextControlExample)
+
+![Example Dialogue](DialogueTextControlExample/images/dialogue1.gif)
+
+[Screen Space Decal Example:](ScreenSpaceDecalExample)
 
 ![Render Stage](ScreenSpaceDecalExample/images/scene.png)
 
-Note that the `ScreenSpaceDecalExample` project can be seen as an accumulation of applying the techniques from both the `EntityProcessorExample` and `ObjectInfoRenderTargetExample` projects, so it may be worthwhile understanding those projects before trying to look at the `ScreenSpaceDecalExample` project.
+[Level Editor Extension Example:](LevelEditorExtensionExample)
+
+![Editor buttons](LevelEditorExtensionExample/images/editor_buttons.gif)
