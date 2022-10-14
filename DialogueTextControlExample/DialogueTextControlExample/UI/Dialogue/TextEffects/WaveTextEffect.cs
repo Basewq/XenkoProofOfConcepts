@@ -12,9 +12,26 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
 
         public float Amplitude = 1;
         /// <summary>
-        /// The number of times per second a wave cycles.
+        /// The number of times per second a wave cycles up and down.
+        /// <br />
+        /// By default, a wave cycles once per second.
         /// </summary>
         public float Frequency = 1;
+        /// <summary>
+        /// The scale multiplier of the wave period.
+        /// <br />
+        /// eg. 2 means there are twice as many waves compared to the default (ie. waves appear narrower),
+        /// 0.5 means half as many (waves appear wider), zero is effectively flat.
+        /// <br />
+        /// By default, one period is 10 * DialogueText.ActualTextSize.
+        /// </summary>
+        public float PeriodScale = 1;
+        /// <summary>
+        /// Shift the wave, to the left, as a multiple of <see cref="MathUtil.TwoPi"/>.
+        /// <br />
+        /// eg. 0.25 means shifting the start of the wave by 90 degrees (ie. effectively a cosine wave).
+        /// </summary>
+        public float PhaseShift = 0;
         /// <summary>
         /// The direction of the wave peaks.
         /// </summary>
@@ -37,6 +54,20 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
                     Frequency = value;
                 }
             }
+            if (properties.TryGetValue("per", out valueText))
+            {
+                if (float.TryParse(valueText, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out float value))
+                {
+                    PeriodScale = value;
+                }
+            }
+            if (properties.TryGetValue("shift", out valueText))
+            {
+                if (float.TryParse(valueText, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out float value))
+                {
+                    PhaseShift = value;
+                }
+            }
             if (properties.TryGetValue("dir", out valueText))
             {
                 if ("right".Equals(valueText, StringComparison.OrdinalIgnoreCase))
@@ -52,16 +83,22 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
 
         public override void Update(GameTime time, DialogueTextGlyphRenderInfo glyphRenderInfo)
         {
-            // A full sine wave cycle = 2 * Pi = 6.28, therefore if an 'O' character is approximately
-            // equal width and height, and has a height approximately equal to fontSize,
-            // one 'O' character is:
-            // OCharWidth / fontSize = 1
-            // So a full sine wave cycle is about 6.28 'O' across by default
-            // (this is only an approximation to get an idea how wide the wave should appear).
             var fontSize = glyphRenderInfo.TextControl.ActualTextSize;
             var dt = (float)time.Total.TotalSeconds;
             float waveDir = (Direction == WaveDirection.Right) ? -1 : 1;
-            float phaseShift = waveDir * glyphRenderInfo.PositionX / fontSize;
+            float startEffectGlyphPositionX = 0;
+            if (GlyphStartIndex < glyphRenderInfo.TextControl.TextGlyphRenderInfos.Count)
+            {
+                // This is to make the start of the sine wave at zero for the first character of the effect.
+                // The only real purpose for this is if you make Frequency = 0 (ie. a static wave)
+                startEffectGlyphPositionX = glyphRenderInfo.TextControl.TextGlyphRenderInfos[GlyphStartIndex].PositionX;
+            }
+            float relativePosition = glyphRenderInfo.PositionX - startEffectGlyphPositionX;
+            // One wave is MathUtil.TwoPi, and this TextEffect will arbitrarily pick (10 * fontSize) as the default length of the wave.
+            // For Arial font, this is just under 9 'O' characters.
+            float periodLength = MathUtil.TwoPi * relativePosition / (10 * fontSize);
+            float phaseShift = waveDir * periodLength * PeriodScale;
+            phaseShift -= MathUtil.TwoPi * PhaseShift;  // Additional shift to the left (for positive shift values)
             float amp = Amplitude * fontSize * 0.5f;
             glyphRenderInfo.PositionOffsetY += amp * MathF.Sin(Frequency * dt * MathUtil.TwoPi + phaseShift);
         }
