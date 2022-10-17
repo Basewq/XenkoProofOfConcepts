@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DialogueTextControlExample.UI.Renderers;
+using System.Collections.Generic;
 
 namespace DialogueTextControlExample.UI.Dialogue.TextEffects
 {
@@ -14,6 +15,8 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
         public int GlyphStartIndex;
         public int AffectedGlyphsCount;
         public int GlyphEndIndex => GlyphStartIndex + AffectedGlyphsCount - 1;
+
+        public virtual bool IsShaderEffect => false;
 
         /// <summary>
         /// The key-value properties within the text effect tag.
@@ -42,6 +45,8 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
         public virtual void OnCharacterAppear(DialogueTextGlyphRenderInfo glyphRenderInfo) { }
 
         public virtual void Update(Stride.Games.GameTime time, DialogueTextGlyphRenderInfo glyphRenderInfo) { }
+
+        public virtual void SetShaderData(ref TextEffectData textEffectData) { }
 
         public bool IsIndexInRange(int glyphIndex)
         {

@@ -96,8 +96,8 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
             float relativePosition = glyphRenderInfo.PositionX - startEffectGlyphPositionX;
             // One wave is MathUtil.TwoPi, and this TextEffect will arbitrarily pick (10 * fontSize) as the default length of the wave.
             // For Arial font, this is just under 9 'O' characters.
-            float periodLength = MathUtil.TwoPi * relativePosition / (10 * fontSize);
-            float phaseShift = waveDir * periodLength * PeriodScale;
+            float periodLength = PeriodScale * MathUtil.TwoPi  / (10 * fontSize);
+            float phaseShift = waveDir * periodLength * relativePosition;
             phaseShift -= MathUtil.TwoPi * PhaseShift;  // Additional shift to the left (for positive shift values)
             float amp = Amplitude * fontSize * 0.5f;
             glyphRenderInfo.PositionOffsetY += amp * MathF.Sin(Frequency * dt * MathUtil.TwoPi + phaseShift);

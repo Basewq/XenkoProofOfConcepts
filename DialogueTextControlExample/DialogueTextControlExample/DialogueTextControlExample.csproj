@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +15,62 @@
     <PackageReference Include="Stride.UI" Version="4.1.0.1734" />
 
     <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1734" IncludeAssets="build;buildTransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Effects\TextFontShaderShared.sdsl.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>TextFontShaderShared.sdsl</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\TextSdfFontShader.sdsl.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\TextSdfFontEffect.sdfx.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TextSdfFontEffect.sdfx</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\TextFontEffect.sdfx.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\TextFontShader.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\UIEffectShader2.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UIEffectShader2.sdsl</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Effects\TextSdfFontEffect.sdfx">
+      <LastGenOutput>TextSdfFontEffect.sdfx.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\TextFontEffect.sdfx">
+      <LastGenOutput>TextFontEffect.sdfx.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\TextFontShaderShared.sdsl">
+      <LastGenOutput>TextFontShaderShared.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\TextSdfFontShader.sdsl">
+      <LastGenOutput>TextSdfFontShader.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\TextFontShader.sdsl">
+      <LastGenOutput>TextFontShader.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\UIEffectShader2.sdsl">
+      <LastGenOutput>UIEffectShader2.sdsl.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,14 +1,11 @@
 ﻿using DialogueTextControlExample.UI;
 using DialogueTextControlExample.UI.Controls;
 using Stride.Engine;
-using Stride.Rendering.UI;
 using Stride.UI.Controls;
-using System.Diagnostics;
-using System.Linq;
 
 namespace DialogueTextControlExample
 {
-    public class DialogueStartupController : SyncScript
+    public class DialogueStartupController : StartupScript
     {
         private static readonly UIElementKey<Button> ShowDialogueButton1 = new("ShowDialogueButton1");
         private static readonly UIElementKey<Button> ShowDialogueButton2 = new("ShowDialogueButton2");
@@ -17,8 +14,6 @@ namespace DialogueTextControlExample
         private static readonly UIElementKey<TextBlock> DialogueTextBlock = new("DialogueTextBlock");
         private static readonly UIElementKey<EditText> DialogueEditText = new("DialogueEditText");
         private static readonly UIElementKey<Button> NextDialogueButton = new("NextDialogueButton");
-
-        private bool _hasInitializedUIRenderer = false;
 
         private DialogueText _dialogueText;
         private TextBlock _dialogueTextBlock;
@@ -39,31 +34,11 @@ namespace DialogueTextControlExample
             uiComp.GetUI(NextDialogueButton).Click += (_, _) => OnNextButton();
         }
 
-        public override void Update()
-        {
-            if (!_hasInitializedUIRenderer)
-            {
-                // Note we can't use Start because the RenderFeature isn't initialized in time.
-                var uiRenderFeature = SceneSystem.GraphicsCompositor.RenderFeatures.FirstOrDefault(x => x is UIRenderFeature) as UIRenderFeature;
-                Debug.Assert(uiRenderFeature != null, "GraphicsCompositor is missing UIRenderFeature");
-                if (!uiRenderFeature.Initialized)
-                {
-                    return;
-                }
-                var rendererFactory = new GameUIRendererFactory(Services);
-                rendererFactory.RegisterToUIRenderFeature(uiRenderFeature);
-                // Existing control is already cached using the default renderer, so overwrite it by setting it directly
-                var newRenderer = rendererFactory.TryCreateRenderer(_dialogueText);
-                uiRenderFeature.RegisterRenderer(_dialogueText, newRenderer);
-
-                _hasInitializedUIRenderer = true;
-            }
-        }
-
         private void ShowEditText()
         {
-            _dialogueTextBlock.Text = _dialogueText.Text;
-            _dialogueText.Text = _dialogueEditText.Text;
+            string newText = _dialogueEditText.Text;
+            _dialogueTextBlock.Text = newText;
+            _dialogueText.Text = newText;
             _dialogueText.PlayTextDisplay();
         }
 
@@ -71,7 +46,9 @@ namespace DialogueTextControlExample
         {
             _dialogueText.Text = @"This is <color=red>red text!!!</color>
 Now the next line <wave>has wavy</wave> text
-Third line's <wave amp=0.75 freq=2><color=green>wave</color> is faster</wave>";
+Third line's <wave amp=0.75 freq=2><color=green>wave</color> is faster</wave>
+Fourth line is <b><heatwave per=2>feeling the <color=red>heat.</color></heatwave></b>
+";
             _dialogueTextBlock.Text = _dialogueText.Text;
             _dialogueText.PlayTextDisplay();
         }

@@ -1,0 +1,38 @@
+﻿namespace DialogueTextControlExample.UI.Renderers
+{
+    // You do not need to modify this file, changes should be done in TextFontShaderShared.sdsl
+    // in either DoPreShading or DoPostShading method
+
+    shader TextSdfFontShader : SignedDistanceFieldFontShader, TextFontShaderShared
+    {
+        // -------------------------------------
+        // VertexShader
+        // -------------------------------------
+        //stage override void VSMain()
+        //{
+        //    streams.ShadingPosition = streams.Position;
+        //}
+
+        // -------------------------------------
+        // PixelShader
+        // -------------------------------------
+        stage override void PSMain()
+        {
+            DoPreShading();
+            streams.ColorTarget = Shading();
+            DoPostShading();
+        }
+
+        //override stage float4 Shading()
+        //{
+        //    // This should be a 3-channel signed distance field texture
+        //    float4 signedMultiDistance = Texture0.Sample(Sampler, streams.TexCoord);
+
+        //    // These values can go into streams later
+        //    float4 borderColor = float4(0, 0, 0, 1);
+        //    float borderThickness = 0.0f;
+
+        //    return FontColor(signedMultiDistance, streams.Color, borderColor, borderThickness);
+        //}
+    };
+}

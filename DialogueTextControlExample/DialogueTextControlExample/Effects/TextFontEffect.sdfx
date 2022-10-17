@@ -1,0 +1,10 @@
+﻿namespace DialogueTextControlExample.Effects
+{
+    // This is the effect used by non-signed distance field fonts
+
+    partial effect TextFontEffect
+    {
+        using params SpriteBaseKeys;
+        mixin TextFontShader<SpriteBaseKeys.ColorIsSRgb>;
+   };
+}

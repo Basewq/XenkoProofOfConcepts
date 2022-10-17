@@ -1,4 +1,5 @@
 ﻿using DialogueTextControlExample.UI.Dialogue;
+using DialogueTextControlExample.UI.Dialogue.TextEffects;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Games;
@@ -18,6 +19,9 @@ namespace DialogueTextControlExample.UI.Controls
     [DataContractMetadataType(typeof(DialogueTextMetadata))]
     public class DialogueText : TextBlock
     {
+        private const bool DefaultWrapText = true;
+        private const float DefaultCharacterAppearanceSpeed = 20;
+
         private bool _isPlayingTextDisplay = false;
         private TimeSpan _timeToDisplayNextGlyph;
         private TimeSpan _nextGlyphDisplayTimeRemaining;
@@ -25,13 +29,23 @@ namespace DialogueTextControlExample.UI.Controls
 
         public event TextCharacterAppearedEventHandler TextCharacterAppeared;
 
+        [DataMember(order: 10)]
+        [Display(category: AppearanceCategory)]
+        public SpriteFont BoldFont { get; set; }
+        [DataMember(order: 11)]
+        [Display(category: AppearanceCategory)]
+        public SpriteFont ItalicFont { get; set; }
+        [DataMember(order: 12)]
+        [Display(category: AppearanceCategory)]
+        public SpriteFont BoldAndItalicFont { get; set; }
+
         private float _characterAppearanceSpeed;
         /// <summary>
         /// Number of characters to appear per second.
         /// </summary>
-        [DataMember]
-        [Display(category: AppearanceCategory)]
-        [DefaultValue(20)]
+        [DataMember(order: 20)]
+        [Display(category: BehaviorCategory)]
+        [DefaultValue(DefaultCharacterAppearanceSpeed)]
         public float CharacterAppearanceSpeed
         {
             get => _characterAppearanceSpeed;
@@ -47,15 +61,22 @@ namespace DialogueTextControlExample.UI.Controls
             }
         }
 
-        [DataMember(order: 10)]
-        [Display(category: AppearanceCategory)]
-        public SpriteFont BoldFont { get; set; }
-        [DataMember(order: 11)]
-        [Display(category: AppearanceCategory)]
-        public SpriteFont ItalicFont { get; set; }
-        [DataMember(order: 12)]
-        [Display(category: AppearanceCategory)]
-        public SpriteFont BoldAndItalicFont { get; set; }
+        private bool _displayTextImmediately = false;
+        [DataMember(order: 21)]
+        [Display(category: BehaviorCategory)]
+        [DefaultValue(false)]
+        public bool DisplayTextImmediately
+        {
+            get => _displayTextImmediately;
+            set
+            {
+                _displayTextImmediately = value;
+                if (_displayTextImmediately && _currentGlyphIndex < 0 && !string.IsNullOrWhiteSpace(Text))
+                {
+                    DisplayAllText();
+                }
+            }
+        }
 
         private readonly DialogueTextParser _parser = new();
         private DialogueTextBuilder _textBuilder;
@@ -67,15 +88,18 @@ namespace DialogueTextControlExample.UI.Controls
         /// </summary>
         [DataMemberIgnore]
         public List<DialogueTextGlyphRenderInfo> TextGlyphRenderInfos { get; } = new();
+        [DataMemberIgnore]
+        public List<DialogueTextEffectBase> TextEffects => _textBuilder?.TextEffects;
 
         public DialogueText()
         {
-            WrapText = true;    // Warning: this must also match in DialogueTextMetadata
-            CharacterAppearanceSpeed = 20;
+            WrapText = DefaultWrapText;    // Warning: this must also match in DialogueTextMetadata
+            CharacterAppearanceSpeed = DefaultCharacterAppearanceSpeed;
         }
 
         private bool _rebuildDisplayTextRequired = true;
         private string _displayText;
+
         /// <summary>
         /// Not used for rendering, only for debug purposes.
         /// Use <see cref="TextGlyphs"/> instead.
@@ -86,7 +110,23 @@ namespace DialogueTextControlExample.UI.Controls
             {
                 if (_rebuildDisplayTextRequired)
                 {
-                    _displayText = _textBuilder?.GetDisplayText(WrapText);
+                    var stringBuilder = new StringBuilder();
+
+                    int currentLineIndex = 0;
+                    foreach (var rendInfo in TextGlyphRenderInfos)
+                    {
+                        var glyph = rendInfo.TextGlyph;
+                        int glpyhLineIndex = glyph.LineIndex;
+                        if (currentLineIndex != glpyhLineIndex)
+                        {
+                            stringBuilder.Append('\n');
+                            currentLineIndex = glpyhLineIndex;
+                        }
+
+                        stringBuilder.Append(glyph.Character);
+                    }
+
+                    _displayText = stringBuilder.ToString();
                     _rebuildDisplayTextRequired = false;
                 }
                 return _displayText;
@@ -208,7 +248,7 @@ namespace DialogueTextControlExample.UI.Controls
             }
 
             var textEffects = _textBuilder?.TextEffects;
-            if ((textEffects?.Count ?? 0) == 0)
+            if (textEffects != null && textEffects.Count == 0)
             {
                 return;
             }
@@ -252,6 +292,10 @@ namespace DialogueTextControlExample.UI.Controls
             _textBuilder = _parser.Parse(Text);
             RebuildRenderInfos();
             _rebuildDisplayTextRequired = true;
+            if (DisplayTextImmediately)
+            {
+                DisplayAllText();
+            }
 
             base.OnTextChanged();
         }
@@ -478,7 +522,7 @@ namespace DialogueTextControlExample.UI.Controls
 
         private class DialogueTextMetadata
         {
-            [DefaultValue(true)]
+            [DefaultValue(DefaultWrapText)]
             public bool WrapText { get; }
         }
     }

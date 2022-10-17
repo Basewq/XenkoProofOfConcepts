@@ -14,9 +14,14 @@ namespace DialogueTextControlExample.UI.Dialogue.TextEffects
         {
             if (properties.TryGetValue("", out string valueText))   // Implicit key
             {
-                // Lazy proof of concept, only accepting key names.
-                // Should adapt to allow hex values and more color names
-                if ("red".Equals(valueText, StringComparison.OrdinalIgnoreCase))
+                // Lazy proof of concept, only accepting rgb as key names.
+                // Should adapt to allow more color names
+                if (ColorExtensions.CanConvertStringToRgba(valueText))
+                {
+                    uint colorValue = ColorExtensions.StringToRgba(valueText);
+                    TextColor = Color.FromRgba(colorValue);
+                }
+                else if ("red".Equals(valueText, StringComparison.OrdinalIgnoreCase))
                 {
                     TextColor = Color.Red;
                 }

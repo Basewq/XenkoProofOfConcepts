@@ -1,0 +1,36 @@
+﻿namespace DialogueTextControlExample.Effects
+{
+    // You do not need to modify this file, changes should be done in TextFontShaderShared.sdsl
+    // in either DoPreShading or DoPostShading method
+
+    shader TextFontShader<bool TSRgb> : UIEffectShader<TSRgb>, TextFontShaderShared
+    {
+        // -------------------------------------
+        // VertexShader
+        // -------------------------------------
+        //stage override void VSMain()
+        //{
+        //    streams.ShadingPosition = streams.Position;
+        //    if (TSRgb)
+        //    {
+        //        streams.Color = ColorUtility.ToLinear(streams.Color);
+        //    }
+        //}
+
+        // Shading of the sprite
+        stage override void PSMain()
+        {
+            DoPreShading();
+            streams.ColorTarget = Shading();
+            DoPostShading();
+        }
+
+        //override stage float4 Shading()
+        //{
+        //    float4 sampledColor = Texture0.Sample(Sampler, streams.TexCoord);
+        //    float4 swizzledColor = streams.Swizzle == 0? sampledColor: sampledColor.rrrr;
+
+        //    return swizzledColor * streams.Color;
+        //}
+    };
+}

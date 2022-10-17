@@ -69,7 +69,7 @@ namespace DialogueTextControlExample.UI.Dialogue
         internal Vector2 AuxiliaryScaling;
 
         /// <summary>
-        /// Each glyph that does not use DialogueText.Font should set this
+        /// Each glyph that does not use DialogueText.Font should set this.
         /// </summary>
         internal SpriteFont SpriteFont;
         internal Glyph SpriteFontGlyph;
@@ -87,6 +87,8 @@ namespace DialogueTextControlExample.UI.Dialogue
             IsWhitespace = false;
             TextColor = default;
             //TextSize = 0;
+            IsBold = false;
+            IsItalic = false;
             LineIndex = 0;
             TextIndex = 0;
             PositionX = 0;

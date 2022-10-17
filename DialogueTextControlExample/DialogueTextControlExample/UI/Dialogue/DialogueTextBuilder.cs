@@ -28,16 +28,15 @@ namespace DialogueTextControlExample.UI.Dialogue
             CurrentTextIndex = 0;
         }
 
-        public string GetDisplayText(bool isWrappedText = false)
+        public string GetDisplayText()
         {
             // This method is only for debug purposes
-
             var stringBuilder = new StringBuilder();
 
             int currentLineIndex = 0;
             foreach (var glyph in Glyphs)
             {
-                int glpyhLineIndex = isWrappedText ? glyph.WrappedLineIndex : glyph.LineIndex;
+                int glpyhLineIndex = glyph.LineIndex;
                 if (currentLineIndex != glpyhLineIndex)
                 {
                     stringBuilder.Append('\n');
@@ -53,9 +52,10 @@ namespace DialogueTextControlExample.UI.Dialogue
         public void Reset()
         {
             Glyphs.Clear();
-
             CurrentLineIndex = 0;
             CurrentTextIndex = 0;
+
+            TextEffects.Clear();
         }
     }
 }

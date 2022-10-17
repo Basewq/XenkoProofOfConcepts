@@ -1,0 +1,81 @@
+﻿#define TwoPi 6.283185307179586476925286766559f
+
+// Make sure these matches ShaderTextEffectType in UI/Renderers/TextEffectData.cs
+#define ShaderTextEffectType_HeatWaveEffectIndex 1
+
+namespace DialogueTextControlExample.UI.Renderers
+{
+    shader TextFontShaderShared : ShaderBaseStream, Texturing
+    {
+        // IMPORTANT: If you change this, make sure it matches UI/Renderers/TextEffectData.cs
+        struct TextEffectData
+        {
+            int GlyphStartIndex;
+            int GlyphEndIndex;
+
+            int ShaderTextEffectType;
+
+            float HeatWaveAmplitude;
+            float HeatWaveFrequency;
+            float HeatWavePeriodScale;
+        };
+
+        stage stream float4 Color : COLOR;
+        stage stream int GlyphIndex : BATCH_GLYPH_INDEX;
+
+        float GameTotalTimeSeconds;
+        float RealFontSizeY;
+        //float LineSpacingDistance;
+
+        StructuredBuffer<TextEffectData> TextEffects;
+        int TextEffectCount;        // The number of active (shader) text effects
+
+        /*** The main function to edit when adding new shader text effects (where applicable) ***/
+        stage void DoPreShading()
+        {
+            for (int i = 0; i < TextEffectCount; i++)
+            {
+                TextEffectData fxData = TextEffects[i];
+                if (fxData.ShaderTextEffectType == ShaderTextEffectType_HeatWaveEffectIndex && IsInRange(fxData, streams.GlyphIndex))
+                {
+                    uint texWidth, texHeight;
+                    Texture0.GetDimensions(texWidth, texHeight);
+                    streams.TexCoord.x += GetHeatWavePositionXOffset(fxData, streams.TexCoord.y, texWidth, texHeight);
+                }
+            }
+        }
+
+        /*** The (other) main function to edit when adding new shader text effects (where applicable) ***/
+        stage void DoPostShading()
+        {
+            //for (int i = 0; i < TextEffectCount; i++)
+            //{
+            //    TextEffectData fxData = TextEffects[i];
+            //    if (fxData.ShaderTextEffectType == ??? && IsInRange(fxData, streams.GlyphIndex))
+            //    {
+            //
+            //    }
+            //}
+            // Allow the text color's alpha to affect the transparency of the text
+            streams.ColorTarget *= streams.Color.a;
+        }
+
+        bool IsInRange(TextEffectData fxData, int glyphIndex)
+        {
+            if (fxData.GlyphStartIndex <= glyphIndex && glyphIndex <= fxData.GlyphEndIndex)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        float GetHeatWavePositionXOffset(TextEffectData fxData, float texCoordsY, float texWidth, float texHeight)
+        {
+            float periodLength = fxData.HeatWavePeriodScale * TwoPi;
+            float relativePosition = texHeight * texCoordsY / RealFontSizeY;
+            float phaseShift = periodLength * relativePosition;
+            float amp = fxData.HeatWaveAmplitude / texWidth;
+            return amp * sin(fxData.HeatWaveFrequency * GameTotalTimeSeconds * TwoPi + phaseShift);
+        }
+    };
+}

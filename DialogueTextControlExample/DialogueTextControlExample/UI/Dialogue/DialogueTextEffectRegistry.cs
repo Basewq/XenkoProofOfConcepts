@@ -19,6 +19,7 @@ namespace DialogueTextControlExample.UI.Dialogue
             _effectTagNameToFactory[ColorTextEffect.TagName] = () => new ColorTextEffect();
             _effectTagNameToFactory[WaveTextEffect.TagName] = () => new WaveTextEffect();
             _effectTagNameToFactory[PauseTextEffect.TagName] = () => new PauseTextEffect();
+            _effectTagNameToFactory[HeatWaveTextEffect.TagName] = () => new HeatWaveTextEffect();
         }
 
         public static bool TryCreate(string tagName, Dictionary<string, string> properties, out DialogueTextEffectBase textEffect)

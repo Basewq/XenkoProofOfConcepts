@@ -148,7 +148,7 @@ namespace DialogueTextControlExample.UI.Dialogue
 
                 textTagBuilder.TextEffect = textEffect;
                 textEffect.GlyphStartIndex = dialogueBuilder.Glyphs.Count;  // The will effect start for the next glyph
-                textEffect.AffectedGlyphsCount = 0;     // Zero because we wait until we actually encounter subsequent glyphs
+                textEffect.AffectedGlyphsCount = textTagBuilder.IsSelfClosingTag ? 1 : 0;   // Zero because we wait until we actually encounter subsequent glyphs
                 dialogueBuilder.TextEffects.Add(textEffect);
             }
             else

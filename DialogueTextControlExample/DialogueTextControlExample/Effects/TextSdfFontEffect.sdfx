@@ -1,0 +1,9 @@
+﻿namespace DialogueTextControlExample.Effects
+{
+    // This is the effect used by signed distance field fonts
+
+    partial effect TextSdfFontEffect
+    {
+        mixin TextSdfFontShader;
+   };
+}

@@ -104,7 +104,7 @@ RenderFeatures:
             11c8b8ccb522e3cd1dd6688016062a6d: !Stride.Rendering.SimpleGroupToRenderStageSelector,Stride.Rendering
                 RenderStage: ref!! a7b07685-d8f5-4b3d-9fa6-aa27c9e23e93
                 EffectName: Test
-    93933ad00d0c357d4915ad462cbfd04c: !Stride.Rendering.UI.UIRenderFeature,Stride.UI
+    280aee016398473e75687e994b72f038*: !DialogueTextControlExample.UI.UIRenderFeatureExt,DialogueTextControlExample
         RenderStageSelectors:
             14a071694411235038a102ac3794bb4d: !Stride.Rendering.SimpleGroupToRenderStageSelector,Stride.Rendering
                 RenderStage: ref!! 441c18f9-08ba-4a51-a2a1-43f77346f06e
@@ -116,6 +116,7 @@ RenderFeatures:
                 TransparentRenderStage: ref!! 441c18f9-08ba-4a51-a2a1-43f77346f06e
                 EffectName: null
         PipelineProcessors: {}
+    93933ad00d0c357d4915ad462cbfd04c: ~(Deleted)
 SharedRenderers:
     60459475d3a3adaf2d1ba5d99913ca75: !Stride.Rendering.Compositing.ForwardRenderer,Stride.Engine
         Id: 83988cd0-5a2f-47b5-b273-e4bfb057f044

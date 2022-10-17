@@ -1,18 +1,39 @@
 ﻿using DialogueTextControlExample.UI.Controls;
+using DialogueTextControlExample.UI.Dialogue;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Graphics;
+using Stride.Rendering;
 using Stride.UI;
 using Stride.UI.Renderers;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DialogueTextControlExample.UI.Renderers
 {
     internal class DialogueTextRenderer : ElementRenderer
     {
+        private readonly UIFontBatch _uiFontBatch;
+
+        private const int MaxShaderTextEffects = 32;
+        private List<int> _shaderTextEffectIndices = new();
+        private Buffer<TextEffectData> _shaderTextEffectsDataBuffer;
+        private TextEffectData[] _shaderTextEffectsDataArray;
+
         public DialogueTextRenderer(IServiceRegistry services)
             : base(services)
         {
+            var effectSystem = services.GetSafeServiceAs<EffectSystem>();
+
+            var defaultEffect = StrideInternalExtensions.StrideUIBatch.GetDefaultEffectField(Batch);
+            var defaultEffectSRgb = StrideInternalExtensions.StrideUIBatch.GetDefaultEffectSRgbField(Batch);
+            var defaultEffectByteCode = defaultEffect.Effect.Bytecode;
+            var defaultEffectSRgbByteCode = defaultEffectSRgb.Effect.Bytecode;
+            _uiFontBatch = new UIFontBatch(GraphicsDevice, effectSystem, defaultEffectByteCode, defaultEffectSRgbByteCode);
+
+            _shaderTextEffectsDataBuffer = Stride.Graphics.Buffer.New<TextEffectData>(GraphicsDevice, MaxShaderTextEffects, BufferFlags.ShaderResource | BufferFlags.StructuredBuffer, GraphicsResourceUsage.Dynamic);
+            _shaderTextEffectsDataArray = new TextEffectData[MaxShaderTextEffects];
         }
 
         public override void RenderColor(UIElement element, UIRenderingContext context)
@@ -20,26 +41,12 @@ namespace DialogueTextControlExample.UI.Renderers
             base.RenderColor(element, context);
 
             var textControl = (DialogueText)element;
-            if (textControl.Font == null || (textControl.TextGlyphs?.Count ?? 0) == 0)
+            if (textControl.Font == null || textControl.TextGlyphRenderInfos.Count == 0)
             {
                 return;
             }
 
-            if (textControl.Font.FontType == SpriteFontType.SDF)
-            {
-                Batch.End();
-
-                Batch.BeginCustom(context.GraphicsContext, 1);
-            }
-
             DrawText(textControl, context);
-
-            if (textControl.Font.FontType == SpriteFontType.SDF)
-            {
-                Batch.End();
-
-                Batch.BeginCustom(context.GraphicsContext, 0);
-            }
         }
 
         private void DrawText(DialogueText textControl, UIRenderingContext context)
@@ -104,7 +111,6 @@ namespace DialogueTextControlExample.UI.Renderers
                     break;
             }
 
-            var textGlyphs = textControl.TextGlyphs;
             var textGlyphRenderInfos = textControl.TextGlyphRenderInfos;
 
             // We don't want to have letters with non uniform ratio
@@ -168,18 +174,117 @@ namespace DialogueTextControlExample.UI.Renderers
                 kerningKey = (kerningKey << 16);
             }
             textControl.UpdateTextEffects(context.Time);
-            for (int i = 0; i < textGlyphRenderInfos.Count; i++)
+
+            _shaderTextEffectIndices.Clear();
+            var textEffects = textControl.TextEffects;
+            if (textEffects != null)
             {
-                var textGlyphRenderInfo = textGlyphRenderInfos[i];
+                for (int i = 0; i < textEffects.Count; i++)
+                {
+                    var fx = textEffects[i];
+                    if (fx.IsShaderEffect)
+                    {
+                        _shaderTextEffectIndices.Add(i);
+                    }
+                }
+            }
+
+            bool isFirstBatchBeginCall = true;
+            bool hasCalledBatchBegin = false;
+            EffectInstance currentEffectInstance = null;
+            for (int glyphIndex = 0; glyphIndex < textGlyphRenderInfos.Count; glyphIndex++)
+            {
+                var textGlyphRenderInfo = textGlyphRenderInfos[glyphIndex];
                 if (textGlyphRenderInfo.IsVisible && !textGlyphRenderInfo.IsWhitespace)
                 {
+                    var fontEffectInstance = _uiFontBatch.GetFontEffectInstance(textGlyphRenderInfo.SpriteFont);
+                    if (currentEffectInstance != fontEffectInstance)
+                    {
+                        if (isFirstBatchBeginCall)
+                        {
+                            // Always end the default batch to prevent conflicts with our UIFontBatch.
+                            Batch.End();
+                            isFirstBatchBeginCall = false;
+                        }
+                        if (hasCalledBatchBegin)
+                        {
+                            _uiFontBatch.End();
+                        }
+                        currentEffectInstance = fontEffectInstance;
+                        CallBatchBeginAndDoEffectSetUp(context, commandList, textControl, fontSizeReal.Y, lineSpacingDistance, currentEffectInstance);
+                        hasCalledBatchBegin = true;
+                    }
+                    UpdateCommonRealtimeEffectParameters(context, currentEffectInstance);
+
                     DrawGlyph(ref drawCommand, textGlyphRenderInfo, fontSizeReal);
                 }
+            }
+
+            if (hasCalledBatchBegin)
+            {
+                _uiFontBatch.End();
+                // Reenable the default batch.
+                Batch.BeginCustom(context.GraphicsContext, 0);
+            }
+        }
+
+        private void UpdateCommonRealtimeEffectParameters(UIRenderingContext context, EffectInstance effectInstance)
+        {
+            effectInstance.Parameters.Set(TextFontShaderSharedKeys.GameTotalTimeSeconds, (float)context.Time.Total.TotalSeconds);
+        }
+
+        private void CallBatchBeginAndDoEffectSetUp(UIRenderingContext context, CommandList commandList, DialogueText textControl,
+            float fontSizeRealY, float lineSpacingDistance,
+            EffectInstance effectInstance)
+        {
+            var graphicsContext = context.GraphicsContext;
+            // We need to get the batch settings from the original UIBatch since it holds the main UI rendering information
+            // set by the UIRenderFeature
+            BlendStateDescription? currentBlendState = StrideInternalExtensions.StrideUIBatch.GetCurrentBlendStateField(Batch);
+            SamplerState currentSamplerState = StrideInternalExtensions.StrideUIBatch.GetCurrentSamplerStateField(Batch);
+            RasterizerStateDescription? currentRasterizerState = StrideInternalExtensions.StrideUIBatch.GetCurrentRasterizerStateField(Batch);
+            DepthStencilStateDescription? currentDepthStencilState = StrideInternalExtensions.StrideUIBatch.GetCurrentDepthStencilStateField(Batch);
+            int currentStencilValue = StrideInternalExtensions.StrideUIBatch.GetCurrentStencilValueField(Batch);
+            Matrix viewProjection = StrideInternalExtensions.StrideUIBatch.GetViewProjectionMatrixField(Batch);
+
+            _uiFontBatch.BeginFontDraw(graphicsContext, effectInstance, ref viewProjection,
+                currentBlendState, currentSamplerState, currentDepthStencilState, currentRasterizerState, currentStencilValue);
+
+            effectInstance.Parameters.Set(TextFontShaderSharedKeys.RealFontSizeY, fontSizeRealY);
+            //effectInstance.Parameters.Set(TextFontShaderBaseKeys.LineSpacingDistance, lineSpacingDistance);
+
+            var textEffects = textControl.TextEffects;
+            if (textEffects != null)
+            {
+                Debug.Assert(_shaderTextEffectIndices.Count <= MaxShaderTextEffects, "Too many shader text effects - to increase the const if needed");
+
+                if (_shaderTextEffectIndices.Count > 0)
+                {
+                    var textEffectsBuffer = effectInstance.Parameters.Get(TextFontShaderSharedKeys.TextEffects);
+                    if (textEffectsBuffer == null)
+                    {
+                        effectInstance.Parameters.Set(TextFontShaderSharedKeys.TextEffects, _shaderTextEffectsDataBuffer);
+                        textEffectsBuffer = _shaderTextEffectsDataBuffer;
+                    }
+
+                    for (int i = 0; i < _shaderTextEffectIndices.Count; i++)
+                    {
+                        int shaderTextEffectIndex = _shaderTextEffectIndices[i];
+                        var fx = textEffects[shaderTextEffectIndex];
+                        ref var textEffectsData = ref _shaderTextEffectsDataArray[i];
+                        textEffectsData.GlyphStartIndex = fx.GlyphStartIndex;
+                        textEffectsData.GlyphEndIndex = fx.GlyphEndIndex;
+                        fx.SetShaderData(ref textEffectsData);
+                    }
+                    textEffectsBuffer.SetData(commandList, _shaderTextEffectsDataArray);
+
+                }
+                effectInstance.Parameters.Set(TextFontShaderSharedKeys.TextEffectCount, _shaderTextEffectIndices.Count);
             }
         }
 
         private void DrawGlyph(
-            ref UIDrawCommand drawCommand, Dialogue.DialogueTextGlyphRenderInfo textGlyphRenderInfo,
+            ref UIDrawCommand drawCommand, DialogueTextGlyphRenderInfo textGlyphRenderInfo,
             Vector2 requestedFontSizeReal)
         {
             var spriteFont = textGlyphRenderInfo.SpriteFont;
@@ -225,7 +330,8 @@ namespace DialogueTextControlExample.UI.Renderers
             worldMatrix.M43 += worldMatrix.M13 * xScaledShift + worldMatrix.M23 * yScaledShift;
             worldMatrix.M44 += worldMatrix.M14 * xScaledShift + worldMatrix.M24 * yScaledShift;
 
-            Batch.DrawImage(
+            _uiFontBatch.DrawImage(
+                textGlyphRenderInfo.TextGlyph.GlyphIndex,
                 texture, ref worldMatrix, ref sourceRectangle, ref elementSize, ref borderSize,
                 ref textColor, depthBias, imageOrientation, swizzle, snapImage);
         }

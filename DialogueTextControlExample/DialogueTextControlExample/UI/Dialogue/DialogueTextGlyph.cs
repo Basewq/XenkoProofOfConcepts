@@ -19,9 +19,6 @@ namespace DialogueTextControlExample.UI.Dialogue
         /// </summary>
         public int TextIndex;
 
-        public int WrappedLineIndex;
-        public int WrappedTextIndex;
-
         /// <summary>
         /// The index of the character relative to the entire glyph list.
         /// Note that '\n' is NOT counted, as it is not part of the glyph list.
