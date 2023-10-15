@@ -1,17 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Stride.Engine" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Video" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Physics" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Navigation" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Particles" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.UI" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1734" IncludeAssets="build;buildTransitive" />
+    <PackageReference Include="Stride.Engine" Version="4.1.0.1948" />
+    <PackageReference Include="Stride.Video" Version="4.1.0.1948" />
+    <PackageReference Include="Stride.Physics" Version="4.1.0.1948" />
+    <PackageReference Include="Stride.Navigation" Version="4.1.0.1948" />
+    <PackageReference Include="Stride.Particles" Version="4.1.0.1948" />
+    <PackageReference Include="Stride.UI" Version="4.1.0.1948" />
+    <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1948" IncludeAssets="build;buildTransitive" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Effects\DecalShader.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Effects\ObjectInfoOutputEffect.sdfx.cs">
       <DesignTime>True</DesignTime>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -91,6 +97,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="Effects\DecalShader.sdsl">
+      <LastGenOutput>DecalShader.sdsl.cs</LastGenOutput>
+    </None>
     <None Update="Effects\ObjectInfoOutputEffect.sdfx">
       <LastGenOutput>ObjectInfoOutputEffect.sdfx.cs</LastGenOutput>
     </None>

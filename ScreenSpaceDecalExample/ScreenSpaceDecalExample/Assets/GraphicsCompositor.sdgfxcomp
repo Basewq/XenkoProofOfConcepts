@@ -131,7 +131,7 @@ SharedRenderers:
         Id: 7b7b3d9c-7007-43fe-91a5-3a4c32803e47
         Clear:
             Id: 4bc4b2ca-027e-4e4a-94cb-2912709bef5f
-            Color: {R: 0.40491876, G: 0.411895424, B: 0.43775, A: 1.0}
+            Color: {R: 0.40491876, G: 0.41189542, B: 0.43775, A: 1.0}
         LightProbes: true
         OpaqueRenderStage: ref!! bd6106ee-2756-47b7-9c98-48dc551d9c72
         TransparentRenderStage: ref!! 171ee007-8cc5-4766-9571-adfba78f2c42
@@ -153,7 +153,7 @@ SharedRenderers:
         Id: 07682930-cb99-4e6e-bc16-f0361989ca17
         Clear:
             Id: 66a42307-1985-4316-871a-768449238c11
-            Color: {R: 0.40491876, G: 0.411895424, B: 0.43775, A: 1.0}
+            Color: {R: 0.40491876, G: 0.41189542, B: 0.43775, A: 1.0}
         LightProbes: true
         OpaqueRenderStage: ref!! bd6106ee-2756-47b7-9c98-48dc551d9c72
         TransparentRenderStage: ref!! 171ee007-8cc5-4766-9571-adfba78f2c42
@@ -173,6 +173,17 @@ SharedRenderers:
         MSAAResolver: {}
     34ecb9b2633eacfc439ba8744fe05102: !PostProcessingEffects
         Id: 8585410b-7e8d-4063-9dda-0f617acfc783
+        Outline:
+            Enabled: false
+            NormalWeight: 2.0
+            DepthWeight: 0.2
+            NormalNearCutoff: 0.1
+        Fog:
+            Enabled: false
+            Density: 0.1
+            Color: {R: 1.0, G: 1.0, B: 1.0}
+            FogStart: 10.0
+            SkipBackground: false
         AmbientOcclusion:
             Enabled: false
         LocalReflections:
