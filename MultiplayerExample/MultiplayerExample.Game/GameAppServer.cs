@@ -180,8 +180,8 @@ namespace MultiplayerExample
             // HACK (kind of): Server must run at a fixed rate, which we'll manually control with _physicGameTime
             var physicsSettings = Settings.Configurations.Get<PhysicsSettings>() ?? new PhysicsSettings();
             physicsSettings.Flags = PhysicsEngineFlags.ContinuousCollisionDetection;
-            physicsSettings.MaxSubSteps = 0;    // Important to keep this at 0 since this makes BulletPhysics simulate exactly one step per update
             physicsSettings.FixedTimeStep = (float)GameConfig.PhysicsFixedTimeStep.TotalSeconds;
+            physicsSettings.MaxTickDuration = physicsSettings.FixedTimeStep;    // Important to keep this the same as FixedTimeStep since this makes BulletPhysics simulate exactly one step per update
             var physicsConfigSettings = new ConfigurationOverride
             {
                 Configuration = physicsSettings

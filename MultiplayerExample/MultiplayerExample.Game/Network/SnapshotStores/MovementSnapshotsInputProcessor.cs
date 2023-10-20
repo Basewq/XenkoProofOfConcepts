@@ -182,8 +182,7 @@ namespace MultiplayerExample.Network.SnapshotStores
                 //modelChildTransform.Rotation  movementData.LocalRotation;
                 BulletPhysicsExt.SetLinearVelocity(characterComp, ref movementData.PhysicsEngineLinearVelocity);
                 characterComp.SetVelocity(Vector3.Zero);    // Need to set to zero here because even simulating with zero delta time moves the character...
-                transformComp.UpdateWorldMatrix();
-                characterComp.UpdatePhysicsTransformation();        // Update in the physics engine
+                characterComp.UpdatePhysicsTransformation(forceUpdateTransform: true);        // Update in the physics engine
                 BulletPhysicsExt.SimulateCharacter(characterComp, _simulation, deltaTimeInSeconds: 0);      // We need to 'resimulate' with zero delta time to ensure character IsGround or !IsGround is reset properly
 
                 // Find the max number of resimulations we'll need to run

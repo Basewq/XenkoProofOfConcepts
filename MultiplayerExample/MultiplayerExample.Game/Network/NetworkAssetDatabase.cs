@@ -80,7 +80,7 @@ namespace MultiplayerExample.Network
         {
             var assetIds = new Guid[contentPaths.Length];
             const int GuidSizeInBytes = 16;
-            using (var sha1 = new SHA1Managed())
+            using (var sha1 = SHA256.Create())
             {
                 for (int i = 0; i < contentPaths.Length; i++)
                 {

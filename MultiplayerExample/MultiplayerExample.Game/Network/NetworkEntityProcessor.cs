@@ -200,8 +200,7 @@ namespace MultiplayerExample.Network
 
             var transformComp = movementSnapshotsComponent.Entity.Transform;
             transformComp.Position = position;
-            transformComp.UpdateWorldMatrix();
-            characterComponent?.UpdatePhysicsTransformation();
+            characterComponent?.UpdatePhysicsTransformation(forceUpdateTransform: true);
         }
 
         private void AddAndRegisterEntity(Entity entity, Scene gameplayScene, SimulationTickNumber simulationTickNumberCreated)

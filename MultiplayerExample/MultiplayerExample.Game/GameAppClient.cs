@@ -39,8 +39,8 @@ namespace MultiplayerExample
             var physicsSettings = gameSettings.Configurations.Get<PhysicsSettings>();
             // Ignore whatever was set in the config asset
             physicsSettings.Flags = PhysicsEngineFlags.ContinuousCollisionDetection;
-            physicsSettings.MaxSubSteps = 0;    // Important to keep this at 0 since this makes BulletPhysics simulate exactly one step per update
             physicsSettings.FixedTimeStep = (float)GameConfig.PhysicsFixedTimeStep.TotalSeconds;
+            physicsSettings.MaxTickDuration = physicsSettings.FixedTimeStep;    // Important to keep this the same as FixedTimeStep since this makes BulletPhysics simulate exactly one step per update
         }
 
         protected override void Initialize()

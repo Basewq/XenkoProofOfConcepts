@@ -261,8 +261,7 @@ namespace MultiplayerExample.Network
                             var transformComp = data.TransformComponent;
                             transformComp.Position = movementData.LocalPosition;
                             //transformComp.Rotation isn't set on the remote entity (it's only set on the view entity's model entity)
-                            transformComp.UpdateWorldMatrix();
-                            characterComp.UpdatePhysicsTransformation();
+                            characterComp.UpdatePhysicsTransformation(forceUpdateTransform: true);
                         }
                     }
                 }
