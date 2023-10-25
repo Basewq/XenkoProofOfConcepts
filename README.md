@@ -12,7 +12,7 @@ These projects are aimed more towards intermediate to advanced programmers, and 
 This repository contains the following projects:
 * [BepuPhysicsExample](BepuPhysicsExample): A rough attempt at integrating Bepu2 physics engine into Stride (this is not completed and has been abandoned).
 * [CutsceneTimelineExample](CutsceneTimelineExample): Playing and previewing a simple cutscene in Stride and Game Studio.
-* [DialogueTextControlExample](DialogueTextControlExample): Playing and previewing a simple cutscene in Stride and Game Studio.
+* [DialogueTextControlExample](DialogueTextControlExample): Custom Stride UI control for an RPG-styled dialogue text box.
 * [EntityProcessorExample](EntityProcessorExample): Processor-centric code rather than "Script"/Component-centric code.
 * [GameScreenManagerExample](GameScreenManagerExample): Game screen navigation via a `GameScreenManager` entity.
 * [LevelEditorExtensionExample](LevelEditorExtensionExample): Custom component & processor running in the editor to extend the Game Studio's functionality.

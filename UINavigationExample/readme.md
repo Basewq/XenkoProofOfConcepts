@@ -52,7 +52,7 @@ These are the steps used to get it working for this project:
 
 6.  Locate and open `ControlsExt.sduilib` in a text editor (depending on the project, it's probably in `\Assets\Shared` folder).
 7. Locate the lines with `!Button`
-8. Change these to your extended control, in the form `!Namespace.ClassName,AssemblyName` (in this project, this is `!UINavigationExample.UI.ButtonExt,UINavigationExample.Game`
+8. Change these to your extended control, in the form `!Namespace.ClassName,AssemblyName` (in this project, this is `!UINavigationExample.UI.ButtonExt,UINavigationExample.Game`)
 9. Once saved, you can open Stride Game Studio, and it should now appear in the UI library panel.
 
 ---
