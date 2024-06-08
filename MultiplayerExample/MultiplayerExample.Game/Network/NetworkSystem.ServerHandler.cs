@@ -97,7 +97,7 @@ namespace MultiplayerExample.Network
 
             void INetEventListener.OnPeerConnected(NetPeer peer)
             {
-                _networkSystem.DebugWriteLine($"Svr Player connected: {peer.EndPoint}");
+                _networkSystem.DebugWriteLine($"Svr Player connected: {peer.Address}:{peer.Port}");
                 // Do nothing. Wait for the player to initiate requests.
             }
 

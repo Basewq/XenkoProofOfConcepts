@@ -235,7 +235,7 @@ namespace MultiplayerExample.Network
 
             void INetEventListener.OnPeerConnected(NetPeer peer)
             {
-                _networkSystem.DebugWriteLine($"Cln Player connected: {peer.EndPoint}");
+                _networkSystem.DebugWriteLine($"Cln Player connected: {peer.Address}:{peer.Port}");
 
                 _connectionToServer = new NetworkConnection(peer);
                 IsConnected = true;
