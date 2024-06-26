@@ -6,14 +6,13 @@ using MultiplayerExample.Network.NetworkMessages.Client;
 using MultiplayerExample.Network.NetworkMessages.Server;
 using MultiplayerExample.Network.SnapshotStores;
 using MultiplayerExample.Utilities;
-using Stride.Core.Collections;
 using Stride.Core.Mathematics;
 using Stride.Core.Serialization;
 using Stride.Engine;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network
 {
@@ -30,15 +29,15 @@ namespace MultiplayerExample.Network
             private readonly List<EntityExistenceDetails> _workingUpdateEntities;
             private readonly List<EntityUpdateInputAction> _workingUpdateEntityInputs;
 
-            public readonly FastList<ServerPendingRemotePlayer> PendingRemotePlayers;
-            public readonly FastList<ServerActiveRemotePlayer> ActiveRemotePlayers;
-            public readonly FastList<ServerActiveLocalPlayer> ActiveLocalPlayers;
+            public readonly List<ServerPendingRemotePlayer> PendingRemotePlayers;
+            public readonly List<ServerActiveRemotePlayer> ActiveRemotePlayers;
+            public readonly List<ServerActiveLocalPlayer> ActiveLocalPlayers;
 
             public ServerPlayerManager(int initialCapacity, NetworkEntityProcessor networkEntityProcessor)
             {
-                PendingRemotePlayers = new FastList<ServerPendingRemotePlayer>(initialCapacity);
-                ActiveRemotePlayers = new FastList<ServerActiveRemotePlayer>(initialCapacity);
-                ActiveLocalPlayers = new FastList<ServerActiveLocalPlayer>(initialCapacity);
+                PendingRemotePlayers = new List<ServerPendingRemotePlayer>(initialCapacity);
+                ActiveRemotePlayers = new List<ServerActiveRemotePlayer>(initialCapacity);
+                ActiveLocalPlayers = new List<ServerActiveLocalPlayer>(initialCapacity);
 
                 _networkEntityProcessor = networkEntityProcessor;
 
@@ -52,9 +51,10 @@ namespace MultiplayerExample.Network
                 var assetDefinitions = GetNetworkAssetDefinitions();
 
                 //lock (PendingPlayers)
-                for (int i = 0; i < PendingRemotePlayers.Count; i++)
+                var pendingRemotePlayersSpan = CollectionsMarshal.AsSpan(PendingRemotePlayers);
+                for (int i = 0; i < pendingRemotePlayersSpan.Length; i++)
                 {
-                    ref var pendingPlayer = ref PendingRemotePlayers.Items[i];
+                    ref var pendingPlayer = ref pendingRemotePlayersSpan[i];
                     switch (pendingPlayer.PendingPlayerState)
                     {
                         case PendingPlayerState.JustConnected:
@@ -139,9 +139,10 @@ namespace MultiplayerExample.Network
                 gameManager.RaisePlayerAddedEvent(playerEntity);
 
                 // Notify the new player of all existing players
-                for (int i = 0; i < ActiveRemotePlayers.Count - 1; i++)       // Exclude the last because that's the new player
+                var activeRemotePlayersSpan = CollectionsMarshal.AsSpan(ActiveRemotePlayers);
+                for (int i = 0; i < activeRemotePlayersSpan.Length - 1; i++)    // Exclude the last because that's the new player
                 {
-                    ref var existingPlayer = ref ActiveRemotePlayers.Items[i];
+                    ref var existingPlayer = ref activeRemotePlayersSpan[i];
                     Debug.Assert(existingPlayer.PlayerId != playerId);
 
                     var existingPlayerDetails = entityExistenceStates[existingPlayer.PlayerEntity];
@@ -157,9 +158,10 @@ namespace MultiplayerExample.Network
                     spawnPlayer.WriteTo(networkMessageWriter);
                     playerConnection.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
                 }
-                for (int i = 0; i < ActiveLocalPlayers.Count; i++)
+                var activeLocalPlayersSpan = CollectionsMarshal.AsSpan(ActiveLocalPlayers);
+                for (int i = 0; i < activeLocalPlayersSpan.Length; i++)
                 {
-                    ref var existingPlayer = ref ActiveLocalPlayers.Items[i];
+                    ref var existingPlayer = ref activeLocalPlayersSpan[i];
                     Debug.Assert(existingPlayer.PlayerId != playerId);
 
                     var existingPlayerDetails = entityExistenceStates[existingPlayer.PlayerEntity];
@@ -195,9 +197,10 @@ namespace MultiplayerExample.Network
 
             internal void UpdatePlayerInputs(SimulationTickNumber inputSimTickNumber)
             {
-                for (int i = 0; i < ActiveRemotePlayers.Count; i++)
+                var activeRemotePlayersSpan = CollectionsMarshal.AsSpan(ActiveRemotePlayers);
+                for (int i = 0; i < activeRemotePlayersSpan.Length; i++)
                 {
-                    ref var player = ref ActiveRemotePlayers.Items[i];
+                    ref var player = ref activeRemotePlayersSpan[i];
                     bool wasInputApplied = false;
                     const int MaxPendingInputs = 5;
                     while (player.PendingInputs.Count > MaxPendingInputs)
@@ -235,9 +238,10 @@ namespace MultiplayerExample.Network
 
             internal void SendEntityChangesToClients(SimulationTickNumber simTickNumber, NetworkMessageWriter networkMessageWriter)
             {
-                for (int playerIdx = 0; playerIdx < ActiveRemotePlayers.Count; playerIdx++)
+                var activeRemotePlayersSpan = CollectionsMarshal.AsSpan(ActiveRemotePlayers);
+                for (int playerIdx = 0; playerIdx < activeRemotePlayersSpan.Length; playerIdx++)
                 {
-                    ref var player = ref ActiveRemotePlayers.Items[playerIdx];
+                    ref var player = ref activeRemotePlayersSpan[playerIdx];
                     var conn = player.Connection;
 
                     networkMessageWriter.Reset();
@@ -333,7 +337,7 @@ namespace MultiplayerExample.Network
                     return false;
                 }
                 Debug.Assert(clientIndex >= 0);
-                var playerEntity = ActiveRemotePlayers.Items[clientIndex].PlayerEntity;
+                var playerEntity = ActiveRemotePlayers[clientIndex].PlayerEntity;
                 ActiveRemotePlayers.RemoveAt(clientIndex);
 
                 var gameplayScene = GetGameplayScene();
@@ -381,7 +385,7 @@ namespace MultiplayerExample.Network
                     spawnPlayer.WriteTo(networkMessageWriter);
                     for (int i = 0; i < ActiveRemotePlayers.Count - 1; i++)       // Exclude the last because that's the new player
                     {
-                        var conn = ActiveRemotePlayers.Items[i].Connection;
+                        var conn = ActiveRemotePlayers[i].Connection;
                         conn.Send(networkMessageWriter, SendNetworkMessageType.ReliableOrdered);   // Use Ordered to ensure a player's joined & dropped events are in sequence
                     }
                 }
@@ -391,7 +395,7 @@ namespace MultiplayerExample.Network
             {
                 int clientIndex = ActiveLocalPlayers.FindIndex(x => x.PlayerId == playerId);
                 Debug.Assert(clientIndex >= 0);
-                var playerEntity = ActiveLocalPlayers.Items[clientIndex].PlayerEntity;
+                var playerEntity = ActiveLocalPlayers[clientIndex].PlayerEntity;
                 ActiveLocalPlayers.RemoveAt(clientIndex);
 
                 var gameplayScene = GetGameplayScene();
@@ -403,11 +407,12 @@ namespace MultiplayerExample.Network
             internal void CollectPendingInputs(
                 SerializableGuid playerId,
                 PlayerUpdateMessage pendingPlayerUpdateMessage,
-                FastList<PlayerUpdateInputMessage> pendingPlayerUpdateInputsMessages)
+                List<PlayerUpdateInputMessage> pendingPlayerUpdateInputsMessages)
             {
                 int clientIndex = ActiveRemotePlayers.FindIndex(x => x.PlayerId == playerId);
                 Debug.Assert(clientIndex >= 0);
-                ref var player = ref ActiveRemotePlayers.Items[clientIndex];
+                var activeRemotePlayersSpan = CollectionsMarshal.AsSpan(ActiveRemotePlayers);
+                ref var player = ref activeRemotePlayersSpan[clientIndex];
                 var playerNetworkEntityComp = player.NetworkEntityComponent;
                 if (playerNetworkEntityComp.LastAcknowledgedServerSimulationTickNumber < pendingPlayerUpdateMessage.AcknowledgedServerSimulationTickNumber)
                 {
@@ -416,10 +421,10 @@ namespace MultiplayerExample.Network
 
                 var inputSnapshotsComp = player.InputSnapshotsComponent;
                 int inputCount = pendingPlayerUpdateInputsMessages.Count;
-                var inputArray = pendingPlayerUpdateInputsMessages.Items;
+                var inputSpan = CollectionsMarshal.AsSpan(pendingPlayerUpdateInputsMessages);
                 for (int i = 0; i < inputCount; i++)
                 {
-                    ref var playerUpdateMsg = ref inputArray[i];
+                    ref readonly var playerUpdateMsg = ref inputSpan[i];
                     var playerInputSeqNumber = playerUpdateMsg.PlayerInputSequenceNumber;
                     //if (_gameClockManager.SimulationTickNumber <= simTickNumber)
                     //{
@@ -453,7 +458,8 @@ namespace MultiplayerExample.Network
                 //lock (_serverPlayerManager.PendingPlayers)
                 int clientIndex = PendingRemotePlayers.FindIndex(x => x.PlayerId == playerId);
                 Debug.Assert(clientIndex >= 0);
-                ref var player = ref PendingRemotePlayers.Items[clientIndex];
+                var pendingRemotePlayersSpan = CollectionsMarshal.AsSpan(PendingRemotePlayers);
+                ref var player = ref pendingRemotePlayersSpan[clientIndex];
                 player.PendingPlayerState = PendingPlayerState.Ready;
             }
 

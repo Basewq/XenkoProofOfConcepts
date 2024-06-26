@@ -2,9 +2,10 @@
 using MultiplayerExample.Data;
 using MultiplayerExample.Engine;
 using Stride.Core.Annotations;
-using Stride.Core.Collections;
 using Stride.Engine;
 using Stride.Games;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network.SnapshotStores
 {
@@ -17,11 +18,11 @@ namespace MultiplayerExample.Network.SnapshotStores
                 objectCreatorFunc: () => new SnapshotStore<InputSnapshotsComponent.InputCommandSet>(MovementSnapshotsProcessor.SnapshotBufferSize),
                 onObjectPutAction: ObjectPoolItemClearer<SnapshotStore<InputSnapshotsComponent.InputCommandSet>>.Default);
 
-        private static readonly ObjectPool<FastList<InputSnapshotsComponent.InputCommandSet>> UnacknowledgedInputsPool
-            = new ObjectPool<FastList<InputSnapshotsComponent.InputCommandSet>>(
+        private static readonly ObjectPool<List<InputSnapshotsComponent.InputCommandSet>> UnacknowledgedInputsPool
+            = new ObjectPool<List<InputSnapshotsComponent.InputCommandSet>>(
                 initialCapacity: 64,
-                objectCreatorFunc: () => new FastList<InputSnapshotsComponent.InputCommandSet>(MovementSnapshotsProcessor.SnapshotBufferSize),
-                onObjectPutAction: x => x.Clear(fastClear: true));
+                objectCreatorFunc: () => new List<InputSnapshotsComponent.InputCommandSet>(MovementSnapshotsProcessor.SnapshotBufferSize),
+                onObjectPutAction: x => x.Clear());
 
         private GameClockManager _gameClockManager;
         private GameEngineContext _gameEngineContext;

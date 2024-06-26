@@ -3,11 +3,12 @@ using LiteNetLib.Utils;
 using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
 using MultiplayerExample.Network.NetworkMessages.Server;
-using Stride.Core.Collections;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network
 {
@@ -29,9 +30,9 @@ namespace MultiplayerExample.Network
             private readonly NetManager _netManager;
             private readonly NetworkMessageWriter _networkMessageWriter;
 
-            private readonly FastList<ClientConnectionDetails> _activeClients = new FastList<ClientConnectionDetails>();
+            private readonly List<ClientConnectionDetails> _activeClients = new List<ClientConnectionDetails>();
 
-            private readonly FastList<PlayerUpdateInputMessage> _pendingPlayerUpdateInputMessages = new FastList<PlayerUpdateInputMessage>();
+            private readonly List<PlayerUpdateInputMessage> _pendingPlayerUpdateInputMessages = new List<PlayerUpdateInputMessage>();
 
             public ServerNetworkHandler(NetworkSystem networkSystem)
             {
@@ -111,7 +112,7 @@ namespace MultiplayerExample.Network
                 int clientIndex = FindClientDetailsIndex(peer);
                 if (clientIndex >= 0)
                 {
-                    var clientDetails = _activeClients.Items[clientIndex];
+                    var clientDetails = _activeClients[clientIndex];
                     _activeClients.RemoveAt(clientIndex);
 
                     var playerId = clientDetails.PlayerId;
@@ -128,9 +129,10 @@ namespace MultiplayerExample.Network
                         };
                         _networkMessageWriter.Reset();
                         despawnPlayer.WriteTo(_networkMessageWriter);
-                        for (int playerIdx = 0; playerIdx < _activeClients.Count; playerIdx++)
+                        var activeClientsSpan = CollectionsMarshal.AsSpan(_activeClients);
+                        for (int playerIdx = 0; playerIdx < activeClientsSpan.Length; playerIdx++)
                         {
-                            ref var otherClientDetails = ref _activeClients.Items[playerIdx];
+                            ref var otherClientDetails = ref activeClientsSpan[playerIdx];
                             if (!otherClientDetails.IsInGame)
                             {
                                 continue;
@@ -196,7 +198,8 @@ namespace MultiplayerExample.Network
                                 if (clientIndex >= 0)
                                 {
                                     var gameClockManager = _networkSystem._gameClockManager;
-                                    ref var clientDetails = ref _activeClients.Items[clientIndex];
+                                    var activeClientsSpan = CollectionsMarshal.AsSpan(_activeClients);
+                                    ref var clientDetails = ref activeClientsSpan[clientIndex];
                                     _networkMessageWriter.Reset();
                                     var syncClockResponse = new SynchronizeClockResponseMessage
                                     {
@@ -204,8 +207,7 @@ namespace MultiplayerExample.Network
                                         ServerWorldTimeInTicks = gameClockManager.SimulationClock.TotalTime.Ticks,
                                     };
                                     syncClockResponse.WriteTo(_networkMessageWriter);
-                                    var connection = clientDetails.Connection;
-                                    connection.Send(_networkMessageWriter, SendNetworkMessageType.Unreliable);
+                                    clientDetails.Connection.Send(_networkMessageWriter, SendNetworkMessageType.Unreliable);
                                 }
                             }
                         }
@@ -220,7 +222,8 @@ namespace MultiplayerExample.Network
                                 int clientIndex = FindClientDetailsIndex(peer);
                                 if (clientIndex >= 0)
                                 {
-                                    ref var clientDetails = ref _activeClients.Items[clientIndex];
+                                    var activeClientsSpan = CollectionsMarshal.AsSpan(_activeClients);
+                                    ref var clientDetails = ref activeClientsSpan[clientIndex];
                                     if (!clientDetails.IsInGame)
                                     {
                                         clientDetails.IsInGame = true;
@@ -237,7 +240,8 @@ namespace MultiplayerExample.Network
                             int clientIndex = FindClientDetailsIndex(peer);
                             if (clientIndex >= 0)
                             {
-                                ref var clientDetails = ref _activeClients.Items[clientIndex];
+                                var activeClientsSpan = CollectionsMarshal.AsSpan(_activeClients);
+                                ref var clientDetails = ref activeClientsSpan[clientIndex];
                                 PlayerUpdateMessage playerUpdateMsg = default;
                                 if (playerUpdateMsg.TryRead(message))
                                 {
@@ -280,7 +284,8 @@ namespace MultiplayerExample.Network
                 int clientIndex = FindClientDetailsIndex(peer);
                 if (clientIndex >= 0)
                 {
-                    ref var clientDetails = ref _activeClients.Items[clientIndex];
+                    var activeClientsSpan = CollectionsMarshal.AsSpan(_activeClients);
+                    ref var clientDetails = ref activeClientsSpan[clientIndex];
                     clientDetails.AverageNetworkLatency = TimeSpan.FromMilliseconds(latencyInMilliseconds);
                 }
             }
@@ -288,9 +293,10 @@ namespace MultiplayerExample.Network
             private int FindClientDetailsIndex(NetPeer peer)
             {
                 var connection = new NetworkConnection(peer);
-                for (int i = 0; i < _activeClients.Count; i++)
+                var activeClientsSpan = CollectionsMarshal.AsSpan(_activeClients);
+                for (int i = 0; i < activeClientsSpan.Length; i++)
                 {
-                    if (_activeClients.Items[i].Connection == connection)
+                    if (activeClientsSpan[i].Connection == connection)
                     {
                         return i;
                     }

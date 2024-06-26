@@ -1,10 +1,9 @@
 ﻿using MultiplayerExample.Core;
 using Stride.Core;
-using Stride.Core.Collections;
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Engine.Design;
-using System;
+using System.Collections.Generic;
 
 namespace MultiplayerExample.Network.SnapshotStores
 {
@@ -23,7 +22,7 @@ namespace MultiplayerExample.Network.SnapshotStores
         /// Contains the list of inputs that have been applied on the local client, and either not acknowledged or
         /// not yet applied on the server.
         /// </summary>
-        internal FastList<InputCommandSet> PendingInputs;
+        internal List<InputCommandSet> PendingInputs;
 
         internal PlayerInputSequenceNumber NextPlayerInputSequenceNumber = new PlayerInputSequenceNumber(1);
 

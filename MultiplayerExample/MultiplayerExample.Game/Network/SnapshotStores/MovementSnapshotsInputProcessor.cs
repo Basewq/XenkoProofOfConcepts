@@ -2,13 +2,14 @@
 using MultiplayerExample.Engine;
 using Stride.Core;
 using Stride.Core.Annotations;
-using Stride.Core.Collections;
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using Stride.Games;
 using Stride.Physics;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network.SnapshotStores
 {
@@ -141,7 +142,7 @@ namespace MultiplayerExample.Network.SnapshotStores
             }
         }
 
-        internal void Resimulate(SimulationTickNumber currentSimulationTickNumber, FastList<PredictMovementEntityData> resimulateEntities)
+        internal void Resimulate(SimulationTickNumber currentSimulationTickNumber, List<PredictMovementEntityData> resimulateEntities)
         {
             _physicsProcessor ??= _sceneSystem.SceneInstance.GetProcessor<PhysicsProcessor>();
             _simulation ??= _physicsProcessor?.Simulation;
@@ -149,11 +150,12 @@ namespace MultiplayerExample.Network.SnapshotStores
             Debug.Assert(_simulation != null, "Physics Simulation needs to be created.");
             Debug.Assert(_gameEngineContext.IsClient, "Server engine should not be resimulating entities.");
 
+            var resimulateEntitiesSpan = CollectionsMarshal.AsSpan(resimulateEntities);
             int maxResimInputCount = 0;
             // Reset the initial positions to the start of the simulation time
-            for (int i = 0; i < resimulateEntities.Count; i++)
+            for (int i = 0; i < resimulateEntitiesSpan.Length; i++)
             {
-                ref var entityData = ref resimulateEntities.Items[i];
+                ref var entityData = ref resimulateEntitiesSpan[i];
 
                 var transformComp = entityData.TransformComponent;
                 var characterComp = entityData.CharacterComponent;
@@ -223,9 +225,9 @@ namespace MultiplayerExample.Network.SnapshotStores
             float simDeltaTime = _simulation.FixedTimeStep;
             for (int inputIdx = 0; inputIdx < maxResimInputCount; inputIdx++)
             {
-                for (int i = 0; i < resimulateEntities.Count; i++)
+                for (int i = 0; i < resimulateEntitiesSpan.Length; i++)
                 {
-                    ref var entityData = ref resimulateEntities.Items[i];
+                    ref var entityData = ref resimulateEntitiesSpan[i];
                     var inputSnapshotsComp = entityData.InputSnapshotsComponent;
                     if (inputIdx >= inputSnapshotsComp.PendingInputs.Count)
                     {
@@ -245,7 +247,8 @@ namespace MultiplayerExample.Network.SnapshotStores
 
                     var oldPos = transformComp.Position;
 
-                    ref var inputData = ref inputSnapshotsComp.PendingInputs.Items[inputIdx];
+                    var pendingInputsSpan = CollectionsMarshal.AsSpan(inputSnapshotsComp.PendingInputs);
+                    ref var inputData = ref pendingInputsSpan[inputIdx];
 #if DEBUG
                     //Debug.WriteLine($"InpProc: RunSpeed: {curMovementData.MoveSpeedDecimalPercentage} - Sim {curMovementData.SimulationTickNumber} - {curMovementData.SnapshotType}");
 #endif

@@ -10,6 +10,7 @@ using Stride.Core.Mathematics;
 using Stride.Engine;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Player
 {
@@ -238,7 +239,8 @@ namespace MultiplayerExample.Player
                 {
                     return;
                 }
-                ref var curMovementData = ref predictedMovements.Items[predictedMovements.Count - 1];
+                var predictedMovementsSpan = CollectionsMarshal.AsSpan(predictedMovements);
+                ref var curMovementData = ref predictedMovementsSpan[predictedMovements.Count - 1];
                 // State control
                 runSpeed = curMovementData.MoveSpeedDecimalPercentage;
 

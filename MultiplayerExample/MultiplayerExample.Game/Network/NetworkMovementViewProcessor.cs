@@ -8,6 +8,7 @@ using Stride.Engine;
 using Stride.Rendering;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network
 {
@@ -98,19 +99,19 @@ namespace MultiplayerExample.Network
                 var networkEntityComp = data.NetworkEntityComponent;
                 if (networkEntityComp.IsLocalEntity && clientPredictionSnapshotsComp != null && !_networkService.IsGameHost)
                 {
-                    var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
+                    var predictedMovementsSpan = CollectionsMarshal.AsSpan(clientPredictionSnapshotsComp.PredictedMovements);
 #if DEBUG
                     //DebugWriteLine(@$"RENDER -- SimTick {_gameClockManager.SimulationClock.SimulationTickNumber} - SimTotalTime {_gameClockManager.SimulationClock.TotalTime} - SimCurElapsed {_gameClockManager.SimulationClock.CurrentTickTimeElapsed} - Lerp {localSimTickElapsedRatio}");
 #endif
-                    if (predictedMovements.Count < 2)
+                    if (predictedMovementsSpan.Length < 2)
                     {
                         // Not enough positions
                         continue;
                     }
 
                     // Always just use the last two data points
-                    ref var fromMovementData = ref predictedMovements.Items[predictedMovements.Count - 2];
-                    ref var toMovementData = ref predictedMovements.Items[predictedMovements.Count - 1];
+                    ref var fromMovementData = ref predictedMovementsSpan[predictedMovementsSpan.Length - 2];
+                    ref var toMovementData = ref predictedMovementsSpan[predictedMovementsSpan.Length - 1];
 
                     var interpAmount = localSimTickElapsedRatio;
                     Vector3.Lerp(ref fromMovementData.LocalPosition, ref toMovementData.LocalPosition, interpAmount, out var renderPos);

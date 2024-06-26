@@ -1,17 +1,18 @@
 ﻿using MultiplayerExample.Core;
 using MultiplayerExample.Data;
 using Stride.Core.Annotations;
-using Stride.Core.Collections;
 using Stride.Engine;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network.SnapshotStores
 {
     class ClientPredictionSnapshotsInitializerProcessor : EntityProcessor<ClientPredictionSnapshotsComponent, ClientPredictionSnapshotsInitializerProcessor.AssociatedData>
     {
-        private static readonly ObjectPool<FastList<MovementSnapshotsComponent.MovementData>> ObjectPool
-            = new ObjectPool<FastList<MovementSnapshotsComponent.MovementData>>(
+        private static readonly ObjectPool<List<MovementSnapshotsComponent.MovementData>> ObjectPool
+            = new ObjectPool<List<MovementSnapshotsComponent.MovementData>>(
                 initialCapacity: 4,
-                objectCreatorFunc: () => new FastList<MovementSnapshotsComponent.MovementData>(10),
+                objectCreatorFunc: () => new List<MovementSnapshotsComponent.MovementData>(10),
                 onObjectPutAction: x => x.Clear());
 
         protected override AssociatedData GenerateComponentData([NotNull] Entity entity, [NotNull] ClientPredictionSnapshotsComponent component)
@@ -44,19 +45,20 @@ namespace MultiplayerExample.Network.SnapshotStores
         }
 
         internal static ref MovementSnapshotsComponent.MovementData CreateNewSnapshotData(
-            FastList<MovementSnapshotsComponent.MovementData> predictedMovements,
+            List<MovementSnapshotsComponent.MovementData> predictedMovements,
             SimulationTickNumber simulationTickNumber,
             MovementSnapshotsComponent movementSnapshotsComponent,
             TransformComponent transformComponent)
         {
             predictedMovements.Add(default);
-            ref var nextMovementData = ref predictedMovements.Items[predictedMovements.Count - 1];
+            var predictedMovementsSpan = CollectionsMarshal.AsSpan(predictedMovements);
+            ref var nextMovementData = ref predictedMovementsSpan[predictedMovements.Count - 1];
 
             var movementSnapshotStore = movementSnapshotsComponent.SnapshotStore;
             if (predictedMovements.Count >= 2)
             {
                 // Just copy the previous snapshot's data
-                nextMovementData = predictedMovements.Items[predictedMovements.Count - 2];
+                nextMovementData = predictedMovementsSpan[predictedMovements.Count - 2];
             }
             else if (movementSnapshotStore != null && movementSnapshotStore.Count > 0)  // movementSnapshotStore doesn't exist on newly created entities
             {

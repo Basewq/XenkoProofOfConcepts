@@ -5,11 +5,12 @@ using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
 using MultiplayerExample.Network.NetworkMessages.Server;
 using MultiplayerExample.Network.SnapshotStores;
-using Stride.Core.Collections;
 using Stride.Core.Mathematics;
 using Stride.Engine;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network
 {
@@ -22,23 +23,24 @@ namespace MultiplayerExample.Network
         internal class ClientPlayerManager
         {
             private readonly NetworkEntityProcessor _networkEntityProcessor;
-            private readonly FastList<LocalPlayerDetails> _localPlayers;
+            private readonly List<LocalPlayerDetails> _localPlayers;
             // Working list to hold entities to pass to MovementSnapshotsInputProcessor
-            private readonly FastList<MovementSnapshotsInputProcessor.PredictMovementEntityData> _resimulateEntities;
+            private readonly List<MovementSnapshotsInputProcessor.PredictMovementEntityData> _resimulateEntities;
 
             public ClientPlayerManager(NetworkEntityProcessor networkEntityProcessor)
             {
                 _networkEntityProcessor = networkEntityProcessor;
 
-                _localPlayers = new FastList<LocalPlayerDetails>();
-                _resimulateEntities = new FastList<MovementSnapshotsInputProcessor.PredictMovementEntityData>();
+                _localPlayers = new List<LocalPlayerDetails>();
+                _resimulateEntities = new List<MovementSnapshotsInputProcessor.PredictMovementEntityData>();
             }
 
             internal void SendClientInputPredictionsToServer(SimulationTickNumber currentSimTickNumber, NetworkMessageWriter networkMessageWriter)
             {
-                for (int playerIdx = 0; playerIdx < _localPlayers.Count; playerIdx++)
+                var localPlayersSpan = CollectionsMarshal.AsSpan(_localPlayers);
+                for (int playerIdx = 0; playerIdx < localPlayersSpan.Length; playerIdx++)
                 {
-                    ref var player = ref _localPlayers.Items[playerIdx];
+                    ref var player = ref localPlayersSpan[playerIdx];
                     var inputSnapshotsComp = player.InputSnapshotsComponent;
 
                     PlayerUpdateMessage playerUpdateMsg = default;
@@ -77,10 +79,11 @@ namespace MultiplayerExample.Network
                     PlayerUpdateInputMessage playerUpdateInputsMsg = default;
                     playerUpdateInputsMsg.WriteHeader(networkMessageWriter, (ushort)sendInputCount);
 
+                    var pendingInputsSpan = CollectionsMarshal.AsSpan(pendingInputs);
                     for (int i = 0; i < sendInputCount; i++)
                     {
                         int inputIndex = i + inputIndexOffset;
-                        ref var curInputData = ref pendingInputs.Items[inputIndex];
+                        ref var curInputData = ref pendingInputsSpan[inputIndex];
                         playerUpdateInputsMsg.PlayerInputSequenceNumber = curInputData.PlayerInputSequenceNumber;
                         playerUpdateInputsMsg.MoveInput = curInputData.MoveInput;
                         playerUpdateInputsMsg.JumpRequestedInput = curInputData.IsJumpButtonDown;
@@ -104,9 +107,10 @@ namespace MultiplayerExample.Network
                 PlayerInputSequenceNumber lastAppliedPlayerInputSequenceNumber)
             {
                 bool hasServerAppliedNewPlayerInput = false;
+                var localPlayersSpan = CollectionsMarshal.AsSpan(_localPlayers);
                 for (int playerIdx = 0; playerIdx < _localPlayers.Count; playerIdx++)
                 {
-                    ref var player = ref _localPlayers.Items[playerIdx];
+                    ref var player = ref localPlayersSpan[playerIdx];
                     var inputSnapshotsComp = player.InputSnapshotsComponent;
                     if (inputSnapshotsComp.ServerLastAcknowledgedPlayerInputSequenceNumber < lastAcknowledgedPlayerInputSequenceNumber)
                     {
@@ -117,11 +121,11 @@ namespace MultiplayerExample.Network
                         inputSnapshotsComp.ServerLastAppliedPlayerInputSequenceNumber = lastAppliedPlayerInputSequenceNumber;
                         hasServerAppliedNewPlayerInput = true;
 
-                        var pendingInputs = inputSnapshotsComp.PendingInputs;
+                        var pendingInputsSpan = CollectionsMarshal.AsSpan(inputSnapshotsComp.PendingInputs);
                         int removeCount = 0;
-                        for (int i = 0; i < pendingInputs.Count; i++)
+                        for (int i = 0; i < pendingInputsSpan.Length; i++)
                         {
-                            if (pendingInputs.Items[i].PlayerInputSequenceNumber <= lastAppliedPlayerInputSequenceNumber)
+                            if (pendingInputsSpan[i].PlayerInputSequenceNumber <= lastAppliedPlayerInputSequenceNumber)
                             {
                                 removeCount++;
                             }
@@ -130,7 +134,7 @@ namespace MultiplayerExample.Network
                                 break;
                             }
                         }
-                        pendingInputs.RemoveRange(0, removeCount);
+                        inputSnapshotsComp.PendingInputs.RemoveRange(0, removeCount);
                     }
                 }
                 return hasServerAppliedNewPlayerInput;
@@ -139,14 +143,15 @@ namespace MultiplayerExample.Network
             internal void UpdateEntityStates(
                 SimulationTickNumber currentSimulationTickNumber,
                 bool hasServerAppliedNewPlayerInput,
-                FastList<EntityUpdateTransform> updateEntityTransforms,
-                FastList<EntityUpdateInputAction> updateEntityInputs,
+                List<EntityUpdateTransform> updateEntityTransforms,
+                List<EntityUpdateInputAction> updateEntityInputs,
                 PlayerInputSequenceNumber lastAppliedServerPlayerInputSequenceNumber)
             {
                 var networkEntityIdToEntityDataMap = _networkEntityProcessor._networkEntityIdToEntityDataMap;
-                for (int i = 0; i < updateEntityTransforms.Count; i++)
+                var updateEntityTransformsSpan = CollectionsMarshal.AsSpan(updateEntityTransforms);
+                for (int i = 0; i < updateEntityTransformsSpan.Length; i++)
                 {
-                    ref var updateTransform = ref updateEntityTransforms.Items[i];
+                    ref readonly var updateTransform = ref updateEntityTransformsSpan[i];
                     if (!networkEntityIdToEntityDataMap.TryGetValue(updateTransform.NetworkEntityId, out var data))
                     {
                         // Since network messages can occur out of order, the entity might already have been removed
@@ -205,7 +210,7 @@ namespace MultiplayerExample.Network
                         bool exists = false;
                         for (int j = 0; j < _resimulateEntities.Count; j++)
                         {
-                            if (_resimulateEntities.Items[j].TransformComponent == data.TransformComponent)
+                            if (_resimulateEntities[j].TransformComponent == data.TransformComponent)
                             {
                                 exists = true;
                                 break;
@@ -217,9 +222,10 @@ namespace MultiplayerExample.Network
                             if (hasServerAppliedNewPlayerInput)
                             {
                                 var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
+                                var predictedMovementsSpan = CollectionsMarshal.AsSpan(predictedMovements);
                                 for (int mvmtIndx = 0; mvmtIndx < predictedMovements.Count; mvmtIndx++)
                                 {
-                                    ref var predictedMovementData = ref predictedMovements.Items[mvmtIndx];
+                                    ref var predictedMovementData = ref predictedMovementsSpan[mvmtIndx];
                                     if (predictedMovementData.PlayerInputSequenceNumberApplied == lastAppliedServerPlayerInputSequenceNumber)
                                     {
                                         var posDiff = predictedMovementData.LocalPosition - updateTransform.Position;
@@ -266,9 +272,10 @@ namespace MultiplayerExample.Network
                     }
                 }
 
-                for (int i = 0; i < updateEntityInputs.Count; i++)
+                var updateEntityInputsSpan = CollectionsMarshal.AsSpan(updateEntityInputs);
+                for (int i = 0; i < updateEntityInputsSpan.Length; i++)
                 {
-                    ref var updateInput = ref updateEntityInputs.Items[i];
+                    ref readonly var updateInput = ref updateEntityInputsSpan[i];
                     Debug.Assert(networkEntityIdToEntityDataMap.ContainsKey(updateInput.NetworkEntityId));
                     var data = networkEntityIdToEntityDataMap[updateInput.NetworkEntityId];
                     var networkEntityComp = data.NetworkEntityComponent;
@@ -320,9 +327,10 @@ namespace MultiplayerExample.Network
                 {
                     var gameplayScene = GetGameplayScene();
                     var gameManager = GetGameManager();
-                    for (int i = 0; i < _localPlayers.Count; i++)
+                    var localPlayersSpan = CollectionsMarshal.AsSpan(_localPlayers);
+                    for (int i = 0; i < localPlayersSpan.Length; i++)
                     {
-                        ref var player = ref _localPlayers.Items[i];
+                        ref var player = ref localPlayersSpan[i];
                         var playerEntity = player.NetworkEntityComponent.Entity;
                         _networkEntityProcessor.RemoveAndUnregisterEntity(player.PlayerId, playerEntity, gameplayScene);
                         gameManager.RaisePlayerRemovedEntity(playerEntity);

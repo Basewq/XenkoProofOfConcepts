@@ -7,6 +7,7 @@ using Stride.Games;
 using Stride.Physics;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MultiplayerExample.Network.SnapshotStores
 {
@@ -120,8 +121,8 @@ namespace MultiplayerExample.Network.SnapshotStores
                     {
                         continue;
                     }
-                    var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
-                    ref var predictedMovementData = ref predictedMovements.Items[predictedMovements.Count - 1];     // Data was already created in MovementSnapshotsInputProcessor.Update, just need to save the position data
+                    var predictedMovementsSpan = CollectionsMarshal.AsSpan(clientPredictionSnapshotsComp.PredictedMovements);
+                    ref var predictedMovementData = ref predictedMovementsSpan[predictedMovementsSpan.Length - 1];      // Data was already created in MovementSnapshotsInputProcessor.Update, just need to save the position data
                     Debug.Assert(predictedMovementData.SimulationTickNumber == simTickNumber);
 
                     // Save resulting position in the predicted movement buffer

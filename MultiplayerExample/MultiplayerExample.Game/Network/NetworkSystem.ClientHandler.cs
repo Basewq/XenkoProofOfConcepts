@@ -6,9 +6,9 @@ using MultiplayerExample.Network.NetworkMessages;
 using MultiplayerExample.Network.NetworkMessages.Client;
 using MultiplayerExample.Network.NetworkMessages.Server;
 using MultiplayerExample.Utilities;
-using Stride.Core.Collections;
 using Stride.Games;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -82,8 +82,8 @@ namespace MultiplayerExample.Network
 
             private GameTime _currentGameTime;  // Only valid during an Update
 
-            private readonly FastList<EntityUpdateTransform> _updateEntityTransforms = new FastList<EntityUpdateTransform>();
-            private readonly FastList<EntityUpdateInputAction> _updateEntityInputs = new FastList<EntityUpdateInputAction>();
+            private readonly List<EntityUpdateTransform> _updateEntityTransforms = new List<EntityUpdateTransform>();
+            private readonly List<EntityUpdateInputAction> _updateEntityInputs = new List<EntityUpdateInputAction>();
 
             /// <summary>
             /// Average time a packet will take from client to server, ~1/2 round-trip time.
@@ -461,7 +461,7 @@ namespace MultiplayerExample.Network
                     //Debug.WriteLine($"Cln ProcessData.ProcessMessageSnapshotUpdates: {_workingUpdateEntityTransforms.Count}");
                 }
 
-                static bool PopulateMessages<TMsg>(NetworkMessageReader netMessage, FastList<TMsg> messageList)
+                static bool PopulateMessages<TMsg>(NetworkMessageReader netMessage, List<TMsg> messageList)
                     where TMsg : struct, INetworkMessageArray
                 {
                     messageList.Clear();
