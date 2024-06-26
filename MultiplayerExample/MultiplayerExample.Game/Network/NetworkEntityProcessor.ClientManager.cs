@@ -108,7 +108,7 @@ namespace MultiplayerExample.Network
             {
                 bool hasServerAppliedNewPlayerInput = false;
                 var localPlayersSpan = CollectionsMarshal.AsSpan(_localPlayers);
-                for (int playerIdx = 0; playerIdx < _localPlayers.Count; playerIdx++)
+                for (int playerIdx = 0; playerIdx < localPlayersSpan.Length; playerIdx++)
                 {
                     ref var player = ref localPlayersSpan[playerIdx];
                     var inputSnapshotsComp = player.InputSnapshotsComponent;
@@ -223,7 +223,7 @@ namespace MultiplayerExample.Network
                             {
                                 var predictedMovements = clientPredictionSnapshotsComp.PredictedMovements;
                                 var predictedMovementsSpan = CollectionsMarshal.AsSpan(predictedMovements);
-                                for (int mvmtIndx = 0; mvmtIndx < predictedMovements.Count; mvmtIndx++)
+                                for (int mvmtIndx = 0; mvmtIndx < predictedMovementsSpan.Length; mvmtIndx++)
                                 {
                                     ref var predictedMovementData = ref predictedMovementsSpan[mvmtIndx];
                                     if (predictedMovementData.PlayerInputSequenceNumberApplied == lastAppliedServerPlayerInputSequenceNumber)
