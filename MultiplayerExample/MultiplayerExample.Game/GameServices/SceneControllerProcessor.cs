@@ -8,8 +8,8 @@ namespace MultiplayerExample.GameServices
     class SceneControllerProcessor : EntityProcessor<SceneController>
     {
         private readonly List<SceneController> _pendingStart = new List<SceneController>(1);        // Technically there should only be one manager, but just in case we support more we'll use a list
-        private readonly List<SceneController> _activeManagers = new List<SceneController>(1);
-        private readonly List<SceneController> _updatingManagers = new List<SceneController>(1);
+        private readonly List<SceneController> _activeControllers = new List<SceneController>(1);
+        private readonly List<SceneController> _updatingControllers = new List<SceneController>(1);
 
         protected override void OnEntityComponentAdding(Entity entity, [NotNull] SceneController component, [NotNull] SceneController data)
         {
@@ -21,7 +21,7 @@ namespace MultiplayerExample.GameServices
         protected override void OnEntityComponentRemoved(Entity entity, [NotNull] SceneController component, [NotNull] SceneController data)
         {
             _pendingStart.Remove(data);
-            _activeManagers.Remove(data);
+            _activeControllers.Remove(data);
 
             component.Deinitialize();
         }
@@ -32,15 +32,15 @@ namespace MultiplayerExample.GameServices
             //{
             //    mgr.Start();
             //}
-            _updatingManagers.AddRange(_activeManagers);    // Done this way to prevent the list being modified while running the update
-            foreach (var mgr in _updatingManagers)
+            _updatingControllers.AddRange(_activeControllers);    // Done this way to prevent the list being modified while running the update
+            foreach (var mgr in _updatingControllers)
             {
                 mgr.Update();
             }
-            _updatingManagers.Clear();
+            _updatingControllers.Clear();
             if (_pendingStart.Count > 0)
             {
-                _activeManagers.AddRange(_pendingStart);
+                _activeControllers.AddRange(_pendingStart);
             }
             _pendingStart.Clear();
         }
