@@ -5,6 +5,7 @@ This project includes code and assets for a proof of concept for extending editi
 **Important Notes**
 - This requires advance knowledge in how Stride Game Studio works, on a programming level, as Game Studio does not currently officially support extending the editor.
 - Visual Studio is required in order to run the standalone exe (debug/release builds), due to different compilation symbols required when running in Game Studio or the standalone exe.
+- As of version `4.2.0.2149`, you can only build/run the standalone exe in DebugExGameEditor or Release builds, because there is a bug with the CompilerApp which cannot load WPF libraries.
 
 ---
 

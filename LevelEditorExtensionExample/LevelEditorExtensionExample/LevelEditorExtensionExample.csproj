@@ -1,35 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <Configurations>Debug;Release;DebugExGameEditor</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|AnyCPU'">
     <DefineConstants>$(DefineConstants)TRACE;GAME_EDITOR</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='DebugExGameEditor|net6.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='DebugExGameEditor|net8.0-windows|AnyCPU'">
     <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows|AnyCPU'">
     <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Stride.Engine" Version="4.1.0.1734" />
+    <PackageReference Include="Stride.Engine" Version="4.2.0.2188" />
 
-    <PackageReference Include="Stride.Video" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Physics" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Navigation" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Particles" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.UI" Version="4.1.0.1734" />
+    <PackageReference Include="Stride.Video" Version="4.2.0.2188" />
+    <PackageReference Include="Stride.Physics" Version="4.2.0.2188" />
+    <PackageReference Include="Stride.Navigation" Version="4.2.0.2188" />
+    <PackageReference Include="Stride.Particles" Version="4.2.0.2188" />
+    <PackageReference Include="Stride.UI" Version="4.2.0.2188" />
 
-    <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.1.0.1734" IncludeAssets="build;buildTransitive" />
+    <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.2.0.2188" IncludeAssets="build;buildTransitive" />
   </ItemGroup>
   <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*GAME_EDITOR(;.*)*$'))">
-    <PackageReference Include="Stride.Assets.Presentation" Version="4.1.0.1734" PrivateAssets="all" />
-    <PackageReference Include="Stride.GameStudio" Version="4.1.0.1734" PrivateAssets="all" />
+    <PackageReference Include="Stride.Assets.Presentation" Version="4.2.0.2149" PrivateAssets="all" />
+    <PackageReference Include="Stride.GameStudio" Version="4.2.0.2149" PrivateAssets="all" />
   </ItemGroup>
 </Project>

@@ -115,17 +115,17 @@ namespace LevelEditorExtensionExample.Editor
             var levelEditComp = kv.Key;
 
             var editorVm = Stride.Core.Assets.Editor.ViewModel.EditorViewModel.Instance;
-            var gsVm = Stride.GameStudio.GameStudioViewModel.GameStudio;
+            var gsVm = Stride.GameStudio.ViewModels.GameStudioViewModel.GameStudio;
             gsVm.StrideAssets.Dispatcher.Invoke(() =>
             {
                 // Application.Current must be accessed on the UI thread
-                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.GameStudioWindow;
+                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.View.GameStudioWindow;
                 var sceneEditorView = window.GetChildOfType<Stride.Assets.Presentation.AssetEditors.SceneEditor.Views.SceneEditorView>();
-                var sceneVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.ViewModel.SceneViewModel;
-                var sceneEditorVm = sceneVm?.Editor as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneEditorVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneVm = sceneEditorVm?.Asset;
                 if (sceneEditorVm != null)
                 {
-                    //var sp = sceneVm?.Editor?.Asset.ServiceProvider;
+                    //var sp = sceneVm?.ServiceProvider;
                     var package = sceneVm.AssetItem.Package;
                     var boxPrefabPath = levelEditComp.BoxPrefab;
                     var boxPrefabAssetItem = package.Assets.FirstOrDefault(x => string.Equals(x.Location.FullPath, boxPrefabPath.Url));
@@ -185,14 +185,13 @@ namespace LevelEditorExtensionExample.Editor
             var levelEditComp = kv.Key;
 
             var editorVm = Stride.Core.Assets.Editor.ViewModel.EditorViewModel.Instance;
-            var gsVm = Stride.GameStudio.GameStudioViewModel.GameStudio;
+            var gsVm = Stride.GameStudio.ViewModels.GameStudioViewModel.GameStudio;
             gsVm.StrideAssets.Dispatcher.Invoke(() =>
             {
                 // Application.Current must be accessed on the UI thread
-                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.GameStudioWindow;
+                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.View.GameStudioWindow;
                 var sceneEditorView = window.GetChildOfType<Stride.Assets.Presentation.AssetEditors.SceneEditor.Views.SceneEditorView>();
-                var sceneVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.ViewModel.SceneViewModel;
-                var sceneEditorVm = sceneVm?.Editor as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneEditorVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
                 if (sceneEditorVm != null)
                 {
                     var levelEditorEntity = levelEditComp.Entity;
@@ -222,14 +221,13 @@ namespace LevelEditorExtensionExample.Editor
             var levelEditComp = kv.Key;
 
             var editorVm = Stride.Core.Assets.Editor.ViewModel.EditorViewModel.Instance;
-            var gsVm = Stride.GameStudio.GameStudioViewModel.GameStudio;
+            var gsVm = Stride.GameStudio.ViewModels.GameStudioViewModel.GameStudio;
             gsVm.StrideAssets.Dispatcher.Invoke(() =>
             {
                 // Application.Current must be accessed on the UI thread
-                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.GameStudioWindow;
+                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.View.GameStudioWindow;
                 var sceneEditorView = window.GetChildOfType<Stride.Assets.Presentation.AssetEditors.SceneEditor.Views.SceneEditorView>();
-                var sceneVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.ViewModel.SceneViewModel;
-                var sceneEditorVm = sceneVm?.Editor as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneEditorVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
                 if (sceneEditorVm != null)
                 {
                     var levelEditorEntity = levelEditComp.Entity;
@@ -265,14 +263,13 @@ namespace LevelEditorExtensionExample.Editor
             var levelEditComp = kv.Key;
 
             var editorVm = Stride.Core.Assets.Editor.ViewModel.EditorViewModel.Instance;
-            var gsVm = Stride.GameStudio.GameStudioViewModel.GameStudio;
+            var gsVm = Stride.GameStudio.ViewModels.GameStudioViewModel.GameStudio;
             gsVm.StrideAssets.Dispatcher.Invoke(() =>
             {
                 // Application.Current must be accessed on the UI thread
-                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.GameStudioWindow;
+                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.View.GameStudioWindow;
                 var sceneEditorView = window.GetChildOfType<Stride.Assets.Presentation.AssetEditors.SceneEditor.Views.SceneEditorView>();
-                var sceneVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.ViewModel.SceneViewModel;
-                var sceneEditorVm = sceneVm?.Editor as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneEditorVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
                 if (sceneEditorVm != null)
                 {
                     var levelEditorEntity = levelEditComp.Entity;
@@ -303,14 +300,13 @@ namespace LevelEditorExtensionExample.Editor
             var levelEditComp = kv.Key;
 
             var editorVm = Stride.Core.Assets.Editor.ViewModel.EditorViewModel.Instance;
-            var gsVm = Stride.GameStudio.GameStudioViewModel.GameStudio;
+            var gsVm = Stride.GameStudio.ViewModels.GameStudioViewModel.GameStudio;
             gsVm.StrideAssets.Dispatcher.Invoke(() =>
             {
                 // Application.Current must be accessed on the UI thread
-                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.GameStudioWindow;
+                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.View.GameStudioWindow;
                 var sceneEditorView = window.GetChildOfType<Stride.Assets.Presentation.AssetEditors.SceneEditor.Views.SceneEditorView>();
-                var sceneVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.ViewModel.SceneViewModel;
-                var sceneEditorVm = sceneVm?.Editor as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneEditorVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
                 if (sceneEditorVm != null)
                 {
                     var levelEditorEntity = levelEditComp.Entity;
@@ -358,14 +354,13 @@ namespace LevelEditorExtensionExample.Editor
             var levelEditComp = kv.Key;
 
             var editorVm = Stride.Core.Assets.Editor.ViewModel.EditorViewModel.Instance;
-            var gsVm = Stride.GameStudio.GameStudioViewModel.GameStudio;
+            var gsVm = Stride.GameStudio.ViewModels.GameStudioViewModel.GameStudio;
             gsVm.StrideAssets.Dispatcher.Invoke(() =>
             {
                 // Application.Current must be accessed on the UI thread
-                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.GameStudioWindow;
+                var window = System.Windows.Application.Current.MainWindow as Stride.GameStudio.View.GameStudioWindow;
                 var sceneEditorView = window.GetChildOfType<Stride.Assets.Presentation.AssetEditors.SceneEditor.Views.SceneEditorView>();
-                var sceneVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.ViewModel.SceneViewModel;
-                var sceneEditorVm = sceneVm?.Editor as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
+                var sceneEditorVm = sceneEditorView?.DataContext as Stride.Assets.Presentation.AssetEditors.SceneEditor.ViewModels.SceneEditorViewModel;
                 if (sceneEditorVm != null)
                 {
                     var levelEditorEntity = levelEditComp.Entity;
