@@ -19,20 +19,22 @@ There are two types of "Custom Assets" which are required:
 
 ---
 The most complicated part is setting up all the files required for the **design-time** custom asset.
-In this project the design-time custom asset is `LocalizationStringDefinitionAsset` defined in the project `CustomAssetExample.StrideAssetExt`.
+In this project the design-time custom asset is `LocalizationStringDefinitionAsset` defined in the project `CustomAssetExample.StrideAssetExt`. Its run-time equivalent is  `LocalizationStringDefinitionAsset` in the project `CustomAssetExample.StrideAssetExt`, which is also explicitly declared in the `[AssetContentType]` attribute.
 
 To properly support the design-time asset, the following things are required:
 - All Stride assets are *compiled* through Stride.Core.Assets.CompilerApp.exe, so `LocalizationStringDefinitionAssetCompiler` is required so the compiler app knows how to convert the design-time asset into the runtime equivalent.
-- `EditorModule` contains the `[ModuleInitializer]` which is required so Stride's CompilerApp and Editor is aware the `CustomAssetExample.StrideAssetExt` library contains custom assets.
+- `EditorModule` contains the `[ModuleInitializer]` which is required so Stride's CompilerApp and Editor are aware the `CustomAssetExample.StrideAssetExt` library contains custom assets.
 - The design-time asset requires a 'template definition' which is defined in `Templates\Assets\LocalizationStringDefinition.sdtpl`. Some of the properties (eg. Name, Icon, etc) are things that appear in the Stride editor when creating a new asset.
 - In order for Stride to detect any template definitions, this needs to be defined in `CustomAssetExample.StrideAssetExt.sdpkg`.
 - `LocalizationStringDefinitionAssetFactory` can be used to set up default values when creating a new asset through the editor.
 
 ---
 The `CustomAssetExample.SharedData` contains the run-time data of the custom asset, which is used by the directly by your `SyncScript`/`AsyncScript`/components.
-In this project `LocalizationStringRefScript` is has a `UrlReference<LocalizationStringDefinition>` and loads the compiled asset (as `LocalizationStringDefinition`) at the start of the script.
+In this project `LocalizationStringRefScript` has a property to `UrlReference<LocalizationStringDefinition>` and loads the compiled asset (as `LocalizationStringDefinition`) at the start of the script.
 
-`CustomAssetExample.StrideAssetExt` also references this project since it compiles the custom asset (`LocalizationStringDefinitionAsset`) to the run-time equivalent (`LocalizationStringDefinition`).
+`CustomAssetExample.StrideAssetExt` also references this project since it compiles the custom asset (`LocalizationStringDefinitionAsset`) to the run-time equivalent (`LocalizationStringDefinition`) through `LocalizationStringDefinitionAssetCompiler`.
+
+> For the sake of this example project, the design-time asset and run-time asset have matching fields, however you can change them to have completely different definitions and/or do additional processing (eg. read some external file) when you process it through your derived AssetCompiler class.
 
 ---
 `CustomAssetExample.GameStudioExt` provides additional supporting files for the editor only (which is optional).
