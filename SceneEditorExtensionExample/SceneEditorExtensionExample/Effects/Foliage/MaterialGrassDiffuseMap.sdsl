@@ -1,0 +1,67 @@
+﻿namespace SceneEditorExtensionExample.Rendering
+{
+    shader MaterialGrassDiffuseMap<bool IsBrightnessMapEnabled, bool HasBrightnessMap> : MaterialSurfaceDiffuse, IMaterialSurfacePixel,
+        ShaderBaseStream, Texturing, NormalStream, PositionStream4
+    {
+        rgroup PerMaterial
+        {
+            stage Texture2D BrightnessMap;
+        }
+
+        cbuffer PerMaterial
+        {
+            stage float BrightnessMapWorldLength;
+            stage float BrightnessMapMinValue;
+            stage float BrightnessMapMaxValue;
+            stage bool IsBrightnessMapLevelsEnabled;
+            stage int BrightnessMapLevels;
+            stage float GlobalBrightness;
+
+            [Color] stage float3 GrassTopColor;
+            [Color] stage float3 GrassBottomColor;
+        }
+
+        override void Compute()
+        {
+            float3 grassColor = lerp(GrassBottomColor, GrassTopColor, streams.TexCoord.y);
+            float4 color = float4(grassColor, 1.0) * GlobalBrightness;
+        
+            if (IsBrightnessMapEnabled && HasBrightnessMap)
+            {
+                float2 uv = streams.PositionWS.xz / BrightnessMapWorldLength;
+                float brightnessMapValue = BrightnessMap.Sample(LinearRepeatSampler, uv, 0).r;
+                float brightnessMapValueRange = BrightnessMapMaxValue - BrightnessMapMinValue;
+                if (IsBrightnessMapLevelsEnabled && BrightnessMapLevels > 1)
+                {
+    //brightnessMapValue = 0.4;
+                    float brightnessMapValuePerLevel = 1.0 / BrightnessMapLevels;
+                    //brightnessMapValue *= brightnessMapValue;
+                    float levels = floor(brightnessMapValue / brightnessMapValuePerLevel);
+                    levels = min(levels, BrightnessMapLevels - 1);
+                    float brightnessValuePerLevel = brightnessMapValueRange / (BrightnessMapLevels - 1);    // -1 to get full colour range
+                    float brightnessValue = (levels * brightnessValuePerLevel) + BrightnessMapMinValue;
+                    color *= brightnessValue;
+                }
+                else
+                {
+                    float brightnessValue = brightnessMapValue * brightnessMapValueRange + BrightnessMapMinValue;
+                    color *= brightnessValue;
+                }
+            }
+
+            color *= GlobalBrightness;
+
+            // Output as per MaterialSurfaceDiffuse 
+            streams.matDiffuse = color;
+            // Because matDiffuse can be modified when using a metalness, we are storing the colorBase into matColorBase
+            // so that we are able to query the original diffuse color without any modifications.
+            streams.matColorBase = color;
+            if (!streams.IsFrontFace)
+            {
+                streams.meshNormal *= -1;
+                streams.meshNormalWS *= -1;
+                streams.normalWS *= -1;
+            }
+        }
+    };
+}

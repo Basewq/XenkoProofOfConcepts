@@ -18,6 +18,7 @@ This repository contains the following projects:
 * [LevelEditorExtensionExample](LevelEditorExtensionExample): Custom component & processor running in the editor to extend the Game Studio's functionality.
 * [MultiplayerExample](MultiplayerExample): Multiplayer project with a client application and a server application, both running with Stride code.
 * [ObjectInfoRenderTargetExample](ObjectInfoRenderTargetExample): Render entity information onto a `Texture` and then read this in a subsequent shader.
+* [SceneEditorExtensionExample](SceneEditorExtensionExample): Advanced editor extension to paint foliage in the editor scene and save/load this as a custom asset at run-time.
 * [ScreenSpaceDecalExample](ScreenSpaceDecalExample): Use a cube projector and renders a given `Texture` onto any surfaces within the projector.
 * [ScreenSpaceDecalRootRendererExample](ScreenSpaceDecalRootRendererExample): Similar to `ScreenSpaceDecalExample`, but uses a `RootRenderFeature` instead of making a processor fake a `RenderMesh`.
 * [UINavigationExample](UINavigationExample): Example on extending existing UI controls to add the ability to traverse between UI via keyboard/gamepad.

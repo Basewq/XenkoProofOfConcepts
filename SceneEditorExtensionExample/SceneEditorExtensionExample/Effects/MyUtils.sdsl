@@ -1,0 +1,30 @@
+﻿shader MyUtils
+{
+    static const float Epsilon = 0.0001;
+
+    float2 GetPanningTextureMapUv(float3 vertWorldPos, float texMapWorldLength, float2 uvOffsetDirection, float uvSpeed)
+    {
+        float2 texMapUvTimeOffset = uvOffsetDirection * Global.Time * uvSpeed;
+//texMapUvTimeOffset = 0;
+        float2 texMapUvOffset = (vertWorldPos.xz  / texMapWorldLength) - texMapUvTimeOffset;  // Subtract from offset to appear to move the right direction
+        return texMapUvOffset;
+    }
+
+    float3 ReconstructNormalFromXY(float3 normal, float xyScale)
+    {
+        //if (TScaleAndBias)
+        {
+            normal = (2.0f * normal) - 1.0f;    // Gets values in [-1...1] range.
+        }
+
+        normal.xy *= xyScale;
+
+        // Stride removes z-component due to compression, so reconstruct here
+        // If Z is calculated from XY do it here
+        //if (TIsNormalXY1)
+        {
+            normal.z = sqrt(max(0, 1.0f - (normal.x * normal.x + normal.y * normal.y)));
+        }
+        return normal;
+    }
+};

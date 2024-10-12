@@ -1,18 +1,86 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Configurations>Debug;Release;DebugExGameEditor</Configurations>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE;GAME_EDITOR</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='DebugExGameEditor|net8.0-windows|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Stride.Engine" Version="4.2.0.2232" />
-
     <PackageReference Include="Stride.Video" Version="4.2.0.2232" />
     <PackageReference Include="Stride.Physics" Version="4.2.0.2232" />
     <PackageReference Include="Stride.Navigation" Version="4.2.0.2232" />
     <PackageReference Include="Stride.Particles" Version="4.2.0.2232" />
     <PackageReference Include="Stride.UI" Version="4.2.0.2232" />
-
     <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.2.0.2232" IncludeAssets="build;buildTransitive" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SceneEditorExtensionExample.SharedData\SceneEditorExtensionExample.SharedData.csproj" />
+    <ProjectReference Include="..\SceneEditorExtensionExample.StrideAssetExt\SceneEditorExtensionExample.StrideAssetExt.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($(DefineConstants), '^(.*;)*GAME_EDITOR(;.*)*$'))">
+    <!--Editor specific-->
+    <PackageReference Include="Stride.GameStudio" Version="4.2.0.2232" GeneratePathProperty="true" />
+    <ProjectReference Include="..\SceneEditorExtensionExample.GameStudioExt\SceneEditorExtensionExample.GameStudioExt.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Effects\Environment\EnvironmentInteractors.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\Environment\EnvironmentWindSources.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\Foliage\FoliageInstancingShared.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\Foliage\FoliageInstancingShared.sdsl.cs">
+      <DependentUpon>FoliageInstancingShared.sdsl</DependentUpon>
+    </Compile>
+    <Compile Update="Effects\Foliage\MaterialGrassDiffuseMap.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\Foliage\MaterialGrassMeshDisplacement.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\MyUtils.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Effects\Environment\EnvironmentInteractors.sdsl">
+      <LastGenOutput>EnvironmentInteractors.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\Environment\EnvironmentWindSources.sdsl">
+      <LastGenOutput>EnvironmentWindSources.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\Foliage\FoliageInstancingShared.sdsl">
+      <LastGenOutput>FoliageInstancingShared.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\Foliage\MaterialGrassDiffuseMap.sdsl">
+      <LastGenOutput>MaterialGrassDiffuseMap.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\Foliage\MaterialGrassMeshDisplacement.sdsl">
+      <LastGenOutput>MaterialGrassMeshDisplacement.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\MyUtils.sdsl">
+      <LastGenOutput>MyUtils.sdsl.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>

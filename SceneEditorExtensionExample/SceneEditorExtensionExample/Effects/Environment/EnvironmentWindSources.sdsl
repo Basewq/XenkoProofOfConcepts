@@ -1,0 +1,19 @@
+﻿namespace SceneEditorExtensionExample.Rendering
+{
+    shader EnvironmentWindSources
+    {
+        // Note: cbuffer doesn't support custom structs so break down the C# struct to the native data types
+        cbuffer PerView.EnvironmentWindSources
+        {
+            stage float WindAmbient_WindSpeed;
+
+            stage float2 WindDirectional_WindDirectionXZ;       // Normalized vector
+            stage float WindDirectional_WindMaxSpeed;
+            stage float WindDirectional_WindCurrentStrength;    // [0...1] value to be multiplied with WindMaxSpeed to get the current speed
+        }
+    
+        //rgroup PerView.EnvironmentWindSources
+        //{
+        //}
+    };
+}

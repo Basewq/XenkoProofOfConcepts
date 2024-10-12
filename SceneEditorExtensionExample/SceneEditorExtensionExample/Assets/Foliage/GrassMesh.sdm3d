@@ -1,0 +1,15 @@
+!Model
+Id: 0e3b083d-7030-483f-b968-5799d7ee619a
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Foliage/GrassMesh.fbx
+Skeleton: null
+PivotPosition: {X: 0.0, Y: 0.0, Z: 0.0}
+Materials:
+    0a5cfae5e719878455f7066d09e183ae:
+        Name: GrassBladeMaterial
+        MaterialInstance:
+            Material: 6082e0d7-0f02-46a7-8b92-a8121de63790:Foliage/GrassBladeMaterial
+Modifiers: {}
+~SourceHashes:
+    9bb74e570a7853ce8186171cb85f78df~../../Resources/Foliage/GrassMesh.fbx: 208aee65ac4375d1c08c43a03c9a1fbf

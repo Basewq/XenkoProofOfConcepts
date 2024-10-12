@@ -1,0 +1,35 @@
+!MaterialAsset
+Id: 6082e0d7-0f02-46a7-8b92-a8121de63790
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Attributes:
+    Displacement: !SceneEditorExtensionExample.Rendering.Materials.MaterialGrassMeshDisplacementFeature,SceneEditorExtensionExample
+        WindNoiseMap: d6dd8de3-e138-43f7-a6f3-d679cdcc239e:Foliage/WindNoise
+        AmbientWindNoiseMapWorldLength: 5.0
+        AmbientWindMaxDisplacementY: 0.1
+        ActiveWindNoiseMapWorldLength: 30.0
+        ActiveWindMaxDisplacementXZ: 0.75
+    Diffuse: !SceneEditorExtensionExample.Rendering.Materials.MaterialGrassDiffuseMapFeature,SceneEditorExtensionExample
+        IsBrightnessMapEnabled: true
+        BrightnessMap: 81345e4e-071f-44dd-8702-5f73e9074a01:Foliage/GrassBrightnessMap
+        BrightnessMapWorldLength: 30.0
+        BrightnessMapMinValue: 0.8
+        BrightnessMapMaxValue: 1.0
+        IsBrightnessMapLevelsEnabled: true
+        BrightnessMapLevels: 4
+        GlobalBrightness: 1.0
+        TopColor: {R: 0.032500006, G: 0.4, B: 0.06143708}
+        BottomColor: {R: 0.019765627, G: 0.1375, B: 0.041840825}
+    DiffuseModel: !MaterialDiffuseLambertModelFeature {}
+    Specular: !MaterialMetalnessMapFeature
+        MetalnessMap: !ComputeFloat
+            Value: 0.7
+    SpecularModel: !MaterialSpecularMicrofacetModelFeature
+        Fresnel: !MaterialSpecularMicrofacetFresnelSchlick {}
+        Visibility: !MaterialSpecularMicrofacetVisibilitySmithSchlickGGX {}
+        NormalDistribution: !MaterialSpecularMicrofacetNormalDistributionGGX {}
+        Environment: !MaterialSpecularMicrofacetEnvironmentGGXLUT {}
+    Overrides:
+        UVScale: {X: 1.0, Y: 1.0}
+    CullMode: None
+Layers: {}

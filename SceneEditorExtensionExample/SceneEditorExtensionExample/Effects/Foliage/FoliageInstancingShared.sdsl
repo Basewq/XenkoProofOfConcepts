@@ -1,0 +1,15 @@
+﻿namespace SceneEditorExtensionExample.Rendering
+{
+    shader FoliageInstancingShared
+    {
+        struct FoliageInstanceData
+        {
+            float3 SurfaceNormalModelSpace;
+        };
+
+        rgroup PerDraw.FoliageInstancing
+        {
+            stage StructuredBuffer<FoliageInstanceData> FoliageInstanceDataArray;
+        }
+    };
+}

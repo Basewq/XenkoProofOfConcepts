@@ -1,0 +1,145 @@
+﻿namespace SceneEditorExtensionExample.Rendering
+{
+    shader MaterialGrassMeshDisplacement : FoliageInstancingShared, EnvironmentInteractors, EnvironmentWindSources, IMaterialSurface,
+        TransformationInstancing, PositionStream4, NormalStream, Texturing, MyUtils
+    {
+        SamplerState WindNoiseMapSampler
+        {
+            Filter = MIN_MAG_MIP_LINEAR;
+            AddressU = Wrap;
+            AddressV = Wrap;
+        };
+
+        rgroup PerMaterial
+        {
+            stage Texture2D WindNoiseMap;
+        }
+
+        cbuffer PerMaterial
+        {
+            stage float AmbientWindNoiseMapWorldLength;
+            stage float AmbientWindMaxDisplacementY;
+
+            stage float ActiveWindNoiseMapWorldLength;
+            stage float ActiveWindMaxDisplacementXZ;
+        }
+
+        override void Compute()
+        {
+            uint instanceId = streams.InstanceID;   // This is also the index of FoliageInstanceDataArray
+            float4x4 worldMatrix = GetInstanceWorld(instanceId);
+            float4x4 invWorldMatrix = GetInstanceWorldInverse(instanceId);
+
+            float4 vertModelSpacePos = streams.Position;
+            float4 vertWorldSpacePos = mul(vertModelSpacePos, worldMatrix);
+
+            float3 displacementModelSpace = 0;
+            float3 displacementWorldSpace = 0;
+
+            float3 grassWorldPos = mul(float4(0, 0, 0, 1), worldMatrix).xyz;
+            float windInfluence = 1;
+
+            // Transition from only influenced by interactable to only influenced by wind,
+            // which occurs at (InteractableRadius - OverlapTransitionWorldHalfLength) to (InteractableRadius + OverlapTransitionWorldHalfLength)
+            const float OverlapTransitionWorldLength = 1.0;
+            const float OverlapTransitionWorldHalfLength = OverlapTransitionWorldLength * 0.5;
+
+            // Calculate Interactable Displacement
+            float maxIntrGrassOverlap = 0;
+            float3 maxInteractableToGrassVec = 0;
+            for (int i = 0; i < EnvironmentInteractorCount; i++)
+            {
+                float3 curInteractableToGrassVec = grassWorldPos - EnvironmentInteractorArray[i].Position;
+                float intrToGrassDistance = length(curInteractableToGrassVec);
+                float interactableRadius = EnvironmentInteractorArray[i].Radius;
+                float intrGrassOverlap = interactableRadius - intrToGrassDistance;      // Value <= 0 = No overlap, Value > 0 = Overlap
+                intrGrassOverlap += OverlapTransitionWorldHalfLength;                   // Extend out the overlap
+                if (intrGrassOverlap > maxIntrGrassOverlap)
+                {
+                    maxIntrGrassOverlap = intrGrassOverlap;
+                    maxInteractableToGrassVec = curInteractableToGrassVec;
+                }
+            }
+            float intrGrassOverlapTransitionAmount = maxIntrGrassOverlap / OverlapTransitionWorldLength;
+            if (intrGrassOverlapTransitionAmount > 0)
+            {
+                const float MaxInteractableInfluence = 1.0;
+                const float MinInteractableInfluence = 0.8f;
+                const float MinWindInfluence = 0.0;
+                const float MaxWindInfluence = 1 - MinInteractableInfluence;
+                // 0 = Wind, 1 = Interactable
+                intrGrassOverlapTransitionAmount = min(intrGrassOverlapTransitionAmount, 1.0);      // Ensure value is only in range [0, 1]
+                float interactableDisplacementStrength = clamp(intrGrassOverlapTransitionAmount, MinInteractableInfluence, MaxInteractableInfluence);
+                const float interactableMaxXZDisplacement = 0.95;
+                const float interactableMaxYDisplacement = -0.95;
+                if (length(maxInteractableToGrassVec) <= MyUtils.Epsilon || false)
+                {
+                    // Just bend the mesh forward (and down)
+                    float4 forwardVecModelSpace = { 0, 0, 1, 1 };
+                    float4 displaceForwardWorldSpace = mul(forwardVecModelSpace, worldMatrix);
+                    float3 bendForwardDirPos = displaceForwardWorldSpace.xyz - grassWorldPos;
+                    float3 displaceForwardDownWorldSpace = bendForwardDirPos * interactableMaxXZDisplacement;
+                    displaceForwardDownWorldSpace.y = interactableMaxYDisplacement;
+                    displacementWorldSpace += displaceForwardDownWorldSpace * interactableDisplacementStrength;
+                }
+                else
+                {
+                    float3 intrToGrassDirWorldSpace = maxInteractableToGrassVec;
+                    intrToGrassDirWorldSpace.y = 0;
+                    intrToGrassDirWorldSpace = normalize(intrToGrassDirWorldSpace) * interactableMaxXZDisplacement;
+                    intrToGrassDirWorldSpace.y = interactableMaxYDisplacement;
+                    displacementWorldSpace += intrToGrassDirWorldSpace * interactableDisplacementStrength;
+                }
+
+                float curWindInfluence = clamp(1.0 - intrGrassOverlapTransitionAmount, MinWindInfluence, MaxWindInfluence);
+                windInfluence = min(windInfluence, curWindInfluence);
+            }
+
+            // Calculate Ambient Wind Displacement
+            if (windInfluence > 0 && WindAmbient_WindSpeed > 0)
+            {
+                float4 meshPosWorldSpace = mul(float4(0, 0, 0, 1), worldMatrix); 
+                float2 windDirXZ = float2(1.0, 1.0);
+                float uvPanSpeed = WindAmbient_WindSpeed / AmbientWindNoiseMapWorldLength;
+                float2 uv = MyUtils.GetPanningTextureMapUv(meshPosWorldSpace.xyz, AmbientWindNoiseMapWorldLength, windDirXZ, uvPanSpeed);
+                float ambWindNoiseValue = WindNoiseMap.SampleLevel(WindNoiseMapSampler, uv, 0).r;   // Must use SampleLevel instead of Sample in vertex shader
+                float ambientWindDisplacementStrength = 2 * (ambWindNoiseValue - 0.5);              // Get value in [-1, 1] range
+                // Only squash up/down
+                float heightOffset = streams.TexCoord.y * ambientWindDisplacementStrength * windInfluence * AmbientWindMaxDisplacementY; 
+                float3 displaceWindModelSpace = float3(0, heightOffset, 0);
+                displacementModelSpace += displaceWindModelSpace;
+            }
+
+            // Calculate Active Wind Displacement
+            if (windInfluence > 0 && WindDirectional_WindCurrentStrength > 0)
+            {
+                // Full body bending (bends with the wind)
+                float2 windDirXZ = WindDirectional_WindDirectionXZ;
+                float uvPanSpeed = WindDirectional_WindMaxSpeed / ActiveWindNoiseMapWorldLength;
+                float2 uv = MyUtils.GetPanningTextureMapUv(vertWorldSpacePos.xyz, ActiveWindNoiseMapWorldLength, windDirXZ, uvPanSpeed);
+                float activeWindNoiseValue = WindNoiseMap.SampleLevel(WindNoiseMapSampler, uv, 0).r;        // Must use SampleLevel instead of Sample in vertex shader
+                const float NoiseValueMin = -0.85;
+                const float NoiseValueMax = 1.0;
+                const float NoiseValueRange = NoiseValueMax - NoiseValueMin;
+                float activeWindDisplacementStrength = (activeWindNoiseValue * NoiseValueRange) + NoiseValueMin;    // Get value in [NoiseValueMin, NoiseValueMax] range
+                float2 activeWindDisplacementXZ = windDirXZ * ActiveWindMaxDisplacementXZ * activeWindDisplacementStrength * WindDirectional_WindCurrentStrength * windInfluence;
+                float displacementXZLength = length(activeWindDisplacementXZ);
+                float posXZLength = length(streams.Position.xz);
+                float heightOffsetFactor = 1.0 - (posXZLength / (posXZLength + displacementXZLength));
+                float heightOffset = -streams.Position.y * (heightOffsetFactor * heightOffsetFactor);        // heightOffsetFactor is squared to make the offset look less linear
+                float3 displaceWindWorldSpace = float3(activeWindDisplacementXZ.x, heightOffset, activeWindDisplacementXZ.y);
+                displacementWorldSpace += displaceWindWorldSpace;
+            }
+
+            float displacementWorldSpaceStrength = streams.TexCoord.y;      // Mesh base has zero displacement, the grass tip (at uv.y = 1) has full displacement
+
+            vertWorldSpacePos += float4(displacementWorldSpace, 0) * displacementWorldSpaceStrength;
+
+            streams.Position = mul(vertWorldSpacePos, invWorldMatrix);  // Convert back to model space
+            streams.Position += float4(displacementModelSpace, 0);
+
+            // Change the vertex normal to align with the surface
+            streams.meshNormal = FoliageInstanceDataArray[instanceId].SurfaceNormalModelSpace;
+        }
+    };
+}

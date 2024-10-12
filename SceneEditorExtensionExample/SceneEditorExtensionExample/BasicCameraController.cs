@@ -17,6 +17,8 @@ namespace SceneEditorExtensionExample
     {
         private const float MaximumPitch = MathUtil.PiOverTwo * 0.99f;
 
+        private bool _showHints = true;
+
         private Vector3 upVector;
         private Vector3 translation;
         private float yaw;
@@ -55,6 +57,30 @@ namespace SceneEditorExtensionExample
         {
             ProcessInput();
             UpdateTransform();
+
+            if (Input.HasKeyboard && Input.IsKeyPressed(Keys.H))
+            {
+                _showHints = !_showHints;
+            }
+            if (_showHints)
+            {
+                var nextPrintLinePos = new Int2(10, 30);
+                PrintLine("Hide this hint with [H]", ref nextPrintLinePos);
+                PrintLine("Move camera with [WASD + QE]", ref nextPrintLinePos);
+                PrintLine("Rotate camera by holding down right mouse button", ref nextPrintLinePos);
+                PrintLine("", ref nextPrintLinePos);
+                PrintLine("Start/Stop moving sphere with [Z]", ref nextPrintLinePos);
+                PrintLine("Show/Hide moving sphere with [X]", ref nextPrintLinePos);
+            }
+
+            void PrintLine(string line, ref Int2 printLinePos)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    DebugText.Print(line, printLinePos);
+                }
+                printLinePos.Y += 15;
+            }
         }
 
         private void ProcessInput()

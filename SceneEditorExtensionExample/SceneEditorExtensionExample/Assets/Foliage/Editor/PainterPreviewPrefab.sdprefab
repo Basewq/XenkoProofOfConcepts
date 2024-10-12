@@ -1,0 +1,22 @@
+!PrefabAsset
+Id: 8a5814d7-6f36-4bb9-b3ca-7ee2534acea4
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+Hierarchy:
+    RootParts:
+        - ref!! a8475745-344d-4758-9f43-ec20a922fff1
+    Parts:
+        -   Entity:
+                Id: a8475745-344d-4758-9f43-ec20a922fff1
+                Name: PainterPreviewSphere
+                Components:
+                    d56d30cf5d84f63eecbfd3ebfe90a135: !TransformComponent
+                        Id: 1505d995-cec3-493c-bccc-c598b3e2804e
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    29cc42d3fedfb316e1c160924bb967b7: !ModelComponent
+                        Id: 43362344-f020-4a65-9cfa-e6e3d04938ff
+                        Model: a6d172a9-4b8b-4884-8a9f-2012a5ff65ad:Foliage/Editor/PainterPreviewSphere
+                        Materials: {}

@@ -1,0 +1,21 @@
+﻿namespace SceneEditorExtensionExample.Rendering
+{
+    shader EnvironmentInteractors
+    {
+        struct EnvironmentInteractorData
+        {
+            float3 Position;
+            float Radius;
+        };
+
+        cbuffer PerView.EnvironmentInteractors
+        {
+            stage int EnvironmentInteractorCount;
+        }
+
+        rgroup PerView.EnvironmentInteractors
+        {
+            stage StructuredBuffer<EnvironmentInteractorData> EnvironmentInteractorArray;
+        }
+    };
+}

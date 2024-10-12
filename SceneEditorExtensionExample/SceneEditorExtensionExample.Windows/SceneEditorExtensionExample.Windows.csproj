@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SceneEditorExtensionExample</RootNamespace>
+    <Configurations>Debug;Release;DebugExGameEditor</Configurations>
 
     <OutputPath>..\Bin\Windows\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -17,5 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\SceneEditorExtensionExample\SceneEditorExtensionExample.csproj" />
   </ItemGroup>
-
 </Project>

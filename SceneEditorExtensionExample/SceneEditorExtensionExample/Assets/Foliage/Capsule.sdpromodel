@@ -1,0 +1,13 @@
+!ProceduralModelAsset
+Id: df9bffa4-0323-4c4e-934a-b55e0120dc36
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Type: !CapsuleProceduralModel
+    Length: 1.0
+    Radius: 0.1
+    Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+    UvScale: {X: 1.0, Y: 1.0}
+    LocalOffset: {X: 0.0, Y: 0.5, Z: 0.0}
+    NumberOfTextureCoordinates: 1
+    MaterialInstance:
+        Material: 3f9cbcc5-1f42-4fdd-9d43-4247154c5927:Foliage/CapsuleMaterial

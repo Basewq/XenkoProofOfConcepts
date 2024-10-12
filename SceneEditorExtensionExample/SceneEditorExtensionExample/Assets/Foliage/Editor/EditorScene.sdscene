@@ -1,0 +1,31 @@
+!SceneAsset
+Id: 0d28eeb7-fe3e-4cb9-b7c1-fc10f2fe6239
+SerializedVersion: {Stride: 3.1.0.1}
+Tags: []
+ChildrenIds: []
+Parent: 8f167372-0485-4eae-a7d0-28cd5947ed77:MainScene
+Offset: {X: 0.0, Y: 0.0, Z: 0.0}
+Hierarchy:
+    RootParts:
+        - ref!! f89dc4d3-c19b-4802-8e72-31ee014f4e10
+    Parts:
+        -   Entity:
+                Id: f89dc4d3-c19b-4802-8e72-31ee014f4e10
+                Name: FoliagePainter
+                Components:
+                    99a7089cf7fc7e13e34aae2c8966dc9b: !TransformComponent
+                        Id: f78c871c-ef18-4d6f-8d94-7a05641c0f01
+                        Position: {X: 0.0, Y: 0.0, Z: 0.0}
+                        Rotation: {X: 0.0, Y: 0.0, Z: 0.0, W: 1.0}
+                        Scale: {X: 1.0, Y: 1.0, Z: 1.0}
+                        Children: {}
+                    8671f4790d3c6dbbcf2a2bdcc21710ae: !SceneEditorExtensionExample.WorldTerrain.Foliage.Editor.FoliagePainterComponent,SceneEditorExtensionExample
+                        Id: fc508fc0-39f1-4660-a0d2-a83ff2391b90
+                        FoliagePlacementAsset: 70b5e4a8-33a9-4349-89a6-754c52f7d2fe:Foliage/MainSceneFoliagePlacement
+                        PaintPlacementPreviewPrefabUrl: 8a5814d7-6f36-4bb9-b3ca-7ee2534acea4:Foliage/Editor/PainterPreviewPrefab
+                        PaintFoilageModelUrl: 0e3b083d-7030-483f-b968-5799d7ee619a:Foliage/GrassMesh
+                        MaterialCheckFilter:
+                            5edfd8cac1a1335f6fb01e263410b772: 6c5b1a3a-7c03-463f-b974-a5809d1353f7:Ground Material
+                        PaintMode: Disabled
+                        BrushSize: 4.0
+                        TileCellLength: 0.4

@@ -1,0 +1,6 @@
+!Texture
+Id: 81345e4e-071f-44dd-8702-5f73e9074a01
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Foliage/GrassBrightnessMap.png
+Type: !GrayscaleTextureType {}

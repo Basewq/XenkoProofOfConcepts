@@ -1,0 +1,6 @@
+!Texture
+Id: d6dd8de3-e138-43f7-a6f3-d679cdcc239e
+SerializedVersion: {Stride: 2.0.0.0}
+Tags: []
+Source: !file ../../Resources/Foliage/WindNoise.png
+Type: !GrayscaleTextureType {}
