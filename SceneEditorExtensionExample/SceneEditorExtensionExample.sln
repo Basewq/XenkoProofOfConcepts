@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 16
+VisualStudioVersion = 16.0.0.0
+MinimumVisualStudioVersion = 16.0.0.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneEditorExtensionExample.Windows", "SceneEditorExtensionExample.Windows\SceneEditorExtensionExample.Windows.csproj", "{B21EF542-FD19-4F25-9C79-DE9436691005}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SceneEditorExtensionExample", "SceneEditorExtensionExample\SceneEditorExtensionExample.csproj", "{51800662-7D5C-4280-9857-C8A63D29FA3E}"
+EndProject
+Global
+EndGlobal
