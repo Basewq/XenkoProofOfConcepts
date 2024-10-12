@@ -10,7 +10,6 @@ Note that some projects were originally created with Xenko, then upgraded to Str
 These projects are aimed more towards intermediate to advanced programmers, and may require further investigation into the Stride source code, or search online, for more information on how some of the applied code works, as some of the some techniques may not be officially what the Stride developers intended for us to use.
 
 This repository contains the following projects:
-* [BepuPhysicsExample](BepuPhysicsExample): A rough attempt at integrating Bepu2 physics engine into Stride (this is not completed and has been abandoned).
 * [CustomAssetExample](CustomAssetExample): Example on creating and consuming a custom asset.
 * [CutsceneTimelineExample](CutsceneTimelineExample): Playing and previewing a simple cutscene in Stride and Game Studio.
 * [DialogueTextControlExample](DialogueTextControlExample): Custom Stride UI control for an RPG-styled dialogue text box.
