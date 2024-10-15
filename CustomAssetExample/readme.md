@@ -55,6 +55,7 @@ Change the file type (and the referenced library) to:
 > Note: There are **two** separate icon images.
 > - The image in `CustomAssetExample.StrideAssetExt\Templates\.sdtpl\Localization.png` is a 48x48px image that appears in the "Add asset" dropdown option.
 > - The image in `CustomAssetExample.GameStudioExt\Resources\LocalizationThumbnail.png` is a 128x128px image that appears the Asset view sub-window.
+> - To make the icons match closely with Stride's icons, 48x48px as-is can be used for the 48x48px image, whereas a centered 72x72px icon should be used for the 128x128px image.
 
 ![Custom Asset Icons](images/asset-view-custom-asset-icons.png)
 
