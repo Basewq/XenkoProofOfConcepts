@@ -32,6 +32,16 @@ Creating and modifying foliage data in the **Foliage Placement** asset is done i
 
 ---
 
+Editor demo:
+
+https://github.com/user-attachments/assets/bc1c2c9d-27ac-4d60-b376-251fcad3eb4d
+
+Run-time demo:
+
+https://github.com/user-attachments/assets/30a522a6-87a4-4ee9-ab44-a3f94a856c60
+
+---
+
 ## Foliage Painter Editor & Scene Setup
 
 For a scene to have foliage, you must create a new **Foliage Placement** asset.
