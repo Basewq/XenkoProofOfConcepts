@@ -383,11 +383,6 @@ public class FoliageInstancingManagerComponent : EntityComponent
         }
         chunkInstancingComponent.InstanceDataBuffer.SetData(_graphicsContext.CommandList, instancingData.InstanceDataList.ToArray());
 
-        var material = chunkInstancingComponent.ModelComponent.GetMaterial(0);
-        Debug.WriteLineIf(material is null, "Model does not contain a material.");
-        var materialParams = material?.Passes?.Count > 0 ? material.Passes[0].Parameters : null;
-        materialParams?.Set(FoliageInstancingSharedKeys.FoliageInstanceDataArray, chunkInstancingComponent.InstanceDataBuffer);
-
         // If this was a new entity, ensure it is attached to our entity/scene
         if (chunkInstancingComponent.Entity.Scene is null)
         {
