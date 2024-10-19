@@ -6,6 +6,7 @@ using Stride.Games;
 using Stride.Graphics;
 using Stride.Rendering;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using StrideBuffer = Stride.Graphics.Buffer;
@@ -81,15 +82,17 @@ public static class ModelHelper
 
             var vertexBuffer = meshData.Draw.VertexBuffers[0].Buffer;
             var indexBuffer = meshData.Draw.IndexBuffer.Buffer;
-            bool isVertexBufferContentLoaded = TryFetchBufferContent(vertexBuffer, graphicsContext.CommandList, out byte[] verticesBytes);
-            bool isIndexBufferContentLoaded = TryFetchBufferContent(indexBuffer, graphicsContext.CommandList, out byte[] indicesBytes);
+            var vertexBufferBytes = ArrayPool<byte>.Shared.Rent(vertexBuffer.SizeInBytes);
+            var indexBufferBytes = ArrayPool<byte>.Shared.Rent(indexBuffer.SizeInBytes);
+            bool isVertexBufferContentLoaded = TryFetchBufferContent(vertexBuffer, graphicsContext.CommandList, vertexBufferBytes);
+            bool isIndexBufferContentLoaded = TryFetchBufferContent(indexBuffer, graphicsContext.CommandList, indexBufferBytes);
 
-            if (!isVertexBufferContentLoaded || verticesBytes.Length == 0)
+            if (!isVertexBufferContentLoaded || vertexBuffer.SizeInBytes == 0)
             {
                 //throw new InvalidOperationException($"Failed to load mesh vertex buffer.");
                 return false;
             }
-            if (!isIndexBufferContentLoaded || indicesBytes.Length == 0)
+            if (!isIndexBufferContentLoaded || indexBuffer.SizeInBytes == 0)
             {
                 //throw new InvalidOperationException($"Failed to load mesh index buffer.");
                 return false;
@@ -97,7 +100,7 @@ public static class ModelHelper
 
             int vertMappingStart = vertexPositions.Count;
 
-            fixed (byte* bytePtr = verticesBytes)
+            fixed (byte* bytePtr = vertexBufferBytes)
             {
                 var vertBufferBinding = meshData.Draw.VertexBuffers[0];
                 int count = vertBufferBinding.Count;
@@ -125,7 +128,7 @@ public static class ModelHelper
                 }
             }
 
-            fixed (byte* bytePtr = indicesBytes)
+            fixed (byte* bytePtr = indexBufferBytes)
             {
                 if (meshData.Draw.IndexBuffer.Is32Bit)
                 {
@@ -142,6 +145,8 @@ public static class ModelHelper
                     }
                 }
             }
+            ArrayPool<byte>.Shared.Return(vertexBufferBytes);
+            ArrayPool<byte>.Shared.Return(indexBufferBytes);
 
             if (normalElementOffset < 0)
             {
@@ -174,14 +179,13 @@ public static class ModelHelper
     }
 
     private static unsafe bool TryFetchBufferContent(
-        StrideBuffer buffer, CommandList commandList, out byte[] output)
+        StrideBuffer buffer, CommandList commandList, byte[] output)
     {
-        // Code taken from Stride.Physics.StaticMeshColliderShape.TryFetchBufferContent
+        // Code adapted from Stride.Physics.StaticMeshColliderShape.TryFetchBufferContent
 
-        output = new byte[buffer.SizeInBytes];
         fixed (byte* window = output)
         {
-            var ptr = new DataPointer(window, output.Length);
+            var ptr = new DataPointer(window, buffer.SizeInBytes);
             if (buffer.Description.Usage == GraphicsResourceUsage.Staging)
             {
                 // Directly if this is a staging resource
