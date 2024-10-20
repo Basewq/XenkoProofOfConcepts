@@ -261,7 +261,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
         var modelComp = new ModelComponent
         {
             Model = model,
-            IsShadowCaster = false,
+            IsShadowCaster = model.Materials.FirstOrDefault()?.IsShadowCaster ?? false,
         };
         //// Because we divide instancing into chunks we need to clone the material
         //// so each model chunk have separate instancing data.

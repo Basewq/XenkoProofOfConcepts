@@ -286,7 +286,6 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         {
             return false;
         }
-        var ss = _sceneEditorGame.EditorServices.Services;
         if (!data.IsInitialInstancingDisplayed)
         {
             var uniqueModelUrls = foliagePlacementAsset.ModelPlacements.Select(x => x.ModelUrl.Url).Distinct();
@@ -902,21 +901,6 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         var maxIndex = MathExt.ToInt3Floor(maxWorldPos * posToTileCellIndex);
 
         return (minIndex, maxIndex);
-    }
-
-    private static (Int3 Min, Int3 Max) GetIndexBoundingBox(Vector3 pos0, Vector3 pos1, Vector3 pos2, Vector3 posToTileCellIndex)
-    {
-        var idx0 = MathExt.ToInt3Floor(pos0 * posToTileCellIndex);
-        var idx1 = MathExt.ToInt3Floor(pos1 * posToTileCellIndex);
-        var idx2 = MathExt.ToInt3Floor(pos2 * posToTileCellIndex);
-
-        var min = Int3.Min(idx0, idx1);
-        min = Int3.Min(min, idx2);
-
-        var max = Int3.Max(idx0, idx1);
-        max = Int3.Max(max, idx2);
-
-        return (min, max);
     }
 
     private static (float MinY, float MaxY) GetVerticalExtremes(List<ModelMeshTriangleData> triangleList)

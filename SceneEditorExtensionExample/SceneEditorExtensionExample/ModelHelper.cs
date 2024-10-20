@@ -51,7 +51,6 @@ public static class ModelHelper
     {
         // This only deals with static data (ie. no skinning)
 
-        var contentManager = services.GetService<ContentManager>();
         var game = services.GetService<IGame>();
         var graphicsContext = game.GraphicsContext;
 

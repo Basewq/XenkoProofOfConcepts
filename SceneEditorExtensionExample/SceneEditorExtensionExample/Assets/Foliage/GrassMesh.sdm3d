@@ -10,6 +10,7 @@ Materials:
         Name: GrassBladeMaterial
         MaterialInstance:
             Material: 6082e0d7-0f02-46a7-8b92-a8121de63790:Foliage/GrassBladeMaterial
+            IsShadowCaster: false
 Modifiers: {}
 ~SourceHashes:
     9bb74e570a7853ce8186171cb85f78df~../../Resources/Foliage/GrassMesh.fbx: 208aee65ac4375d1c08c43a03c9a1fbf
