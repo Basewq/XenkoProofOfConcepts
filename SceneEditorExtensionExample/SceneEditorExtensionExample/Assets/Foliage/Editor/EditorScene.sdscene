@@ -22,7 +22,7 @@ Hierarchy:
                     8671f4790d3c6dbbcf2a2bdcc21710ae: !SceneEditorExtensionExample.WorldTerrain.Foliage.Editor.FoliagePainterComponent,SceneEditorExtensionExample
                         Id: fc508fc0-39f1-4660-a0d2-a83ff2391b90
                         FoliagePlacementAsset: 70b5e4a8-33a9-4349-89a6-754c52f7d2fe:Foliage/MainSceneFoliagePlacement
-                        PaintPlacementPreviewPrefabUrl: 8a5814d7-6f36-4bb9-b3ca-7ee2534acea4:Foliage/Editor/PainterPreviewPrefab
+                        PaintPlacementPreviewPrefab: 8a5814d7-6f36-4bb9-b3ca-7ee2534acea4:Foliage/Editor/PainterPreviewPrefab
                         PaintFoilageModelUrl: 0e3b083d-7030-483f-b968-5799d7ee619a:Foliage/GrassMesh
                         MaterialCheckFilter:
                             5edfd8cac1a1335f6fb01e263410b772: 6c5b1a3a-7c03-463f-b974-a5809d1353f7:Ground Material

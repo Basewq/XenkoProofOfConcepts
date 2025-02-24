@@ -37,7 +37,7 @@ public class FoliagePainterComponent : SceneEditorExtBase
     }
 
     [DataMember(order: 20)]
-    public UrlReference<Prefab> PaintPlacementPreviewPrefabUrl;
+    public Prefab PaintPlacementPreviewPrefab;
 
     // Must add all tile sets here so the ContentManager becomes aware to allow the prefabs
     // to be loadable through ContentManager while in the editor.

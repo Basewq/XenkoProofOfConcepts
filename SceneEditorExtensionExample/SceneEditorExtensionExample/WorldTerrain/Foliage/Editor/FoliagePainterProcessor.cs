@@ -245,9 +245,9 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
                 case FoliagePlacementPaintMode.Paint:
                 case FoliagePlacementPaintMode.Erase:
-                    if (data.PaintPreviewEntity is null && painterComp.PaintPlacementPreviewPrefabUrl is not null)
+                    if (data.PaintPreviewEntity is null && painterComp.PaintPlacementPreviewPrefab is not null)
                     {
-                        var prefab = _contentManager.Load(painterComp.PaintPlacementPreviewPrefabUrl);
+                        var prefab = painterComp.PaintPlacementPreviewPrefab;
                         data.PaintPreviewEntity = prefab.Instantiate().First();
                         var modelComp = data.PaintPreviewEntity.Get<ModelComponent>();
                         data.PaintPreviewModelComponent = modelComp;
