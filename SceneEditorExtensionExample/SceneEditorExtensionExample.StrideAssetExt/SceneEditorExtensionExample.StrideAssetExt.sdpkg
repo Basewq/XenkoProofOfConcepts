@@ -12,8 +12,8 @@ OutputGroupDirectories: {}
 ExplicitFolders: []
 Bundles: []
 TemplateFolders:
-    -   Path: !dir Templates\Assets
-        Group: Assets
+    -   Path: !dir Templates/Assets
+        Group: !dir Assets
         Files:
-            - !file Templates\Assets\FoliagePlacement.sdtpl
+            - !file Templates/Assets/FoliagePlacement.sdtpl
 RootAssets: []
