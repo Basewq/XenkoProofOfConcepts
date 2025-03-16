@@ -19,7 +19,7 @@ There are two types of "Custom Assets" which are required:
 
 ---
 The most complicated part is setting up all the files required for the **design-time** custom asset.
-In this project the design-time custom asset is `LocalizationStringDefinitionAsset` defined in the project `CustomAssetExample.StrideAssetExt`. Its run-time equivalent is  `LocalizationStringDefinitionAsset` in the project `CustomAssetExample.StrideAssetExt`, which is also explicitly declared in the `[AssetContentType]` attribute.
+In this project the design-time custom asset is `LocalizationStringDefinitionAsset` defined in the project `CustomAssetExample.StrideAssetExt`. Its run-time equivalent is `LocalizationStringDefinition` in the project `CustomAssetExample.SharedData`, which is also explicitly declared in the `[AssetContentType]` attribute on the `LocalizationStringDefinitionAsset` class.
 
 To properly support the design-time asset, the following things are required:
 - All Stride assets are *compiled* through Stride.Core.Assets.CompilerApp.exe, so `LocalizationStringDefinitionAssetCompiler` is required so the compiler app knows how to convert the design-time asset into the runtime equivalent.
@@ -38,8 +38,8 @@ In this project `LocalizationStringRefScript` has a property to `UrlReference<Lo
 
 ---
 `CustomAssetExample.GameStudioExt` provides additional supporting files for the editor only (which is optional).
-If you want a custom icon for your custom asset to appear in the Asset view sub-window, you require a embeded resource file (`.resx` file) and embed your image/icon in there.
-`LocalizationStringDefinitionThumbnailCompiler` derives `StaticThumbnailCompiler` and passes the embedded image through the constructor.
+If you want a custom icon for your custom asset to appear in the Asset view sub-window, you require an embedded resource file (`.resx` file) and embed your image/icon in there.
+`LocalizationStringDefinitionThumbnailCompiler` derives from `StaticThumbnailCompiler` and passes the embedded image through the constructor.
 > `CustomAssetExample.GameStudioExt` also requires `EditorModule` for Stride to detect it contains asset related code.
 
 Note that the constructor only accepts `byte[]`, but when you add your image to the `.resx` file Visual Studio always adds the file as a Bitmap.
@@ -63,7 +63,7 @@ Change the file type (and the referenced library) to:
 ---
 ### Limitations
 
-1. `CustomAssetExample` is required to reference `CustomAssetExample.GameStudioExt` & `CustomAssetExample.StrideAssetExt` due to how the asset compiler works. Unfortunately these references things like `Stride.Core.Assets.Editor` which crash when running at run-time due to weird dll/exe conflicts. To workaround this issue we must create a separate build **Configuration**, eg. this project has created `DebugExGameEditor` which allows building without the Stride Editor library.
+1. `CustomAssetExample` is required to reference `CustomAssetExample.GameStudioExt` & `CustomAssetExample.StrideAssetExt` due to how the asset compiler works. Unfortunately these references things like `Stride.Core.Assets.Editor` which crashes when running at run-time due to weird dll/exe conflicts. To workaround this issue we must create a separate build **Configuration**, eg. this project has created `DebugExGameEditor` which allows building without the Stride Editor library references.
 >  Maybe in the future the asset compiler will be able to reference them separately, so the compiler specific dlls also do not get included in the output folder when building the game, but for now this is necessary.
 
 2. `Stride.Core.Assets.Editor` is a Windows only library and is referenced by `CustomAssetExample.GameStudioExt`. Due to the limitation #1, this means the entire game project must have `TargetFramework` set to `net8.0-windows`.
