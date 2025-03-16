@@ -88,7 +88,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
     private readonly List<Int3> _visibleChunkIndexList = new();
     private readonly Vector3[] _frustumPointsWorldSpace = new Vector3[8];
     private readonly List<FoliageChunkId> _reusedChunkIds = new();
-    internal void Update(GameTime time, CameraComponent overrideCameraComponent)
+    internal void UpdateForDraw(GameTime time, CameraComponent overrideCameraComponent)
     {
         // Find the visible chunks
         _visibleChunkIndexList.Clear();
@@ -170,7 +170,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
                     }
                     else
                     {
-                        bool wasCreated = TryCreateActiveChunkInstancingComponent(chunkId, instancingData.ModelUrl, out chunkInstancingComponent);
+                        bool wasCreated = TryCreateActiveChunkInstancingComponent(chunkId, out chunkInstancingComponent);
                         isBufferUpdateRequired = wasCreated;      // New chunk so must always update buffer
                     }
                     if (chunkInstancingComponent is null)
@@ -247,9 +247,10 @@ public class FoliageInstancingManagerComponent : EntityComponent
         _pendingRemoveInstancingDataList.Clear();
     }
 
-    private bool TryCreateActiveChunkInstancingComponent(FoliageChunkId chunkId, string modelUrl, [NotNullWhen(true)] out FoliageChunkInstancingComponent? chunkInstancingComponent)
+    private bool TryCreateActiveChunkInstancingComponent(FoliageChunkId chunkId, [NotNullWhen(true)] out FoliageChunkInstancingComponent? chunkInstancingComponent)
     {
         var instancingEntity = new Entity();
+        var modelUrl = chunkId.ModelUrl;
         var model = _contentManager.Load<Model>(modelUrl);
         if (model is null)
         {
@@ -338,7 +339,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
         var instancingData = instancingDataList.FirstOrDefault(x => x.ChunkId == chunkId);
         if (instancingData is null)
         {
-            instancingData = new FoliageChunkInstancingData(chunkId, modelUrl);
+            instancingData = new FoliageChunkInstancingData(chunkId);
             instancingDataList.Add(instancingData);
         }
         AddFoliageInstanceData(modelPlacement, instancingData);
@@ -405,15 +406,13 @@ public class FoliageInstancingManagerComponent : EntityComponent
     private class FoliageChunkInstancingData
     {
         public readonly FoliageChunkId ChunkId;
-        public readonly string ModelUrl;        // The editor sometimes loses UrlReference<Model>, so just store the string
         public readonly List<Matrix> InstanceWorldTransformList;
         public readonly List<FoliageInstanceData> InstanceDataList;
         public bool IsDataUpdateRequired = true;
 
-        public FoliageChunkInstancingData(FoliageChunkId chunkId, string modelUrl)
+        public FoliageChunkInstancingData(FoliageChunkId chunkId)
         {
             ChunkId = chunkId;
-            ModelUrl = modelUrl;
             InstanceWorldTransformList = new(capacity: 32);
             InstanceDataList = new(capacity: 32);
         }

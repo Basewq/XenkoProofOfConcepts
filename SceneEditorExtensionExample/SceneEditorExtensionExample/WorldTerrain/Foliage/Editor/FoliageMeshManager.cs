@@ -24,7 +24,7 @@ public class FoliageMeshManager : System.IAsyncDisposable
     private readonly IEditorContentLoader _loader;
     private readonly IObjectNode _meshesNode;
 
-    public FoliageMeshManager(IStrideEditorService  strideEditorService)
+    public FoliageMeshManager(IStrideEditorService strideEditorService)
     {
         _strideEditorService = strideEditorService;
         _referencerId = new AbsoluteId(AssetId.Empty, Guid.NewGuid());

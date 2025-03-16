@@ -16,11 +16,9 @@ class FoliageInstancingManagerProcessor : EntityProcessor<FoliageInstancingManag
     private SceneEditorGame _sceneEditorGame;
 #endif
 
-    public VisibilityGroup VisibilityGroup { get; set; }
-
     public FoliageInstancingManagerProcessor()
     {
-        Order = 100000;     // Make this processor occur to happen after any camera position changes
+        Order = 100000;     // Make this processor's update call after any camera position changes
     }
 
     protected override void OnSystemAdd()
@@ -64,7 +62,7 @@ class FoliageInstancingManagerProcessor : EntityProcessor<FoliageInstancingManag
 #endif
             var comp = kv.Key;
             var data = kv.Value;
-            comp.Update(context.Time, overrideCameraComponent);
+            comp.UpdateForDraw(context.Time, overrideCameraComponent);
         }
     }
 

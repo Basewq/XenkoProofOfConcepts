@@ -46,6 +46,11 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
     private bool _isInstancingRenderFeatureCheckRequired = true;
 
+    public FoliagePainterProcessor()
+    {
+        Order = 100100;     // Make this processor's update call after any camera position changes and after SceneEditorExtProcessor
+    }
+
     protected override void OnSystemAdd()
     {
         _contentManager = Services.GetSafeServiceAs<ContentManager>();
@@ -59,7 +64,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         _painterMouseService = _sceneEditorGame.EditorServices.Get<FoliagePainterEditorMouseService>();
         if (_painterMouseService is null)
         {
-            Debug.WriteLine("GrassPainterEditorMouseService added.");
+            Debug.WriteLine($"{nameof(FoliagePainterEditorMouseService)} added.");
 
             _painterMouseService = new();
 
@@ -93,7 +98,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         }
         else
         {
-            Debug.WriteLine("GrassPainterEditorMouseService already registered.");
+            Debug.WriteLine($"{nameof(FoliagePainterEditorMouseService)} already registered.");
         }
 
         var selectionService = _sceneEditorGame.EditorServices.Get<IEditorGameEntitySelectionService>();
@@ -327,7 +332,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
         var cameraService = _sceneEditorGame.EditorServices.Get<IEditorGameCameraService>();
         var camFrustum = cameraService.Component.Frustum;
-        var mouseRay = CalculateRayFromMousePosition(cameraService.Component, normalisedMousePosition, Matrix.Invert(cameraService.ViewMatrix));
+        var mouseRay = SceneEditorExtensions.CalculateRayFromMousePosition(cameraService.Component, normalisedMousePosition, Matrix.Invert(cameraService.ViewMatrix));
 
         float tileCellLength = painterComp.TileCellLength;
         var tileCellIndexToPos = new Vector3(tileCellLength, tileCellLength * 0.5f, tileCellLength);
@@ -1046,45 +1051,6 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         return finalRndValue;
     }
 
-    // Code from Stride.Assets.Presentation.AssetEditors.GameEditor.Game.EditorGameHelper
-    public static Ray CalculateRayFromMousePosition([NotNull] CameraComponent camera, Vector2 normalisedMousePosition, Matrix worldView)
-    {
-        // determine the mouse position normalized, centered and correctly oriented
-        var screenPosition = new Vector2(2f * (normalisedMousePosition.X - 0.5f), -2f * (normalisedMousePosition.Y - 0.5f));
-
-        if (camera.Projection == CameraProjectionMode.Perspective)
-        {
-            // calculate the ray direction corresponding to the click in the view space
-            var verticalFov = MathUtil.DegreesToRadians(camera.VerticalFieldOfView);
-            var rayDirectionView = Vector3.Normalize(new Vector3(camera.AspectRatio * screenPosition.X, screenPosition.Y, -1 / MathF.Tan(verticalFov / 2f)));
-
-            // calculate the direction of the ray in the gizmo space
-            var rayDirectionGizmo = Vector3.Normalize(Vector3.TransformNormal(rayDirectionView, worldView));
-
-            return new Ray(worldView.TranslationVector, rayDirectionGizmo);
-        }
-        else
-        {
-            // calculate the direction of the ray in the gizmo space
-            var rayDirectionGizmo = Vector3.Normalize(Vector3.TransformNormal(-Vector3.UnitZ, worldView));
-
-            // calculate the position of the ray in the gizmo space
-            var halfSize = camera.OrthographicSize / 2f;
-            var rayOriginOffset = new Vector3(screenPosition.X * camera.AspectRatio * halfSize, screenPosition.Y * halfSize, 0);
-            var rayOrigin = Vector3.TransformCoordinate(rayOriginOffset, worldView);
-
-            return new Ray(rayOrigin, rayDirectionGizmo);
-        }
-    }
-
-    private enum MouseButtonState
-    {
-        Up,
-        JustPressed,
-        HeldDown,
-        JustReleased
-    }
-
     public class AssociatedData
     {
         public bool IsInitialInstancingDisplayed = false;
@@ -1143,22 +1109,5 @@ public struct TileCellIndexXZ : IEquatable<TileCellIndexXZ>, IComparable<TileCel
     }
 
     private static int ToIntFloor(float value) => (int)MathF.Floor(value);
-}
-
-static class ListExt
-{
-    public static bool TryFindIndex<TElement>(this IReadOnlyList<TElement> list, Func<TElement, bool> isMatchPredicate, out int index)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (isMatchPredicate(list[i]))
-            {
-                index = i;
-                return true;
-            }
-        }
-        index = -1;
-        return false;
-    }
 }
 #endif
