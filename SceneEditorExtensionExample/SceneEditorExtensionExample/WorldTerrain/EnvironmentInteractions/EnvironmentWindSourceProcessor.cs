@@ -11,7 +11,7 @@ class EnvironmentWindSourceProcessor : EntityProcessor<EnvironmentWindSourceComp
 {
     private readonly List<EnvironmentWindSourceComponent> _environmentWindSourceComponents = new(capacity: 32);
 
-    public VisibilityGroup VisibilityGroup { get; set; }
+    public VisibilityGroup VisibilityGroup { get; set; } = default!;
 
     public EnvironmentWindSourceProcessor()
     {

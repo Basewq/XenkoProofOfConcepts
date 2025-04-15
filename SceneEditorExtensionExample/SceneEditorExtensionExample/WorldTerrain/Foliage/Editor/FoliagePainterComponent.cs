@@ -28,21 +28,21 @@ public enum FoliagePlacementPaintMode
 #endif
 public class FoliagePainterComponent : SceneEditorExtBase
 {
-    private FoliagePlacement _foliagePlacementAsset;
+    private FoliagePlacement? _foliagePlacementAsset;
     [DataMember(order: 10)]
-    public FoliagePlacement FoliagePlacementAsset
+    public FoliagePlacement? FoliagePlacementAsset
     {
         get => _foliagePlacementAsset;
         set => SetProperty(ref _foliagePlacementAsset, value);
     }
 
     [DataMember(order: 20)]
-    public Prefab PaintPlacementPreviewPrefab;
+    public Prefab? PaintPlacementPreviewPrefab;
 
     // Must add all tile sets here so the ContentManager becomes aware to allow the prefabs
     // to be loadable through ContentManager while in the editor.
     [DataMember(order: 21)]
-    public UrlReference<Model> PaintFoilageModelUrl { get; set; }
+    public UrlReference<Model>? PaintFoilageModelUrl { get; set; }
 
     [DataMember(order: 22)]
     public List<Material> MaterialCheckFilter { get; } = new();

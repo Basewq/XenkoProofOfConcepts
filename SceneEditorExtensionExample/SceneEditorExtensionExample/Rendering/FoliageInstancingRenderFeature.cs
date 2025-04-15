@@ -4,6 +4,7 @@ using Stride.Core.Mathematics;
 using Stride.Graphics;
 using Stride.Rendering;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace SceneEditorExtensionExample.Rendering;
@@ -63,6 +64,7 @@ public partial class FoliageInstancingRenderFeature : SubRenderFeature
             ref var instancingData = ref renderObjectInstancingData[renderMesh.StaticObjectNode];
 
             instancingData.InstanceCount = renderInstancing.InstancingArray.InstanceCount;
+            Debug.Assert(renderInstancing.InstanceDataBuffer is not null);
             instancingData.InstancingDataBuffer = renderInstancing.InstanceDataBuffer;
         }
     }

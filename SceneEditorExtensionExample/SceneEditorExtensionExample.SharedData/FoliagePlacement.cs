@@ -21,7 +21,7 @@ namespace SceneEditorExtensionExample.SharedData
     [DataContract]
     public class ModelPlacement
     {
-        public UrlReference<Model> ModelUrl { get; set; }
+        public UrlReference<Model>? ModelUrl { get; set; }
         public Vector3 Position { get; set; }
         public Quaternion Orientation { get; set; }
         public Vector3 Scale { get; set; }

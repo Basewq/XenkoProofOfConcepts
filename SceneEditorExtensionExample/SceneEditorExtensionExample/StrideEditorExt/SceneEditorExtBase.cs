@@ -5,7 +5,6 @@ using Stride.Games;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace SceneEditorExtensionExample.StrideEditorExt;
@@ -20,7 +19,7 @@ public abstract class SceneEditorExtBase : EntityComponent, INotifyPropertyChang
     public IStrideEditorService StrideEditorService { get; private set; } = default!;
     protected internal UIComponent? UIComponent { get; private set; } = default!;
 
-    private Scene _rootScene;
+    private Scene? _rootScene;
     protected Scene RootScene
     {
         get
@@ -73,7 +72,7 @@ public abstract class SceneEditorExtBase : EntityComponent, INotifyPropertyChang
     }
 
     #region INotifyPropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string propertyName = default!)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

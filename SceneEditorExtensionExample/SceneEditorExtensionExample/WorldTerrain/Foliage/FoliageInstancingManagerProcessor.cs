@@ -13,7 +13,7 @@ namespace SceneEditorExtensionExample.WorldTerrain.Foliage;
 class FoliageInstancingManagerProcessor : EntityProcessor<FoliageInstancingManagerComponent, FoliageInstancingManagerProcessor.AssociatedData>
 {
 #if GAME_EDITOR
-    private SceneEditorGame _sceneEditorGame;
+    private SceneEditorGame _sceneEditorGame = default!;
 #endif
 
     public FoliageInstancingManagerProcessor()
@@ -24,7 +24,7 @@ class FoliageInstancingManagerProcessor : EntityProcessor<FoliageInstancingManag
     protected override void OnSystemAdd()
     {
 #if GAME_EDITOR
-        _sceneEditorGame = Services.GetService<IGame>() as SceneEditorGame;
+        _sceneEditorGame = (Services.GetService<IGame>() as SceneEditorGame)!;
 #endif
     }
 
@@ -52,16 +52,14 @@ class FoliageInstancingManagerProcessor : EntityProcessor<FoliageInstancingManag
 
     public override void Draw(RenderContext context)
     {
-        foreach (var kv in ComponentDatas)
+        foreach (var (comp, data) in ComponentDatas)
         {
-            CameraComponent overrideCameraComponent = null;
+            CameraComponent? overrideCameraComponent = null;
 #if GAME_EDITOR
             // Chunk culling should be done on the editor's camera when in the editor
             var cameraService = _sceneEditorGame.EditorServices.Get<IEditorGameCameraService>();
             overrideCameraComponent = cameraService?.Component;
 #endif
-            var comp = kv.Key;
-            var data = kv.Value;
             comp.UpdateForDraw(context.Time, overrideCameraComponent);
         }
     }

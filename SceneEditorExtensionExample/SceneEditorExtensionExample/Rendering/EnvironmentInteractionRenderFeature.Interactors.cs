@@ -70,7 +70,7 @@ partial class EnvironmentInteractionRenderFeature : SubRenderFeature
             if (_interactorsPerViewData.EnvironmentInteractorDataList.Count > 0)
             {
                 Debug.Assert(_interactorsPerViewData.EnvironmentInteractorDataBuffer is not null);
-                var dataSpan = _interactorsPerViewData.EnvironmentInteractorDataList.Items.AsSpan(start: 0, length: _interactorsPerViewData.EnvironmentInteractorDataList.Count);
+                ReadOnlySpan<EnvironmentInteractorData> dataSpan = _interactorsPerViewData.EnvironmentInteractorDataList.Items.AsSpan(start: 0, length: _interactorsPerViewData.EnvironmentInteractorDataList.Count);
                 _interactorsPerViewData.EnvironmentInteractorDataBuffer.SetData(context.CommandList, dataSpan);
             }
 

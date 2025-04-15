@@ -18,8 +18,8 @@ internal class FoliageChunkInstancingComponent : EntityComponent, IDisposable
     private bool _isDisposed;
 
     public FoliageChunkId ChunkId;
-    public ModelComponent ModelComponent;
-    public InstancingUserArray InstancingArray;     // Same object as InstancingComponent.Type
+    public required ModelComponent ModelComponent;
+    public required InstancingUserArray InstancingArray;    // Same object as InstancingComponent.Type
     public Buffer<FoliageInstanceData>? InstanceDataBuffer;
 
     protected void Dispose(bool disposing)

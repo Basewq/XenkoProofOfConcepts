@@ -1,7 +1,5 @@
 ﻿using Stride.Core;
-using Stride.Core.Mathematics;
 using Stride.Graphics;
-using Stride.Rendering;
 using Stride.Rendering.Materials;
 using Stride.Shaders;
 
@@ -11,7 +9,7 @@ namespace SceneEditorExtensionExample.Rendering.Materials;
 [Display("Grass Mesh Displacement")]
 public class MaterialGrassMeshDisplacementFeature : MaterialFeature, IMaterialDisplacementFeature
 {
-    public Texture WindNoiseMap { get; set; }
+    public Texture? WindNoiseMap { get; set; }
 
     public float AmbientWindNoiseMapWorldLength { get; set; } = 5f;
     public float AmbientWindMaxDisplacementY { get; set; } = 0.1f;

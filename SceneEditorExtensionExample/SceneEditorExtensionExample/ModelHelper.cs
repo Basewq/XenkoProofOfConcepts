@@ -51,7 +51,7 @@ public static class ModelHelper
     {
         // This only deals with static data (ie. no skinning)
 
-        var game = services.GetService<IGame>();
+        var game = services.GetSafeServiceAs<IGame>();
         var graphicsContext = game.GraphicsContext;
 
         int totalVerts = 0, totalIndices = 0;
@@ -177,25 +177,22 @@ public static class ModelHelper
         return true;
     }
 
-    private static unsafe bool TryFetchBufferContent(
+    private static bool TryFetchBufferContent(
         StrideBuffer buffer, CommandList commandList, byte[] output)
     {
         // Code adapted from Stride.Physics.StaticMeshColliderShape.TryFetchBufferContent
 
-        fixed (byte* window = output)
+        var outputSpan = output.AsSpan(start: 0, length: buffer.SizeInBytes);
+        if (buffer.Description.Usage == GraphicsResourceUsage.Staging)
         {
-            var ptr = new DataPointer(window, buffer.SizeInBytes);
-            if (buffer.Description.Usage == GraphicsResourceUsage.Staging)
-            {
-                // Directly if this is a staging resource
-                buffer.GetData(commandList, buffer, ptr);
-            }
-            else
-            {
-                // inefficient way to use the Copy method using dynamic staging texture
-                using var throughStaging = buffer.ToStaging();
-                buffer.GetData(commandList, throughStaging, ptr);
-            }
+            // Directly if this is a staging resource
+            buffer.GetData(commandList, buffer, outputSpan);
+        }
+        else
+        {
+            // inefficient way to use the Copy method using dynamic staging texture
+            using var throughStaging = buffer.ToStaging();
+            buffer.GetData(commandList, throughStaging, outputSpan);
         }
 
         return true;

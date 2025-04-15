@@ -10,9 +10,9 @@ namespace SceneEditorExtensionExample.WorldTerrain.Foliage;
 class FoliageChunkInstancingProcessor : EntityProcessor<FoliageChunkInstancingComponent, FoliageChunkInstancingProcessor.AssociatedData>, IEntityComponentRenderProcessor
 {
     private readonly Dictionary<RenderModel, FoliageChunkInstancingComponent> _modelInstancingMap = new();
-    private ModelRenderProcessor _modelRenderProcessor;
+    private ModelRenderProcessor _modelRenderProcessor = default!;
 
-    public VisibilityGroup VisibilityGroup { get; set; }
+    public VisibilityGroup VisibilityGroup { get; set; } = default!;
 
     public FoliageChunkInstancingProcessor()
     {
@@ -24,7 +24,7 @@ class FoliageChunkInstancingProcessor : EntityProcessor<FoliageChunkInstancingCo
         VisibilityGroup.Tags.Set(FoliageInstancingRenderFeature.ModelToInstancingMapKey, _modelInstancingMap);
 
         _modelRenderProcessor = EntityManager.GetProcessor<ModelRenderProcessor>();
-        if (_modelRenderProcessor == null)
+        if (_modelRenderProcessor is null)
         {
             _modelRenderProcessor = new ModelRenderProcessor();
             EntityManager.Processors.Add(_modelRenderProcessor);
@@ -72,7 +72,7 @@ class FoliageChunkInstancingProcessor : EntityProcessor<FoliageChunkInstancingCo
 
     public class AssociatedData
     {
-        public ModelComponent ModelComponent;
-        public RenderModel RenderModel;
+        public ModelComponent? ModelComponent;
+        public RenderModel? RenderModel;
     }
 }

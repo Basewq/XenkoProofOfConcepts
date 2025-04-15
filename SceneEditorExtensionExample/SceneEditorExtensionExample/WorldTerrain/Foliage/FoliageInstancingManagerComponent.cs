@@ -28,9 +28,9 @@ namespace SceneEditorExtensionExample.WorldTerrain.Foliage;
 [DefaultEntityComponentProcessor(typeof(FoliageInstancingManagerProcessor), ExecutionMode = ExecutionMode.Runtime | ExecutionMode.Editor)]
 public class FoliageInstancingManagerComponent : EntityComponent
 {
-    private GraphicsContext _graphicsContext;
-    private GraphicsDevice _graphicsDevice;
-    private ContentManager _contentManager;
+    private GraphicsContext _graphicsContext = default!;
+    private GraphicsDevice _graphicsDevice = default!;
+    private ContentManager _contentManager = default!;
 
     // The entire data from FoliagePlacement sorted into chunks
     private readonly Dictionary<Int3, List<FoliageChunkInstancingData>> _chunkIndexToFoliageInstancingDataList = new();
@@ -38,7 +38,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
     private Dictionary<FoliageChunkId, FoliageChunkInstancingComponent> _chunkIdToActiveChunkInstancingComponent = new();
     private Dictionary<FoliageChunkId, FoliageChunkInstancingComponent> _chunkIdToActiveChunkInstancingComponentProcessing = new();
 
-    public UrlReference<FoliagePlacement> FoliagePlacement { get; set; }
+    public UrlReference<FoliagePlacement>? FoliagePlacement { get; set; }
 
     public Vector3 ChunkSize { get; set; } = new Vector3(32);
 
@@ -55,7 +55,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
         _graphicsDevice = game.GraphicsDevice;
         _contentManager = game.Content;
 
-        if (Entity.EntityManager.ExecutionMode == ExecutionMode.Runtime)
+        if (Entity.EntityManager.ExecutionMode == ExecutionMode.Runtime && FoliagePlacement is not null)
         {
             // Only load the asset as-is when running as an app, the editor loads the meshes via FoliagePainterProcessor
             var foliagePlacement = _contentManager.Load(FoliagePlacement);
@@ -66,7 +66,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
 
     internal void Deinitialize()
     {
-        _graphicsDevice = null;
+        _graphicsDevice = null!;
 
         _chunkIndexToFoliageInstancingDataList.Clear();
         _chunkIdToActiveChunkInstancingComponent.Clear();
@@ -88,7 +88,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
     private readonly List<Int3> _visibleChunkIndexList = new();
     private readonly Vector3[] _frustumPointsWorldSpace = new Vector3[8];
     private readonly List<FoliageChunkId> _reusedChunkIds = new();
-    internal void UpdateForDraw(GameTime time, CameraComponent overrideCameraComponent)
+    internal void UpdateForDraw(GameTime time, CameraComponent? overrideCameraComponent)
     {
         // Find the visible chunks
         _visibleChunkIndexList.Clear();
@@ -317,15 +317,19 @@ public class FoliageInstancingManagerComponent : EntityComponent
 
     private void AddModelInstanceData(ModelPlacement modelPlacement, Int3 chunkIndex)
     {
-        string modelUrl = modelPlacement.ModelUrl.Url;
+        string? modelUrl = modelPlacement.ModelUrl?.Url;
         if (string.IsNullOrEmpty(modelUrl))
         {
             // The editor can bug out sometimes with the UrlReference...just skip, otherwise it'll crash the app.
 #if GAME_EDITOR
             // HACK: When changing the model to paint with, the Editor sometimes creates an 'empty' UrlReference
             // which is actually just a proxy object
+            if (modelPlacement.ModelUrl is null)
+            {
+                return;
+            }
             var modelUrlAttachedRef = AttachedReferenceManager.GetAttachedReference(modelPlacement.ModelUrl);
-            modelUrl = modelUrlAttachedRef.Url;
+            modelUrl = modelUrlAttachedRef?.Url;
             if (string.IsNullOrEmpty(modelUrl))
             {
                 return;     // Unknown issue...just skip, otherwise it'll crash the editor.

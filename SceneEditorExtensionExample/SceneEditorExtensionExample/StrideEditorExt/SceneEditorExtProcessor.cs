@@ -144,13 +144,13 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         var returnValue = InvokeOnUI(() =>
         {
             var sceneEditorController = GetSceneEditorController(_editorViewModels?.SceneEditorViewModel);
-            var task = sceneEditorController.InvokeTask(actionAsync);
+            var task = sceneEditorController?.InvokeTask(actionAsync);
             return task;
         });
-        return returnValue;
+        return returnValue ?? Task.CompletedTask;
     }
 
-    void IStrideEditorService.AddPrefabToScene(UrlReference<Prefab> prefabRef, Vector3 position, Quaternion? rotation, Vector3? scale, Entity parent, List<Guid>? outputEntityIds)
+    void IStrideEditorService.AddPrefabToScene(UrlReference<Prefab> prefabRef, Vector3 position, Quaternion? rotation, Vector3? scale, Entity? parent, List<Guid>? outputEntityIds)
     {
         var sceneVm = _editorViewModels?.SceneViewModel;
         var sceneEditorVm = _editorViewModels?.SceneEditorViewModel;
@@ -261,7 +261,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         }
     }
 
-    Guid IStrideEditorService.CreateEmptyEntity(Vector3 position, Quaternion? rotation, Vector3? scale, Entity parent, string entityName)
+    Guid IStrideEditorService.CreateEmptyEntity(Vector3 position, Quaternion? rotation, Vector3? scale, Entity? parent, string entityName)
     {
         var sceneEditorVm = _editorViewModels?.SceneEditorViewModel;
         Debug.Assert(sceneEditorVm is not null, "Ensure this is called within Invoke/InvokeAsync");
@@ -310,7 +310,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         //var assetSideSceneEntity = assetEntityViewModel.AssetSideEntity;        // This is the entity on the 'master' version.
 
         HashSet<Tuple<Guid, Guid>> mapping;
-        bool wasFound = assetEntityViewModel.Asset.Asset.Hierarchy.Parts.TryGetValue(entity.Id, out EntityDesign entityDesign);
+        bool wasFound = assetEntityViewModel.Asset.Asset.Hierarchy.Parts.TryGetValue(entity.Id, out EntityDesign? entityDesign);
         Debug.Assert(wasFound);
         var entityDesigns = new[] { entityDesign };
         assetEntityViewModel.Asset.AssetHierarchyPropertyGraph.DeleteParts(entityDesigns, out mapping);
@@ -435,7 +435,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         }
     }
 
-    TAssetViewModel IStrideEditorService.FindAssetViewModel<TAssetViewModel>(object proxyObject)
+    TAssetViewModel? IStrideEditorService.FindAssetViewModel<TAssetViewModel>(object proxyObject)
         where TAssetViewModel : class
     {
         var returnValue = InvokeOnUI(() =>
@@ -453,7 +453,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return returnValue;
     }
 
-    TAssetViewModel IStrideEditorService.FindAssetViewModelByAsset<TAssetViewModel>(object asset)
+    TAssetViewModel? IStrideEditorService.FindAssetViewModelByAsset<TAssetViewModel>(object asset)
         where TAssetViewModel : class
     {
         var returnValue = InvokeOnUI(() =>
@@ -470,7 +470,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return returnValue;
     }
 
-    TAssetViewModel IStrideEditorService.FindAssetViewModelByUrl<TAssetViewModel>(string url)
+    TAssetViewModel? IStrideEditorService.FindAssetViewModelByUrl<TAssetViewModel>(string url)
         where TAssetViewModel : class
     {
         var returnValue = InvokeOnUI(() =>
@@ -488,7 +488,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return returnValue;
     }
 
-    object IStrideEditorService.FindEntityViewModel(Guid entityId)
+    object? IStrideEditorService.FindEntityViewModel(Guid entityId)
     {
         var returnValue = InvokeOnUI(() =>
         {
@@ -503,7 +503,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return returnValue;
     }
 
-    IEditorContentLoader IStrideEditorService.GetEditorContentLoader()
+    IEditorContentLoader? IStrideEditorService.GetEditorContentLoader()
     {
         var returnValue = InvokeOnUI(() =>
         {
@@ -513,7 +513,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return returnValue;
     }
 
-    IObjectNode IStrideEditorService.GetOrCreateGameSideNode(object rootObject)
+    IObjectNode? IStrideEditorService.GetOrCreateGameSideNode(object rootObject)
     {
         var returnValue = InvokeOnUI(() =>
         {
@@ -524,7 +524,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return returnValue;
     }
 
-    private static SceneEditorController GetSceneEditorController(SceneEditorViewModel? sceneEditorVm)
+    private static SceneEditorController? GetSceneEditorController(SceneEditorViewModel? sceneEditorVm)
     {
         if (sceneEditorVm is null)
         {
@@ -537,7 +537,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
         return sceneEditorController;
     }
 
-    private TReturnValue InvokeOnUI<TReturnValue>(Func<TReturnValue> func)
+    private TReturnValue? InvokeOnUI<TReturnValue>(Func<TReturnValue> func)
     {
         if (_editorViewModels.HasValue)
         {
@@ -608,6 +608,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
             var isDestroyed_PropertyInfo = typeof(GameStudioViewModel).GetProperty("IsDestroyed", BindingFlags.NonPublic | BindingFlags.Instance);
             Debug.Assert(isDestroyed_PropertyInfo is not null);
             var isDestroyed_MethodInfo = isDestroyed_PropertyInfo.GetGetMethod(nonPublic: true);
+            Debug.Assert(isDestroyed_MethodInfo is not null);
             IsGameStudioViewModelDestroyed = isDestroyed_MethodInfo.CreateDelegate<Func<GameStudioViewModel, bool>>();
         }
         return !IsGameStudioViewModelDestroyed(gsVm);
@@ -615,8 +616,8 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
 
     private struct EditorViewModels
     {
-        public SceneViewModel SceneViewModel;
-        public SceneEditorViewModel SceneEditorViewModel;
+        public SceneViewModel? SceneViewModel;
+        public SceneEditorViewModel? SceneEditorViewModel;
         public SessionViewModel SessionViewModel;
 
         public static EditorViewModels Create()
@@ -646,7 +647,7 @@ class SceneEditorExtProcessor : EntityProcessor<SceneEditorExtBase>, IStrideEdit
 #if GAME_EDITOR
 static class WpfExt
 {
-    public static T GetChildOfType<T>(this System.Windows.DependencyObject depObj)
+    public static T? GetChildOfType<T>(this System.Windows.DependencyObject depObj)
         where T : System.Windows.DependencyObject
     {
         if (depObj is null) return null;

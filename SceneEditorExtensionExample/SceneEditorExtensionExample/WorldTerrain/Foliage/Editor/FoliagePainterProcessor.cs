@@ -15,7 +15,6 @@ using Stride.Core.Serialization;
 using Stride.Core.Serialization.Contents;
 using Stride.Editor.EditorGame.Game;
 using Stride.Engine;
-using Stride.Engine.Processors;
 using Stride.Games;
 using Stride.Input;
 using Stride.Rendering;
@@ -38,11 +37,11 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
     private ContentManager _contentManager = default!;
     private InputManager _inputManager = default!;
-    private SceneEditorGame _sceneEditorGame;
-    private IStrideEditorService _strideEditorService;
-    private FoliageMeshManager _foliageMeshManager;
-    private Task _foliageMeshManagerInitializeTask;
-    private FoliagePainterEditorMouseService _painterMouseService;
+    private SceneEditorGame _sceneEditorGame = default!;
+    private IStrideEditorService _strideEditorService = default!;
+    private FoliageMeshManager _foliageMeshManager = default!;
+    private Task _foliageMeshManagerInitializeTask = default!;
+    private FoliagePainterEditorMouseService _painterMouseService = default!;
 
     private bool _isInstancingRenderFeatureCheckRequired = true;
 
@@ -57,9 +56,9 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
     {
         _contentManager = Services.GetSafeServiceAs<ContentManager>();
         _inputManager = Services.GetSafeServiceAs<InputManager>();
-        _sceneEditorGame = Services.GetService<IGame>() as SceneEditorGame;
+        _sceneEditorGame = (Services.GetService<IGame>() as SceneEditorGame)!;
 
-        _strideEditorService = Services.GetService<IStrideEditorService>();
+        _strideEditorService = Services.GetSafeServiceAs<IStrideEditorService>();
         _foliageMeshManager = new FoliageMeshManager(_strideEditorService);
         _foliageMeshManagerInitializeTask =_foliageMeshManager.Initialize();
 
@@ -75,6 +74,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
             // This code manually goes through every other mouse service and add our one in.
             var mouseServiceType = typeof(EditorGameMouseServiceBase);
             var mouseSvceListFieldInfo = mouseServiceType.GetField("mouseServices", BindingFlags.Instance | BindingFlags.NonPublic);
+            Debug.Assert(mouseSvceListFieldInfo is not null);
 
             foreach (var editorService in _sceneEditorGame.EditorServices.Services)
             {
@@ -112,7 +112,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         _processorStartTime = DateTime.Now.AddSeconds(3);
     }
 
-    private void EntitySelectionService_OnSelectionUpdated(object sender, EntitySelectionEventArgs e)
+    private void EntitySelectionService_OnSelectionUpdated(object? sender, EntitySelectionEventArgs e)
     {
         // Stop painting if the user changed entity selection
         _strideEditorService.Invoke(() =>
@@ -172,7 +172,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         component.PaintMode = FoliagePlacementPaintMode.Disabled;
     }
 
-    private void OnPainterComponentPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs ev)
+    private void OnPainterComponentPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs ev)
     {
         if (sender is not FoliagePainterComponent painterComp)
         {
@@ -303,7 +303,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         }
         if (!data.IsInitialInstancingDisplayed)
         {
-            var uniqueModelUrls = foliagePlacementAsset.ModelPlacements.Select(x => x.ModelUrl.Url).Distinct();
+            var uniqueModelUrls = foliagePlacementAsset.ModelPlacements
+                                    .Where(x => x.ModelUrl is not null)
+                                    .Select(x => x.ModelUrl!.Url)
+                                    .Distinct();
             if (uniqueModelUrls.Any())
             {
                 _strideEditorService.Invoke(async () =>
@@ -350,7 +353,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
         // Find the model the cursor is over to determine where the brush should be in the scene
         var visibleModelCompSet = _visibleModelCompSetCache;
-        ModelComponent cursorHitModelComp = null;
+        ModelComponent? cursorHitModelComp = null;
         float cursorHitModelDistance = float.MaxValue;
         {
             var modelMeshData = _modelMeshDataCache;
@@ -550,6 +553,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         Vector3 upVec, Vector3 posToTileCellIndex, Vector3 tileCellIndexToPos)
     {
         var foliagePlacementAsset = painterComp.GetFoliagePlacementInternalAsset();
+        if (foliagePlacementAsset is null)
+        {
+            return;
+        }
 
         int previousPendingNewModelPlacementsCount = _pendingNewModelPlacements.Count;
 
@@ -580,6 +587,7 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
                 var painterCompAssetComp = _strideEditorService.GetAssetComponent(painterComp);
                 var modelUrlRef = painterCompAssetComp.PaintFoilageModelUrl;
+                Debug.Assert(modelUrlRef is not null);
 
                 var occupiedTileCellIndices = new HashSet<TileCellIndexXZ>();
                 PopulateOccupiedTileCellIndices(foliagePlacementAsset.ModelPlacements, posToTileCellIndex, brushTileCellIndices, occupiedTileCellIndices);
@@ -643,15 +651,15 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
                     };
                     modelPlacements.Add(modelPlacement);
 
-                    string modelUrl = modelUrlRef.Url;
+                    string? modelUrl = modelUrlRef.Url;
                     if (string.IsNullOrEmpty(modelUrl))
                     {
                         // HACK: When changing the model to paint with, the Editor sometimes creates an 'empty' UrlReference
                         // which is actually just a proxy object
                         var modelUrlAttachedRef = AttachedReferenceManager.GetAttachedReference(modelUrlRef);
-                        modelUrl = modelUrlAttachedRef.Url;
+                        modelUrl = modelUrlAttachedRef?.Url;
                     }
-                    if (!_contentManager.IsLoaded(modelUrl))
+                    if (!string.IsNullOrEmpty(modelUrl) && !_contentManager.IsLoaded(modelUrl))
                     {
                         _strideEditorService.Invoke(() =>
                         {
@@ -686,6 +694,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
                         undo: () =>
                         {
                             var fpAsset = painterComp.GetFoliagePlacementInternalAsset();
+                            if (fpAsset is null)
+                            {
+                                return;
+                            }
                             fpAsset.ModelPlacements.RemoveRange(newPlacementsIndexStart, newModelPlacements.Length);
                             // Reload all
                             var modelPlacementsSpan = CollectionsMarshal.AsSpan(fpAsset.ModelPlacements);
@@ -699,6 +711,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
                         redo: () =>
                         {
                             var fpAsset = painterComp.GetFoliagePlacementInternalAsset();
+                            if (fpAsset is null)
+                            {
+                                return;
+                            }
                             fpAsset.ModelPlacements.AddRange(newModelPlacements);
                             data.FoliageInstancingManagerComponent.AppendInstancingModels(newModelPlacements);
                             _strideEditorService.Invoke(() =>
@@ -732,6 +748,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         Vector3 upVec, Vector3 posToTileCellIndex, Vector3 tileCellIndexToPos)
     {
         var foliagePlacementAsset = painterComp.GetFoliagePlacementInternalAsset();
+        if (foliagePlacementAsset is null)
+        {
+            return;
+        }
 
         int previousPendingRemoveModelPlacementsCount = _pendingRemoveModelPlacements.Count;
 
@@ -779,6 +799,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
                         undo: () =>
                         {
                             var fpAsset = painterComp.GetFoliagePlacementInternalAsset();
+                            if (fpAsset is null)
+                            {
+                                return;
+                            }
                             // Done in *reverse* because indices change as items are removed
                             for (int i = removeModelPlacements.Length - 1; i >= 0; i--)
                             {
@@ -797,6 +821,10 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
                         redo: () =>
                         {
                             var fpAsset = painterComp.GetFoliagePlacementInternalAsset();
+                            if (fpAsset is null)
+                            {
+                                return;
+                            }
                             for (int i = 0; i < removeModelPlacements.Length; i++)
                             {
                                 ref var existingModelIndex = ref removeModelPlacements[i];
@@ -1065,15 +1093,15 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
     {
         public bool IsInitialInstancingDisplayed = false;
         //public bool IsEnabled = false;
-        public Entity PaintPreviewEntity;
-        public ModelComponent PaintPreviewModelComponent;
+        public Entity? PaintPreviewEntity;
+        public ModelComponent? PaintPreviewModelComponent;
         public float BrushSize;
 
-        public Entity FoliageInstancingEntity;
-        public FoliageInstancingManagerComponent FoliageInstancingManagerComponent;
+        public required Entity FoliageInstancingEntity;
+        public required FoliageInstancingManagerComponent FoliageInstancingManagerComponent;
 
-        public Entity PendingFoliageInstancingEntity;
-        public FoliageInstancingManagerComponent PendingFoliageInstancingManagerComponent;
+        public required Entity PendingFoliageInstancingEntity;
+        public required FoliageInstancingManagerComponent PendingFoliageInstancingManagerComponent;
     }
 }
 
@@ -1093,7 +1121,7 @@ public struct TileCellIndexXZ : IEquatable<TileCellIndexXZ>, IComparable<TileCel
         return X == other.X && Z == other.Z;
     }
 
-    public override readonly bool Equals([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] object obj)
+    public override readonly bool Equals([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] object? obj)
     {
         return obj is TileCellIndexXZ cellIndex && Equals(cellIndex);
     }

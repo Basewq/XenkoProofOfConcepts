@@ -11,7 +11,7 @@ class EnvironmentInteractorProcessor : EntityProcessor<EnvironmentInteractorComp
 {
     private readonly List<EnvironmentInteractorComponent> _environmentInteractorComponents = new(capacity: 32);
 
-    public VisibilityGroup VisibilityGroup { get; set; }
+    public VisibilityGroup VisibilityGroup { get; set; } = default!;
 
     public EnvironmentInteractorProcessor()
     {

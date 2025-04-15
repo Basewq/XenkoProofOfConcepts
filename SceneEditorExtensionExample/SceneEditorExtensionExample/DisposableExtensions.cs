@@ -8,7 +8,7 @@ public static class DisposableExtensions
 {
     public static IDisposable Empty { get; } = new EmptyDisposable();
 
-    public static void DisposeAndNull<T>(ref T disposable) where T : class, IDisposable
+    public static void DisposeAndNull<T>(ref T? disposable) where T : class, IDisposable
     {
         disposable?.Dispose();
         disposable = null;

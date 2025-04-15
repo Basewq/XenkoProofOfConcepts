@@ -8,12 +8,13 @@ using Stride.Editor.EditorGame.ContentLoader;
 using Stride.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SceneEditorExtensionExample.WorldTerrain.Foliage.Editor;
 
 // Adapted from Stride.Assets.Presentation.AssetEditors.EntityHierarchyEditor.Game.NavigationMeshManager
-[DataContract]
+//[DataContract]
 public class FoliageMeshManager : System.IAsyncDisposable
 {
     [DataMember]
@@ -28,8 +29,10 @@ public class FoliageMeshManager : System.IAsyncDisposable
     {
         _strideEditorService = strideEditorService;
         _referencerId = new AbsoluteId(AssetId.Empty, Guid.NewGuid());
-        _loader = strideEditorService.GetEditorContentLoader();
+        _loader = strideEditorService.GetEditorContentLoader()!;
+        Debug.Assert(_loader is not null);
         var root = strideEditorService.GetOrCreateGameSideNode(this);
+        Debug.Assert(root is not null);
         _meshesNode = root[nameof(FoliageMeshes)].Target;
         _meshesNode.ItemChanged += (sender, args) => { Changed?.Invoke(this, args); };
     }
@@ -44,7 +47,7 @@ public class FoliageMeshManager : System.IAsyncDisposable
         await _loader.Manager.RemoveReferencer(_referencerId);
     }
 
-    public event EventHandler<ItemChangeEventArgs> Changed;
+    public event EventHandler<ItemChangeEventArgs>? Changed;
 
     public Task Initialize()
     {
@@ -90,6 +93,7 @@ public class FoliageMeshManager : System.IAsyncDisposable
     public async Task EnsureModelIsLoadable(string modelUrl)
     {
         var modelAssetVm = _strideEditorService.FindAssetViewModelByUrl<AssetViewModel>(modelUrl);
+        Debug.Assert(modelAssetVm is not null);
         var modelAssetId = modelAssetVm.Asset.Id;
         await AddUnique(modelAssetId);
     }

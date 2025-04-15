@@ -13,7 +13,7 @@ namespace SceneEditorExtensionExample.Rendering.Materials;
 public class MaterialGrassDiffuseMapFeature : MaterialFeature, IMaterialDiffuseFeature, IMaterialStreamProvider
 {
     public bool IsBrightnessMapEnabled { get; set; } = true;
-    public Texture BrightnessMap { get; set; }
+    public Texture? BrightnessMap { get; set; }
     public float BrightnessMapWorldLength { get; set; } = 10;
     [DataMemberRange(minimum: 0, maximum: 1, smallStep: 0.01, largeStep: 0.1, decimalPlaces: 4)]
     public float BrightnessMapMinValue { get; set; } = 0.8f;
