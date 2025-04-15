@@ -170,6 +170,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
                     }
                     else
                     {
+                        Debug.WriteLine($"Foliage Chunk now visible: {chunkId}");
                         bool wasCreated = TryCreateActiveChunkInstancingComponent(chunkId, out chunkInstancingComponent);
                         isBufferUpdateRequired = wasCreated;      // New chunk so must always update buffer
                     }
@@ -194,11 +195,10 @@ public class FoliageInstancingManagerComponent : EntityComponent
         _reusedChunkIds.Clear();
 
         // Any remaining chunks are no longer visible and should be removed
-        foreach (var kv in _chunkIdToActiveChunkInstancingComponentProcessing)
+        foreach (var (chunkId, chunkInstancingComponent) in _chunkIdToActiveChunkInstancingComponentProcessing)
         {
-            var chunkInstancingComponent = kv.Value;
+            Debug.WriteLineIf(chunkInstancingComponent.Entity.Scene is not null, $"Foliage Chunk no longer visible: {chunkId}");
             chunkInstancingComponent.Entity.Scene = null;
-
         }
         _chunkIdToActiveChunkInstancingComponentProcessing.Clear();
     }
@@ -217,6 +217,7 @@ public class FoliageInstancingManagerComponent : EntityComponent
             {
                 instancingData.InstanceWorldTransformList.Clear();
                 instancingData.InstanceDataList.Clear();
+                instancingData.IsDataUpdateRequired = true;
             }
         }
 
@@ -365,24 +366,33 @@ public class FoliageInstancingManagerComponent : EntityComponent
     private List<Matrix> _modelInstanceWorldTransformsCache = new(capacity: 32);    // Not thread safe!
     private void SetActiveInstancingData(FoliageChunkInstancingData instancingData, FoliageChunkInstancingComponent chunkInstancingComponent)
     {
-        // Update instancing transform matrix array
-        var instanceWorldTransformSpan = CollectionsMarshal.AsSpan(instancingData.InstanceWorldTransformList);
-        for (int i = 0; i < instanceWorldTransformSpan.Length; i++)
+        bool hasInstancingData = instancingData.InstanceWorldTransformList.Count > 0;
+        chunkInstancingComponent.ModelComponent.Enabled = hasInstancingData;
+        if (hasInstancingData)
         {
-            ref var transformMatrix = ref instanceWorldTransformSpan[i];
-            _modelInstanceWorldTransformsCache.Add(transformMatrix);
-        }
-        chunkInstancingComponent.InstancingArray.UpdateWorldMatrices(_modelInstanceWorldTransformsCache.ToArray(), _modelInstanceWorldTransformsCache.Count);
-        _modelInstanceWorldTransformsCache.Clear();
+            // Update instancing transform matrix array
+            var instanceWorldTransformSpan = CollectionsMarshal.AsSpan(instancingData.InstanceWorldTransformList);
+            for (int i = 0; i < instanceWorldTransformSpan.Length; i++)
+            {
+                ref var transformMatrix = ref instanceWorldTransformSpan[i];
+                _modelInstanceWorldTransformsCache.Add(transformMatrix);
+            }
+            chunkInstancingComponent.InstancingArray.UpdateWorldMatrices(_modelInstanceWorldTransformsCache.ToArray(), _modelInstanceWorldTransformsCache.Count);
+            _modelInstanceWorldTransformsCache.Clear();
 
-        // Update instancing custom data
-        if (chunkInstancingComponent.InstanceDataBuffer is null || chunkInstancingComponent.InstanceDataBuffer.ElementCount < instancingData.InstanceDataList.Count)
-        {
-            // Create buffer or recreate to fit new data size
-            chunkInstancingComponent.InstanceDataBuffer?.Dispose();
-            chunkInstancingComponent.InstanceDataBuffer = _graphicsDevice.CreateShaderBuffer<FoliageInstanceData>(instancingData.InstanceDataList.Count);
+            // Update instancing custom data
+            if (chunkInstancingComponent.InstanceDataBuffer is null || chunkInstancingComponent.InstanceDataBuffer.ElementCount < instancingData.InstanceDataList.Count)
+            {
+                // Create buffer or recreate to fit new data size
+                chunkInstancingComponent.InstanceDataBuffer?.Dispose();
+                chunkInstancingComponent.InstanceDataBuffer = _graphicsDevice.CreateShaderBuffer<FoliageInstanceData>(instancingData.InstanceDataList.Count);
+            }
+            chunkInstancingComponent.InstanceDataBuffer.SetData(_graphicsContext.CommandList, instancingData.InstanceDataList.ToArray());
         }
-        chunkInstancingComponent.InstanceDataBuffer.SetData(_graphicsContext.CommandList, instancingData.InstanceDataList.ToArray());
+        else
+        {
+            chunkInstancingComponent.InstancingArray.UpdateWorldMatrices([]);
+        }
 
         // If this was a new entity, ensure it is attached to our entity/scene
         if (chunkInstancingComponent.Entity.Scene is null)

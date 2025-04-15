@@ -29,6 +29,7 @@ internal class FoliageChunkInstancingComponent : EntityComponent, IDisposable
             if (disposing)
             {
                 InstanceDataBuffer?.Dispose();
+                InstanceDataBuffer = null;
             }
 
             _isDisposed = true;

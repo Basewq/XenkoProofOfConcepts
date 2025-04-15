@@ -46,6 +46,8 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
 
     private bool _isInstancingRenderFeatureCheckRequired = true;
 
+    private DateTime _processorStartTime = DateTime.MaxValue;
+
     public FoliagePainterProcessor()
     {
         Order = 100100;     // Make this processor's update call after any camera position changes and after SceneEditorExtProcessor
@@ -106,6 +108,8 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
         {
             selectionService.SelectionUpdated += EntitySelectionService_OnSelectionUpdated;
         }
+
+        _processorStartTime = DateTime.Now.AddSeconds(3);
     }
 
     private void EntitySelectionService_OnSelectionUpdated(object sender, EntitySelectionEventArgs e)
@@ -208,6 +212,12 @@ class FoliagePainterProcessor : EntityProcessor<FoliagePainterComponent, Foliage
     {
         if (_sceneEditorGame is null)
         {
+            return;
+        }
+        if (DateTime.Now < _processorStartTime)
+        {
+            // HACK: Delay further execution because code like painterComp.GetFoliagePlacementInternalAsset() calls code on UI thread
+            // which can crash the editor when called while the scene is still being loaded in the editor
             return;
         }
         if (_isInstancingRenderFeatureCheckRequired)
@@ -1109,5 +1119,17 @@ public struct TileCellIndexXZ : IEquatable<TileCellIndexXZ>, IComparable<TileCel
     }
 
     private static int ToIntFloor(float value) => (int)MathF.Floor(value);
+
+    public static bool operator ==(TileCellIndexXZ left, TileCellIndexXZ right) => left.Equals(right);
+
+    public static bool operator !=(TileCellIndexXZ left, TileCellIndexXZ right) => !left.Equals(right);
+
+    public static bool operator <(TileCellIndexXZ left, TileCellIndexXZ right) => left.CompareTo(right) < 0;
+
+    public static bool operator <=(TileCellIndexXZ left, TileCellIndexXZ right) => left.CompareTo(right) <= 0;
+
+    public static bool operator >(TileCellIndexXZ left, TileCellIndexXZ right) => left.CompareTo(right) > 0;
+
+    public static bool operator >=(TileCellIndexXZ left, TileCellIndexXZ right) => left.CompareTo(right) >= 0;
 }
 #endif
