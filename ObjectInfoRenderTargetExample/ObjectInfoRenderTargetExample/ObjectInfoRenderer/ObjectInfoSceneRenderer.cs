@@ -24,7 +24,7 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 
             // Fill RenderStage formats
             // This declares the ObjectInfo texture to be (uint, uint) format.
-            // Changing this means changing ObjectInfoData, ObjectInfoInputShader, and OioShaderBase.
+            // Changing this means changing ObjectInfoData and ObjectInfoInputShader.
             ObjectInfoRenderStage.Output = new RenderOutputDescription(renderTargetFormat: PixelFormat.R32G32_UInt, depthStencilFormat: PixelFormat.D32_Float);
 
             // Note: if context.RenderView is null, then most likely the GraphicsCompositor is not

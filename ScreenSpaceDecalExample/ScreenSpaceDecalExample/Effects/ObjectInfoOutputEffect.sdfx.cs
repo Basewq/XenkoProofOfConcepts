@@ -26,7 +26,7 @@ namespace ScreenSpaceDecalExample.Effects
                 context.Mixin(mixin, "ObjectInfoOutputShader");
             }
 
-            [ModuleInitializer]
+            [System.Runtime.CompilerServices.ModuleInitializer]
             internal static void __Initialize__()
 
             {

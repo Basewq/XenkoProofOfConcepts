@@ -1,0 +1,141 @@
+﻿using Stride.Rendering.Data;
+using Stride.Rendering.Materials;
+
+namespace ObjectInfoRenderTargetExample.Effects
+{
+    partial effect ObjectInfoStrideBaseEffect
+    {
+        // This is a cut-down version of StrideForwardShadingEffect where we only want
+        // mesh transformation (eg. static and skinned (animated) models).
+
+        using params MaterialKeys;
+        using params StrideEffectBaseKeys;
+
+        // -----------------------------------------------
+        // Base shaders
+        // -----------------------------------------------
+        mixin ShaderBase;
+        //mixin ShadingBase;
+
+        // -----------------------------------------------
+        // Transform vertex stream
+        // -----------------------------------------------
+        // Come after material surface per vertex
+        mixin TransformationBase;
+        mixin NormalStream;
+
+        var extensionTessellationShader = MaterialKeys.TessellationShader;
+
+        if (StrideEffectBaseKeys.HasInstancing)
+        {
+            mixin macro StrideEffectBaseKeys.ModelTransformUsage;
+            mixin TransformationWAndVPInstanced;
+
+            // -----------------------------------------------
+            // Performs normal mapping (in case of no-skinning, otherwise it is overloaded below)
+            // -----------------------------------------------
+            //if (MaterialKeys.HasNormalMap)
+            //{
+            //    if (extensionTessellationShader != null)
+            //    {
+            //        mixin NormalFromNormalMappingTessellationInstanced;
+            //    }
+            //    else
+            //    {
+            //        mixin NormalFromNormalMappingInstanced;
+            //    }
+            //}
+            //else
+            //{
+            //    mixin NormalFromMeshInstanced;
+            //}
+        }
+        else
+        {
+            mixin TransformationWAndVP;
+
+            // -----------------------------------------------
+            // Performs normal mapping (in case of no-skinning, otherwise it is overloaded below)
+            // -----------------------------------------------
+            //if (MaterialKeys.HasNormalMap)
+            //{
+            //    if (extensionTessellationShader != null)
+            //    {
+            //        mixin NormalFromNormalMappingTessellation;
+            //    }
+            //    else
+            //    {
+            //        mixin NormalFromNormalMapping;
+            //    }
+            //}
+            //else
+            //{
+            //    mixin NormalFromMesh;
+            //}
+        }
+
+        // -----------------------------------------------
+        // Performs animation skinning (position, normal and tangent)
+        // -----------------------------------------------
+        if (MaterialKeys.HasSkinningPosition)
+        {
+            mixin macro MaterialKeys.SkinningMaxBones;
+
+            if (StrideEffectBaseKeys.HasInstancing)
+            {
+                mixin TransformationSkinningInstanced;
+            }
+            else
+            {
+                mixin TransformationSkinning;
+            }
+
+            //if (MaterialKeys.HasSkinningNormal)
+            //{
+            //    mixin NormalMeshSkinning;
+            //}
+
+            //if (MaterialKeys.HasSkinningTangent)
+            //{
+            //    mixin TangentMeshSkinning;
+            //}
+
+            //if (MaterialKeys.HasSkinningNormal)
+            //{
+            //    if (MaterialKeys.HasNormalMap)
+            //    {
+            //        if (extensionTessellationShader != null)
+            //        {
+            //            mixin NormalVSSkinningNormalMappingTessellation;
+            //        }
+            //        else
+            //        {
+            //            mixin NormalVSSkinningNormalMapping;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        mixin NormalVSSkinningFromMesh;
+            //    }
+            //}
+        }
+
+        // -----------------------------------------------
+        // Mix Extension after vertex stage
+        // -----------------------------------------------
+        //var extensionPostVertexStage = StrideEffectBaseKeys.ExtensionPostVertexStageShader;
+        //if (extensionPostVertexStage != null)
+        //{
+        //    mixin (extensionPostVertexStage);
+        //}
+
+        // -----------------------------------------------
+        // MRT output definitions (color0 excluded)
+        // -----------------------------------------------
+        //var targetExtensions = StrideEffectBaseKeys.RenderTargetExtensions;
+        //if (targetExtensions != null)
+        //{
+        //    mixin (targetExtensions);
+        //}
+    };
+}

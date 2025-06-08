@@ -1,9 +1,7 @@
 using Stride.Core;
-using Stride.Core.Mathematics;
 using Stride.Core.Threading;
 using Stride.Engine;
 using Stride.Rendering;
-using System.Runtime.CompilerServices;
 
 namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {
@@ -16,9 +14,6 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
         private ObjectPropertyKey<ObjectInfoData> _objectInfoPropertyKey;
         private ConstantBufferOffsetReference _objectInfoDataBuffer;
 
-        private ObjectPropertyKey<Matrix[]> _blendMatricesPropertyKey;
-        private ConstantBufferOffsetReference _blendMatricesDataBuffer;
-
 #if DEBUG
         private bool _isFirstRun = true;
 #endif
@@ -27,19 +22,12 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
         {
             _objectInfoPropertyKey = RootRenderFeature.RenderData.CreateObjectKey<ObjectInfoData>();
             _objectInfoDataBuffer = ((RootEffectRenderFeature)RootRenderFeature).CreateDrawCBufferOffsetSlot(ObjectInfoOutputShaderKeys.ObjectInfo.Name);
-
-            // Note that I am unsure why we need to create our own BlendMatrixArray key rather than
-            // reuse TransformationSkinningKeys.BlendMatrixArray.
-            // When I tried to reuse TransformationSkinningKeys.BlendMatrixArray, the skinned model had graphical glitches,
-            // but creating our own key does not have this issue.
-            _blendMatricesPropertyKey = RootRenderFeature.RenderData.CreateObjectKey<Matrix[]>();
-            _blendMatricesDataBuffer = ((RootEffectRenderFeature)RootRenderFeature).CreateDrawCBufferOffsetSlot(OioTransformationSkinningKeys.BlendMatrixArray.Name);
         }
 
         public override void Extract()
         {
             var objectInfoDataHolder = RootRenderFeature.RenderData.GetData(_objectInfoPropertyKey);
-            var blendMatricesDataHolder = RootRenderFeature.RenderData.GetData(_blendMatricesPropertyKey);
+            //var blendMatricesDataHolder = RootRenderFeature.RenderData.GetData(_blendMatricesPropertyKey);
 
             foreach (var objectNodeReference in RootRenderFeature.ObjectNodeReferences)
             {
@@ -48,8 +36,6 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
                 {
                     continue;
                 }
-
-                blendMatricesDataHolder[objectNodeReference] = renderMesh.BlendMatrices;    // This is for our skinned models.
 
                 int meshIndex = 0;
                 if (renderMesh.Source is not ModelComponent modelComponent)
@@ -113,42 +99,6 @@ namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
                     var mappedConstBufferIntPtr = renderNode.Resources.ConstantBuffer.Data;
                     var destPtr = (ObjectInfoData*)((byte*)mappedConstBufferIntPtr + objectInfoDataOffset);
                     *destPtr = srcObjectInfoData;
-                }
-            });
-
-            // We can probably combine this with the above ForEach method, but separated here
-            // for code clarity.
-            var blendMatricesDataHolder = RootRenderFeature.RenderData.GetData(_blendMatricesPropertyKey);
-            Dispatcher.ForEach(((RootEffectRenderFeature)RootRenderFeature).RenderNodes, (ref RenderNode renderNode) =>
-            {
-                var perDrawLayout = renderNode.RenderEffect.Reflection?.PerDrawLayout;
-                if (perDrawLayout == null)
-                {
-                    return;
-                }
-
-                var blendMatricesOffset = perDrawLayout.GetConstantBufferOffset(_blendMatricesDataBuffer);
-                if (blendMatricesOffset == -1)
-                {
-                    return;
-                }
-
-                var renderModelObjectInfo = blendMatricesDataHolder[renderNode.RenderObject.ObjectNode];
-                if (renderModelObjectInfo == null)
-                {
-                    return;
-                }
-
-                // This is similar to SkinningRenderFeature.Prepare
-                unsafe
-                {
-                    var mappedConstBufferIntPtr = renderNode.Resources.ConstantBuffer.Data;
-                    uint arraySizeInBytes = (uint)(Matrix.SizeInBytes * renderModelObjectInfo.Length);
-                    var destPtr = (byte*)mappedConstBufferIntPtr + blendMatricesOffset;
-                    fixed (Matrix* srcObjectInfoPtr = renderModelObjectInfo)
-                    {
-                        Unsafe.CopyBlockUnaligned(destPtr, srcObjectInfoPtr, arraySizeInBytes);
-                    }
                 }
             });
         }

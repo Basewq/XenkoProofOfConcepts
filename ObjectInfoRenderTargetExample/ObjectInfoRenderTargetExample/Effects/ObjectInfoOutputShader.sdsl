@@ -1,17 +1,14 @@
 ﻿namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {
     // The shader that outputs the supplied ObjectInfoData (ModelComponentId, MeshIndexAndMaterialIndex) on a texture.
-    shader ObjectInfoOutputShader : PositionStream4, Transformation, OioShaderBase
+    shader ObjectInfoOutputShader : PositionStream4, Transformation, ShaderBase
     {
         // Inheriting PositionStream4 gives streams.Position, Transformation gives WorldViewProjection.
 
-        // Note that we cannot inherit ShaderBase because it defines SV_Target0 as float4.
-        // Since our texture is defined as R32G32_UInt (see ObjectInfoSceneRenderer where the
-        // output texture is defined), we need the output to be uint2, otherwise there will
-        // be subtle precision loss due to converting from float to uint.
-        // This is defined in OioShaderBase, and this and many more parameters are
-        // pulled in via ObjectInfoStrideBaseShaders\ObjectInfoStrideBaseEffect.sdfx
-        // (which is pulled in via ObjectInfoOutputEffect.sdfx)
+        // We want to output (uint, uint) data to the output render target texture, so this is defined
+        // as R32G32_UInt (see ObjectInfoSceneRenderer where the output texture is defined).
+        // Stride's ShaderBase defines SV_Target0 as float4 but we can work around this by
+        // bit casting the uint to float (asfloat) so that the texture outputs the correct value.
 
         // This is the same structure as the C# struct ObjectInfoData
         // Because this appears as a shader key, be sure to make the namespace declaration
@@ -28,12 +25,15 @@
             stage ObjectInfoData ObjectInfo;
         }
 
-        // Note that we do not need to override VSMain. Due to inheriting OioShaderBase and the use of effect mixins,
+        // Note that we do not need to override VSMain. Due to inheriting ShaderBase and the use of effect mixins,
         // VSMain will be handled by one of the shader. This is necessary for handling skinned (animated) models.
 
         stage override void PSMain()
         {
-            streams.ColorTarget = uint2(ObjectInfo.ModelComponentId, ObjectInfo.MeshIndexAndMaterialIndex);
+            // The render target is actually R32G32_UInt so just bit cast the uint values
+            float modCompId = asfloat(ObjectInfo.ModelComponentId);
+            float meshMatIdx = asfloat(ObjectInfo.MeshIndexAndMaterialIndex);
+            streams.ColorTarget = float4(modCompId, meshMatIdx, 0,  0);
         }
     };
 }

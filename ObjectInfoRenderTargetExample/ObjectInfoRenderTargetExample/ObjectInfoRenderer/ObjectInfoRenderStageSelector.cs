@@ -1,5 +1,5 @@
-using System.ComponentModel;
 using Stride.Rendering;
+using System.ComponentModel;
 
 namespace ObjectInfoRenderTargetExample.ObjectInfoRenderer
 {

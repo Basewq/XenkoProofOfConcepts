@@ -1,17 +1,14 @@
 ﻿namespace ScreenSpaceDecalExample.ObjectInfoRenderer
 {
     // The shader that outputs the supplied ObjectInfoData (ModelComponentId, MeshIndexAndMaterialIndex) on a texture.
-    shader ObjectInfoOutputShader : PositionStream4, Transformation, OioShaderBase
+    shader ObjectInfoOutputShader : PositionStream4, Transformation, ShaderBase
     {
         // Inheriting PositionStream4 gives streams.Position, Transformation gives WorldViewProjection.
 
-        // Note that we cannot inherit ShaderBase because it defines SV_Target0 as float4.
-        // Since our texture is defined as R32G32_UInt (see ObjectInfoSceneRenderer where the
-        // output texture is defined), we need the output to be uint, otherwise there will
-        // be subtle precision loss due to converting from float to uint.
-        // This is defined in OioShaderBase, and this and many more parameters are
-        // pulled in via ObjectInfoStrideBaseShaders\ObjectInfoStrideBaseEffect.sdfx
-        // (which is pulled in via ObjectInfoOutputEffect.sdfx)
+        // We want to output (uint) data to the output render target texture, so this is defined
+        // as R32_UInt (see ObjectInfoSceneRenderer where the output texture is defined).
+        // Stride's ShaderBase defines SV_Target0 as float4 but we can work around this by
+        // bit casting the uint to float (asfloat) so that the texture outputs the correct value.
 
         // This is the same structure as the C# struct ObjectInfoData
         // Because this appears as a shader key, be sure to make the namespace declaration
@@ -32,7 +29,9 @@
 
         stage override void PSMain()
         {
-            streams.ColorTarget = ObjectInfo.RenderGroup;
+            // The render target is actually R32G32_UInt so just bit cast the uint values
+            float renderGroupId = asfloat(ObjectInfo.RenderGroup);
+            streams.ColorTarget = float4(renderGroupId, 0, 0, 0);
         }
     };
 }

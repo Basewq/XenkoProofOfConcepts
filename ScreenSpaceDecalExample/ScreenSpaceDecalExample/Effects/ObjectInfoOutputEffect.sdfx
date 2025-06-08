@@ -14,7 +14,7 @@
         // inheriting anything that may inherit ShaderBase.
 
         //mixin StrideForwardShadingEffect;
-        mixin ObjectInfoStrideBaseEffect;    // We need to make our own version that avoids all ShaderBase inheritance.
+        mixin ObjectInfoStrideBaseEffect;    // A cut-down version of StrideEffectBase.
 
         mixin ObjectInfoOutputShader;
     };

@@ -24,45 +24,34 @@ namespace ObjectInfoRenderTargetExample.Effects
         {
             public void Generate(ShaderMixinSource mixin, ShaderMixinContext context)
             {
-                context.Mixin(mixin, "OioShaderBase");
-                context.Mixin(mixin, "OioTransformationBase");
+                context.Mixin(mixin, "ShaderBase");
+                context.Mixin(mixin, "TransformationBase");
                 context.Mixin(mixin, "NormalStream");
-                context.Mixin(mixin, "OioTransformationWAndVP");
-                if (context.GetParam(MaterialKeys.HasNormalMap))
+                var extensionTessellationShader = context.GetParam(MaterialKeys.TessellationShader);
+                if (context.GetParam(StrideEffectBaseKeys.HasInstancing))
                 {
-                    context.Mixin(mixin, "OioNormalFromNormalMapping");
+                    mixin.AddMacro("ModelTransformUsage", context.GetParam(StrideEffectBaseKeys.ModelTransformUsage));
+                    context.Mixin(mixin, "TransformationWAndVPInstanced");
                 }
                 else
                 {
-                    context.Mixin(mixin, "OioNormalFromMesh");
+                    context.Mixin(mixin, "TransformationWAndVP");
                 }
                 if (context.GetParam(MaterialKeys.HasSkinningPosition))
                 {
                     mixin.AddMacro("SkinningMaxBones", context.GetParam(MaterialKeys.SkinningMaxBones));
-                    context.Mixin(mixin, "OioTransformationSkinning");
-                    if (context.GetParam(MaterialKeys.HasSkinningNormal))
+                    if (context.GetParam(StrideEffectBaseKeys.HasInstancing))
                     {
-                        context.Mixin(mixin, "OioNormalMeshSkinning");
+                        context.Mixin(mixin, "TransformationSkinningInstanced");
                     }
-                    if (context.GetParam(MaterialKeys.HasSkinningTangent))
+                    else
                     {
-                        context.Mixin(mixin, "OioTangentMeshSkinning");
-                    }
-                    if (context.GetParam(MaterialKeys.HasSkinningNormal))
-                    {
-                        if (context.GetParam(MaterialKeys.HasNormalMap))
-                        {
-                            context.Mixin(mixin, "OioNormalVSSkinningNormalMapping");
-                        }
-                        else
-                        {
-                            context.Mixin(mixin, "OioNormalVSSkinningFromMesh");
-                        }
+                        context.Mixin(mixin, "TransformationSkinning");
                     }
                 }
             }
 
-            [ModuleInitializer]
+            [System.Runtime.CompilerServices.ModuleInitializer]
             internal static void __Initialize__()
 
             {

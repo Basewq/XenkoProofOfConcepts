@@ -13,10 +13,52 @@
     <PackageReference Include="Stride.Core.Assets.CompilerApp" Version="4.2.0.2374" IncludeAssets="build;buildTransitive" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Effects\ObjectInfoInputShader.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoOutputEffect.sdfx.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoOutputShader.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Effects\ObjectInfoOutputShaderBaseEffect.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="Effects\ObjectInfoOutputTestShader.sdsl.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Effects\ObjectInfoStrideBaseEffect.sdfx.cs">
+      <DesignTime>True</DesignTime>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Effects\ObjectInfoInputShader.sdsl">
+      <LastGenOutput>ObjectInfoInputShader.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputEffect.sdfx">
+      <LastGenOutput>ObjectInfoOutputEffect.sdfx.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputShader.sdsl">
+      <LastGenOutput>ObjectInfoOutputShader.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoOutputTestShader.sdsl">
+      <LastGenOutput>ObjectInfoOutputTestShader.sdsl.cs</LastGenOutput>
+    </None>
+    <None Update="Effects\ObjectInfoStrideBaseEffect.sdfx">
+      <LastGenOutput>ObjectInfoStrideBaseEffect.sdfx.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>
