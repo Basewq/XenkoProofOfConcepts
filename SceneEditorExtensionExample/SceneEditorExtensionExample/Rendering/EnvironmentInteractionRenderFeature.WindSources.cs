@@ -1,4 +1,4 @@
-﻿using SceneEditorExtensionExample.WorldTerrain.EnvironmentInteractions;
+using SceneEditorExtensionExample.WorldTerrain.EnvironmentInteractions;
 using Stride.Core;
 using Stride.Core.Collections;
 using Stride.Core.Mathematics;
@@ -11,6 +11,7 @@ namespace SceneEditorExtensionExample.Rendering;
 
 public partial class EnvironmentInteractionRenderFeature : SubRenderFeature
 {
+    [DataMemberIgnore]
     internal static readonly PropertyKey<List<EnvironmentWindSourceComponent>> EnvironmentWindSourcesKey
         = new("EnvironmentWindSourceRenderFeature.EnvironmentWindSources", typeof(EnvironmentInteractionRenderFeature));
 

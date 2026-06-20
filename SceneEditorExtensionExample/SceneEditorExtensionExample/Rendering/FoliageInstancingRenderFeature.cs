@@ -1,4 +1,4 @@
-﻿using SceneEditorExtensionExample.WorldTerrain.Foliage;
+using SceneEditorExtensionExample.WorldTerrain.Foliage;
 using Stride.Core;
 using Stride.Core.Mathematics;
 using Stride.Graphics;
@@ -18,6 +18,7 @@ public struct FoliageInstanceData
 // Code adapted from Stride.Rendering.InstancingRenderFeature
 public partial class FoliageInstancingRenderFeature : SubRenderFeature
 {
+    [DataMemberIgnore]
     internal static readonly PropertyKey<Dictionary<RenderModel, FoliageChunkInstancingComponent>> ModelToInstancingMapKey
         = new("FoliageInstancingRenderFeature.ModelToInstancingMap", typeof(FoliageInstancingRenderFeature));
 

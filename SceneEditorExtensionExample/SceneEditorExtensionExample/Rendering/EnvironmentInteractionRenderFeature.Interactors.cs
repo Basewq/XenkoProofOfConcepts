@@ -1,4 +1,4 @@
-﻿using SceneEditorExtensionExample.WorldTerrain.EnvironmentInteractions;
+using SceneEditorExtensionExample.WorldTerrain.EnvironmentInteractions;
 using Stride.Core;
 using Stride.Core.Collections;
 using Stride.Core.Mathematics;
@@ -13,6 +13,7 @@ namespace SceneEditorExtensionExample.Rendering;
 
 partial class EnvironmentInteractionRenderFeature : SubRenderFeature
 {
+    [DataMemberIgnore]
     internal static readonly PropertyKey<List<EnvironmentInteractorComponent>> EnvironmentInteractorsKey
         = new("EnvironmentInteractorRenderFeature.EnvironmentInteractors", typeof(EnvironmentInteractionRenderFeature));
 
